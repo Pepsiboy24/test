@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeleton Styling Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .comparison-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            background: white;
+        }
+        .comparison-item h3 {
+            margin: 0 0 8px 0;
+            color: #374151;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .comparison-item p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎨 Skeleton Styling Test</h1>
+        <p>Testing the skeleton loading styling to ensure it matches the working pattern.</p>
+        
+        <div class="status-indicator success">✅ Fixed skeleton structure to match studentPortal.html</div>
+        <div class="status-indicator info">📊 Using skeleton skeleton-card classes instead of nested elements</div>
+        
+        <div class="test-section">
+            <h2>🧪 Live Skeleton Test</h2>
+            <button class="test-btn" onclick="showSkeletons()">🎬 Show Skeletons</button>
+            <button class="test-btn success" onclick="hideSkeletons()">✅ Hide Skeletons</button>
+            <button class="test-btn" onclick="showContent()">📊 Show Content</button>
+            
+            <div style="margin-top: 20px;">
+                <h3>Stats Grid Skeleton</h3>
+                <div class="stats-grid" id="testStatsGrid">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+                <div class="stats-grid" id="testStatsContent" style="display:none;">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-sticky-note"></i>
+                        </div>
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">Notes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Past Papers</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <h3>Materials Grid Skeleton</h3>
+                <div class="materials-grid" id="testMaterialsGrid">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+                <div class="materials-grid" id="testMaterialsContent" style="display:none;">
+                    <div class="material-card">
+                        <div class="material-icon">
+                            <i class="fas fa-sticky-note"></i>
+                        </div>
+                        <div class="material-info">
+                            <h4>Mathematics Notes</h4>
+                            <p class="material-subject">Mathematics</p>
+                            <p class="material-description">Complete study notes for calculus</p>
+                            <div class="material-meta">
+                                <span class="material-type">notes</span>
+                                <span class="material-date">2024-01-15</span>
+                            </div>
+                            <button class="download-btn">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="material-card">
+                        <div class="material-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="material-info">
+                            <h4>Physics Past Paper</h4>
+                            <p class="material-subject">Physics</p>
+                            <p class="material-description">2023 examination paper</p>
+                            <div class="material-meta">
+                                <span class="material-type">past-paper</span>
+                                <span class="material-date">2024-01-10</span>
+                            </div>
+                            <button class="download-btn">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h3>✅ Fixed Structure</h3>
+                    <p>Using skeleton skeleton-card classes</p>
+                    <div style="background: #f0fdf4; padding: 8px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-top: 8px;">
+                        &lt;div class="skeleton skeleton-card"&gt;&lt;/div&gt;
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <h3>❌ Previous Structure</h3>
+                    <p>Using nested skeleton elements</p>
+                    <div style="background: #fef2f2; padding: 8px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-top: 8px;">
+                        &lt;div class="material-card skeleton"&gt;<br>
+                        &nbsp;&nbsp;&lt;div class="material-icon skeleton"&gt;&lt;/div&gt;<br>
+                        &lt;/div&gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Expected Behavior</h2>
+            <ol>
+                <li>✅ <strong>Skeletons appear</strong> with animated shine effect</li>
+                <li>✅ <strong>Smooth transitions</strong> between skeleton and content</li>
+                <li>✅ <strong>Consistent styling</strong> with studentPortal.html</li>
+                <li>✅ <strong>Responsive design</strong> works on mobile</li>
+            </ol>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./studyMaterials.html" class="test-btn">📚 Study Materials</a>
+            <a href="./studentPortal.html" class="test-btn">🏠 Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        function showSkeletons() {
+            document.getElementById('testStatsGrid').style.display = 'grid';
+            document.getElementById('testStatsContent').style.display = 'none';
+            document.getElementById('testMaterialsGrid').style.display = 'grid';
+            document.getElementById('testMaterialsContent').style.display = 'none';
+        }
+        
+        function hideSkeletons() {
+            document.getElementById('testStatsGrid').style.display = 'none';
+            document.getElementById('testStatsContent').style.display = 'grid';
+            document.getElementById('testMaterialsGrid').style.display = 'none';
+            document.getElementById('testMaterialsContent').style.display = 'grid';
+        }
+        
+        function showContent() {
+            document.getElementById('testStatsGrid').style.display = 'none';
+            document.getElementById('testStatsContent').style.display = 'grid';
+            document.getElementById('testMaterialsGrid').style.display = 'none';
+            document.getElementById('testMaterialsContent').style.display = 'grid';
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showSkeletons();
+                setTimeout(() => {
+                    hideSkeletons();
+                }, 3000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

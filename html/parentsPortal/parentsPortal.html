@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../scripts/authGuard.js"></script>
+    <meta charset="UTF-8">
+
+    <title>Parent Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="../../styles/parentsPortalStyles/parentsPortal.css?v=1.1">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar" data-sideBar>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="welcome-section">
+                    <h1>Parent Portal</h1>
+                    <p>Monitor your child's academic journey</p>
+                </div>
+                <div class="header-actions">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Academic Performance Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>Academic Performance</h2>
+                </div>
+                <div class="section-content">
+                    <div class="performance-grid">
+                        <div class="recent-grades">
+                            <h4>Recent Grades</h4>
+                            <div id="recentGradesContainer">
+                                <p style="text-align:center; color:#666;">Loading grades...</p>
+                            </div>
+                        </div>
+                        <div class="overall-progress">
+                            <h4>Overall Progress</h4>
+                            <div class="chart-container">
+                                <canvas id="progressChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Report Cards Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>Report Cards</h2>
+                </div>
+                <!-- ... content ... -->
+            </section>
+
+            <!-- Messages Section -->
+            <!-- ... content ... -->
+
+        </main>
+    </div>
+
+    <script type="module" src="../../scripts/parnetsPortalScripts/parents_portal_sidebar.js"></script>
+    <script type="module" src="../../scripts/parnetsPortalScripts/parentsDashboard.js"></script>
+</body>
+
+</html>

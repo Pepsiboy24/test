@@ -1,0 +1,645 @@
+/* ============================================================
+   tp-shared.css — TeachSmart Portal Design System
+   Include this file on every page in /html/teachersPortal/
+   AFTER sidebar.css
+   ============================================================ */
+
+/* ── Reset & Base ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /* Colour palette */
+    --tp-accent: #3182ce;
+    --tp-accent-hover: #2b6cb0;
+    --tp-accent-light: #ebf8ff;
+    --tp-bg: #f8f9fa;
+    --tp-card-bg: #ffffff;
+    --tp-border: #e2e8f0;
+    --tp-text: #1a202c;
+    --tp-text-muted: #718096;
+    --tp-text-sub: #4a5568;
+
+    /* Layout */
+    --tp-sidebar-w: 250px;
+    --tp-radius-card: 14px;
+    --tp-radius-input: 8px;
+    --tp-radius-btn: 8px;
+    --tp-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.07);
+    --tp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--tp-bg);
+    color: var(--tp-text);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Main content area ────────────────────────────────────── */
+.main-content {
+    flex: 1;
+    margin-left: var(--tp-sidebar-w);
+    padding: 36px 40px 48px;
+    overflow-y: auto;
+    min-height: 100vh;
+}
+
+/* ── Page header ──────────────────────────────────────────── */
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--tp-text);
+    margin-bottom: 6px;
+    line-height: 1.25;
+}
+
+.page-header p,
+.page-header .page-subtitle {
+    font-size: 14px;
+    color: var(--tp-text-muted);
+    line-height: 1.5;
+}
+
+/* ── Cards ────────────────────────────────────────────────── */
+.tp-card {
+    background: var(--tp-card-bg);
+    border-radius: var(--tp-radius-card);
+    padding: 28px 32px;
+    box-shadow: var(--tp-shadow-card);
+}
+
+.tp-card+.tp-card {
+    margin-top: 24px;
+}
+
+.tp-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--tp-text);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* step badge inside card title */
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--tp-accent-light);
+    color: var(--tp-accent);
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ── Divider ──────────────────────────────────────────────── */
+.tp-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 24px 0;
+}
+
+/* ── Shared Tables ────────────────────────────────────────── */
+.tp-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tp-table thead {
+    background: #f9fafb;
+}
+
+.tp-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--tp-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border-bottom: 1px solid var(--tp-border);
+    white-space: nowrap;
+}
+
+.tp-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: var(--tp-text-sub);
+    vertical-align: middle;
+}
+
+.tp-table tr:last-child td {
+    border-bottom: none;
+}
+
+.tp-table tbody tr:hover {
+    background: #fafbfc;
+}
+
+/* ── Form Controls ────────────────────────────────────────── */
+.tp-select,
+.tp-input {
+    padding: 10px 14px;
+    border: 1px solid var(--tp-border);
+    border-radius: var(--tp-radius-input);
+    background: #ffffff;
+    color: var(--tp-text-sub);
+    font-size: 14px;
+    font-family: inherit;
+    min-width: 150px;
+    cursor: pointer;
+    transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.tp-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23718096' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.tp-select:focus,
+.tp-input:focus {
+    border-color: var(--tp-accent);
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.12);
+}
+
+.tp-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tp-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--tp-text-sub);
+}
+
+.tp-filters-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.tp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--tp-radius-btn);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.tp-btn-primary {
+    background: var(--tp-accent);
+    color: #ffffff;
+}
+
+.tp-btn-primary:hover {
+    background: var(--tp-accent-hover);
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+}
+
+.tp-btn-secondary {
+    background: #ffffff;
+    color: var(--tp-accent);
+    border: 1.5px solid var(--tp-accent);
+}
+
+.tp-btn-secondary:hover {
+    background: var(--tp-accent-light);
+}
+
+.tp-btn-outline {
+    background: #ffffff;
+    color: var(--tp-text-sub);
+    border: 1.5px solid var(--tp-border);
+}
+
+.tp-btn-outline:hover {
+    background: #f7fafc;
+    border-color: #c8d4e0;
+}
+
+.tp-btn-danger {
+    background: #e53e3e;
+    color: #ffffff;
+}
+
+.tp-btn-danger:hover {
+    background: #c53030;
+}
+
+/* ── Score / comment inputs (in tables) ───────────────────── */
+.score-input {
+    width: 90px;
+    padding: 8px 10px;
+    border: 1px solid var(--tp-border);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border 0.2s;
+    outline: none;
+}
+
+.score-input:focus {
+    border-color: var(--tp-accent);
+}
+
+.comment-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--tp-border);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border 0.2s;
+    outline: none;
+}
+
+.comment-input:focus {
+    border-color: var(--tp-accent);
+}
+
+/* ── Alerts ───────────────────────────────────────────────── */
+.tp-alert {
+    display: none;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 10px;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.tp-alert.visible {
+    display: flex;
+}
+
+.tp-alert-success {
+    background: #f0fff4;
+    color: #276749;
+    border: 1px solid #c6f6d5;
+}
+
+.tp-alert-error {
+    background: #fff5f5;
+    color: #c53030;
+    border: 1px solid #fed7d7;
+}
+
+/* Legacy alert classes (used in upload_notes.html) */
+.alert {
+    display: none;
+}
+
+.alert.visible,
+.alert.show {
+    display: flex;
+}
+
+.alert-success {
+    background: #f0fff4;
+    color: #276749;
+    border: 1px solid #c6f6d5;
+    padding: 14px 18px;
+    border-radius: 10px;
+    gap: 10px;
+    align-items: center;
+}
+
+.alert-error {
+    background: #fff5f5;
+    color: #c53030;
+    border: 1px solid #fed7d7;
+    padding: 14px 18px;
+    border-radius: 10px;
+    gap: 10px;
+    align-items: center;
+}
+
+/* ── Quick Actions row ────────────────────────────────────── */
+.tp-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* ── Section sub-header (title + button in row) ───────────── */
+.tp-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.tp-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--tp-text);
+}
+
+/* ── Stat cards (dashboard) ───────────────────────────────── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: var(--tp-card-bg);
+    border-radius: var(--tp-radius-card);
+    padding: 22px 24px;
+    box-shadow: var(--tp-shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.stat-icon.blue {
+    background: #ebf8ff;
+    color: #3182ce;
+}
+
+.stat-icon.green {
+    background: #f0fff4;
+    color: #38a169;
+}
+
+.stat-icon.purple {
+    background: #faf5ff;
+    color: #805ad5;
+}
+
+.stat-icon.red {
+    background: #fff5f5;
+    color: #e53e3e;
+}
+
+.stat-icon.orange {
+    background: #fffaf0;
+    color: #dd6b20;
+}
+
+.stat-content h3 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--tp-text);
+    margin-bottom: 3px;
+}
+
+.stat-content p {
+    font-size: 13px;
+    color: var(--tp-text-muted);
+    font-weight: 500;
+}
+
+/* existing card alias used by teachersPortal.html */
+.card {
+    background: var(--tp-card-bg);
+    border-radius: var(--tp-radius-card);
+    padding: 24px;
+    box-shadow: var(--tp-shadow-sm);
+}
+
+.card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--tp-text);
+    margin-bottom: 18px;
+}
+
+/* ── Header bar (top of main content on pages that use it) ── */
+.tp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.tp-header-left h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--tp-text);
+    margin-bottom: 2px;
+}
+
+.tp-header-left p {
+    font-size: 13px;
+    color: var(--tp-text-muted);
+}
+
+.tp-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.notification-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--tp-border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--tp-text-sub);
+    transition: background 0.2s;
+}
+
+.notification-btn:hover {
+    background: #f7fafc;
+}
+
+/* ── User avatar (top-bar, not sidebar) ───────────────────── */
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1100px) {
+    .main-content {
+        padding: 28px 28px 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding: 80px 16px 32px;
+        /* extra top for mobile-top-bar */
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+    }
+
+    .tp-card {
+        padding: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tp-filters-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tp-select,
+    .tp-input {
+        width: 100%;
+    }
+
+    .tp-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Responsive table — card layout */
+    .tp-table thead {
+        display: none;
+    }
+
+    .tp-table,
+    .tp-table tbody,
+    .tp-table tr,
+    .tp-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .tp-table tr {
+        margin-bottom: 14px;
+        border: 1px solid var(--tp-border);
+        border-radius: 10px;
+        padding: 14px;
+        background: #fff;
+    }
+
+    .tp-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #f5f5f5;
+        padding: 10px 0;
+        font-size: 13px;
+    }
+
+    .tp-table td:last-child {
+        border-bottom: none;
+    }
+
+    .tp-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--tp-text-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+
+    .tp-actions-row {
+        flex-direction: column;
+    }
+
+    .tp-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header h1 {
+        font-size: 20px;
+    }
+}
+
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+
+

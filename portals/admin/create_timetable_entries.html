@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+    
+    <title>Create Timetable Wizard - Step 2 - EduHubAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+    <style>
+        :root {
+            --primary: #6200ea;
+            --primary-light: #ede7f6;
+            --primary-hover: #5000c2;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            padding: 0 12px 32px 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 32px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+        }
+
+        /* Wizard Progress */
+        .wizard-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .wizard-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 2px solid var(--border);
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .wizard-step.active .step-number {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .wizard-step.completed .step-number {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+
+        .wizard-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .wizard-step.completed .step-label {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .wizard-connector {
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+            margin: 0 16px;
+            margin-bottom: 24px;
+        }
+
+        .wizard-connector.completed {
+            background: var(--success);
+        }
+
+        /* Wizard Card */
+        .wizard-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto 32px auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .wizard-header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .wizard-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .wizard-header p {
+            color: var(--text-gray);
+            font-size: 15px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            background: var(--white);
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            border-color: var(--border);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+            border-color: var(--text-gray);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .wizard-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Schedule Preview Table */
+        .schedule-preview {
+            overflow-x: auto;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .schedule-table th {
+            background: var(--bg-light);
+            color: var(--text-gray);
+            font-weight: 600;
+            width: 14%;
+        }
+
+        .schedule-table th:first-child {
+            width: 16%;
+        }
+
+        .schedule-table td {
+            color: var(--text-dark);
+            height: 50px;
+        }
+
+        /* ── Weekly Grid ─────────────────────────────────────────── */
+        .grid-wrapper {
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        .week-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4px;
+            min-width: 560px;
+        }
+
+        .week-table th {
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-light);
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            text-align: center;
+        }
+
+        .week-table .time-col {
+            width: 72px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-gray);
+            text-align: center;
+            padding: 6px 4px;
+            white-space: nowrap;
+        }
+
+        .week-table td {
+            vertical-align: top;
+            padding: 3px;
+            min-width: 130px;
+        }
+
+        .break-cell {
+            background: #f1f5f9;
+            border-radius: 8px;
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            padding: 6px;
+        }
+
+        .entry-cell {
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+        }
+
+        .entry-cell:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .entry-cell.unsaved {
+            background: var(--warning);
+        }
+
+        .entry-subject {
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 3px;
+        }
+
+        .entry-teacher {
+            font-size: 11px;
+            opacity: .85;
+        }
+
+        .cell-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            justify-content: flex-end;
+        }
+
+        .cell-btn {
+            background: rgba(255, 255, 255, .2);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            transition: background .15s;
+        }
+
+        .cell-btn:hover {
+            background: rgba(255, 255, 255, .35);
+        }
+
+        .cell-btn.del:hover {
+            background: rgba(239, 68, 68, .75);
+        }
+
+        .empty-cell {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            font-size: 12px;
+            gap: 4px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .empty-cell:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .class-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 24px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .wizard-card {
+                padding: 24px;
+            }
+
+            .wizard-actions {
+                flex-direction: column-reverse;
+                gap: 16px;
+            }
+
+            .wizard-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body data-parent-link="./timeTable.html">
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title" id="pageTitle">Weekly Timetable</h1>
+                    <p class="page-subtitle" id="pageSubtitle">Loading class info&hellip;</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="profile"></div>
+            </div>
+        </div>
+
+        <!-- Wizard Progress -->
+        <div class="wizard-progress">
+            <div class="wizard-step completed">
+                <div class="step-number"><i class="fa-solid fa-check"></i></div>
+                <div class="step-label">Setup</div>
+            </div>
+            <div class="wizard-connector completed"></div>
+            <div class="wizard-step active">
+                <div class="step-number">2</div>
+                <div class="step-label">Entries</div>
+            </div>
+        </div>
+
+        <!-- Weekly Grid -->
+        <div class="wizard-card">
+    <div class="wizard-header">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div style="text-align: left;">
+                <h2>Weekly Schedule</h2>
+                <p id="scheduleInfo">Loading schedule configuration&hellip;</p>
+            </div>
+            <div>
+                <button type="button" class="btn btn-secondary" onclick="window.openTimetableExcelUpload()">
+                    <i class="fa-solid fa-file-excel" style="color: #1d6f42;"></i>
+                    Upload Excel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-wrapper">
+        <div id="gridContainer">
+            </div>
+    </div>
+</div>
+
+        <!-- Modal for Adding/Editing Entries -->
+        <div id="entryModal"
+            style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;align-items:center;justify-content:center;">
+            <div
+                style="background:var(--white);padding:28px;border-radius:12px;width:420px;max-width:94%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+                <h3 id="modalTitle" style="margin-bottom:20px;font-size:18px;">Add Entry</h3>
+                <form id="entryForm">
+                    <div class="form-group">
+                        <label for="modalSubject">Subject *</label>
+                        <select id="modalSubject" required>
+                            <option value="">-- Select Subject --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalDuration">Duration (minutes) *</label>
+                        <input type="number" id="modalDuration" value="40" min="1" required>
+                    </div>
+                    <input type="hidden" id="modalDay">
+                    <input type="hidden" id="modalTime">
+                    <input type="hidden" id="modalEntryId">
+
+                    <div style="display:flex;gap:10px;margin-top:24px;align-items:center;">
+                        <!-- Delete only visible for saved entries -->
+                        <button type="button" id="modalDeleteBtn" class="btn btn-secondary"
+                            style="display:none;color:var(--danger);border-color:var(--danger);"
+                            onclick="deleteCurrentEntry()">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                        <div style="flex:1;"></div>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>
+                            Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Wizard Actions -->
+        <div class="wizard-actions">
+            <button type="button" class="btn btn-secondary"
+                onclick="window.location.href='/admin/create_timetable_setup'">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Setup
+            </button>
+            <button type="button" id="saveTimetableBtn" class="btn btn-success">
+                <i class="fa-solid fa-save"></i>
+                Save Timetable
+            </button>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../assets/js-shared/sideBar.js"></script>
+    <script src="./time_table_scripts/timetable_entries.js" type="module"></script>
+    <script src="./time_table_scripts/excel_upload.js" type="module"></script>
+
+    <script>
+        // Sidebar Toggle
+        const sidebar = document.querySelector('[data-sideBar]');
+        const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+        const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+        if (sidebarOpenBtn && sidebar) {
+            sidebarOpenBtn.addEventListener('click', () => sidebar.classList.add('show'));
+        }
+        if (sidebarCloseBtn && sidebar) {
+            sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('show'));
+        }
+    </script>
+</body>
+
+</html>

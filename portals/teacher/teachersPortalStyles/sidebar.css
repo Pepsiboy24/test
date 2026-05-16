@@ -1,0 +1,202 @@
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    border-right: 1px solid #e9ecef;
+    padding: 24px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sidebar Overlay (dark backdrop on mobile) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+.sidebar .logo {
+    padding: 0 24px 40px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0;
+}
+
+.sidebar-menu {
+    list-style: none;
+    margin-bottom: auto;
+    /* Push user section to bottom */
+}
+
+.sidebar-menu li {
+    margin-bottom: 4px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: #718096;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    background-color: #f7fafc;
+    color: #2d3748;
+}
+
+.nav-item.active {
+    background-color: #ebf8ff;
+    color: #3182ce;
+}
+
+.nav-item svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+/* User Section at bottom */
+.user-section {
+    padding: 24px;
+    border-top: 1px solid #e9ecef;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: 12px;
+}
+
+.user-info span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 10px;
+    background: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background: #c53030;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Both .active and .show work to open the sidebar */
+    .sidebar.active,
+    .sidebar.show {
+        transform: translateX(0);
+    }
+}
+
+/* ===== Mobile top bar (used when page doesn't use sidebar header) ===== */
+.mobile-top-bar {
+    display: none;
+    background: #ffffff;
+    padding: 12px 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.mobile-top-bar .brand {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.hamburger-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+}
+
+.hamburger-btn span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #2d3748;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+    .mobile-top-bar {
+        display: flex;
+    }
+}
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+

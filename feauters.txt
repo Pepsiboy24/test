@@ -1,0 +1,44 @@
+School Admin Portal:
+- Dashboard with key statistics (total students, teachers, attendance rate, revenue)
+- Navigation to Classes, Students, Teachers, Schedule, Time Table, Attendance, Fees
+- Recent activity feed for monitoring actions (attendance reports, schedule updates, fee payments)
+- Student management (add/view/search students)
+- Teacher management (add/view/search teachers)
+- Academic schedule management (calendar creation, uploading schedules)
+- Time table management
+- Attendance tracking
+- Fee management and processing
+
+Parents Portal:
+- Home dashboard with child's academic overview
+- Report Cards section with downloadable reports
+- Payments section for fee payments
+- Messages section for communication with teachers/admin
+- Academic performance tracking (recent grades, overall progress chart)
+- User profile with parent and child information
+
+Students Portal:
+- Dashboard displaying rank, points, badges, and achievements
+- Classes section with scheduled upcoming classes and join class options
+- Study Materials section providing learning resources
+- Social section for student interactions and study groups
+- AI Study Buddy for study-related AI assistance
+- Class Leaderboard showing top-performing students
+- Social Feed for posts and reactions
+
+Teachers Portal:
+- Dashboard with statistics for active courses, total students, upcoming classes, and messages
+- Students management table with performance overview
+- Attendance management and tracking
+- Online Classes section
+- AI Assistant for generating lesson notes, creating test questions, and analyzing student performance
+- Messaging system for communication with students and parents
+- Upcoming classes overview
+
+
+
+//things to think of 
+/*1. pricing how much will charge 
+2. operating cost (how much will it cost us to run the thing considering our feauters)
+3. grant funding how we'll get grants
+4. how we'll get to 10,000,000 ARR

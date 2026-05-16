@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeleton Padding Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studyMaterials.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .padding-info {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .comparison-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            background: white;
+        }
+        .comparison-item h3 {
+            margin: 0 0 8px 0;
+            color: #374151;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .comparison-item p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>📏 Skeleton Padding Test</h1>
+        <p>Testing the padding and spacing added to skeleton elements.</p>
+        
+        <div class="status-indicator success">✅ Added padding to materials-list.skeleton</div>
+        <div class="status-indicator success">✅ Added padding to material-card.skeleton</div>
+        <div class="status-indicator success">✅ Added padding to category-header.skeleton</div>
+        <div class="status-indicator info">📏 Proper spacing between skeleton elements</div>
+        
+        <div class="test-section">
+            <h2>📏 Padding Applied</h2>
+            <div class="padding-info">
+                <strong>1. materials-list.skeleton:</strong><br>
+                padding: 16px 24px;<br>
+                display: flex;<br>
+                flex-direction: column;<br>
+                gap: 16px;<br><br>
+                
+                <strong>2. material-card.skeleton:</strong><br>
+                padding: 16px;<br>
+                border: 1px solid var(--border-color);<br>
+                border-radius: 8px;<br>
+                display: flex;<br>
+                align-items: center;<br>
+                gap: 16px;<br><br>
+                
+                <strong>3. category-header.skeleton:</strong><br>
+                padding: 20px 24px;<br>
+                display: flex;<br>
+                justify-content: space-between;<br>
+                align-items: center;<br>
+                border-bottom: 1px solid var(--border-color);
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Live Padding Test</h2>
+            <button class="test-btn" onclick="showSkeleton()">🎬 Show Skeleton</button>
+            <button class="test-btn success" onclick="hideSkeleton()">✅ Hide Skeleton</button>
+            
+            <div style="margin-top: 20px;">
+                <!-- Skeleton State with Padding -->
+                <div class="material-category notes" id="skeletonCategory">
+                    <div class="category-header skeleton">
+                        <div class="category-title skeleton"></div>
+                        <div class="category-count skeleton"></div>
+                    </div>
+                    <div class="materials-list skeleton">
+                        <div class="material-card skeleton">
+                            <div class="material-icon skeleton"></div>
+                            <div class="material-info skeleton">
+                                <div class="material-title skeleton"></div>
+                                <div class="material-meta skeleton"></div>
+                            </div>
+                        </div>
+                        <div class="material-card skeleton">
+                            <div class="material-icon skeleton"></div>
+                            <div class="material-info skeleton">
+                                <div class="material-title skeleton"></div>
+                                <div class="material-meta skeleton"></div>
+                            </div>
+                        </div>
+                        <div class="material-card skeleton">
+                            <div class="material-icon skeleton"></div>
+                            <div class="material-info skeleton">
+                                <div class="material-title skeleton"></div>
+                                <div class="material-meta skeleton"></div>
+                            </div>
+                        </div>
+                        <div class="material-card skeleton">
+                            <div class="material-icon skeleton"></div>
+                            <div class="material-info skeleton">
+                                <div class="material-title skeleton"></div>
+                                <div class="material-meta skeleton"></div>
+                            </div>
+                        </div>
+                        <div class="material-card skeleton">
+                            <div class="material-icon skeleton"></div>
+                            <div class="material-info skeleton">
+                                <div class="material-title skeleton"></div>
+                                <div class="material-meta skeleton"></div>
+                            </div>
+                        </div>
+                        <div class="material-card skeleton">
+                            <div class="material-icon skeleton"></div>
+                            <div class="material-info skeleton">
+                                <div class="material-title skeleton"></div>
+                                <div class="material-meta skeleton"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Real Content State -->
+                <div class="material-category notes" id="notesContent" style="display:none;">
+                    <div class="category-header">
+                        <h3 class="category-title">Notes</h3>
+                        <p class="category-count"><span class="number" id="notes-number">6</span> books</p>
+                    </div>
+                    <div class="materials-list" id="notes-list">
+                        <div class="material-card">
+                            <div class="material-icon">
+                                <i class="fas fa-sticky-note"></i>
+                            </div>
+                            <div class="material-info">
+                                <h4>Mathematics Notes</h4>
+                                <p class="material-subject">Mathematics</p>
+                                <p class="material-description">Complete study notes for calculus</p>
+                                <div class="material-meta">
+                                    <span class="material-type">notes</span>
+                                    <span class="material-date">2024-01-15</span>
+                                </div>
+                                <button class="download-btn">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                        <div class="material-card">
+                            <div class="material-icon">
+                                <i class="fas fa-sticky-note"></i>
+                            </div>
+                            <div class="material-info">
+                                <h4>Physics Notes</h4>
+                                <p class="material-subject">Physics</p>
+                                <p class="material-description">Mechanics and thermodynamics</p>
+                                <div class="material-meta">
+                                    <span class="material-type">notes</span>
+                                    <span class="material-date">2024-01-12</span>
+                                </div>
+                                <button class="download-btn">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Before vs After</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h3>❌ Before (No Padding)</h3>
+                    <p>Skeleton elements were cramped together with no spacing</p>
+                    <div style="background: #fef2f2; padding: 8px; border-radius: 4px; font-size: 12px; color: #991b1b;">
+                        - No padding between elements<br>
+                        - Skeletons touching each other<br>
+                        - Poor visual separation<br>
+                        - Hard to distinguish individual items
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <h3>✅ After (With Padding)</h3>
+                    <p>Proper spacing and padding between skeleton elements</p>
+                    <div style="background: #f0fdf4; padding: 8px; border-radius: 4px; font-size: 12px; color: #166534;">
+                        - 16px padding between cards<br>
+                        - 16px gap between elements<br>
+                        - Clear visual separation<br>
+                        - Easy to distinguish individual items<br>
+                        - Consistent with real content spacing
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./studyMaterials.html" class="test-btn success">📚 Study Materials (With Padding)</a>
+            <a href="./studentPortal.html" class="test-btn">🏠 Dashboard</a>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Expected Behavior</h2>
+            <ol>
+                <li>✅ <strong>Proper Spacing</strong> - Skeleton elements have 16px padding</li>
+                <li>✅ <strong>Visual Separation</strong> - Clear distinction between skeleton cards</li>
+                <li>✅ <strong>Consistent Layout</strong> - Matches spacing of real content</li>
+                <li>✅ <strong>Better UX</strong> - Easier to understand loading state</li>
+                <li>✅ <strong>Professional Look</strong> - Clean, organized skeleton appearance</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showSkeleton() {
+            document.getElementById('skeletonCategory').style.display = 'block';
+            document.getElementById('notesContent').style.display = 'none';
+        }
+        
+        function hideSkeleton() {
+            document.getElementById('skeletonCategory').style.display = 'none';
+            document.getElementById('notesContent').style.display = 'block';
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showSkeleton();
+                setTimeout(() => {
+                    hideSkeleton();
+                }, 3000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

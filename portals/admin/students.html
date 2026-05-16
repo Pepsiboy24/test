@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+
+    <title>Student Management - EduHubAdmin</title>
+    <link rel="stylesheet" href="./schoolAdminStyles/students.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+</head>
+
+<body>
+    <div class="popup" id="registrationPopup">
+        <div class="containment">
+            <div class="popup-header">
+                <div class="icon" id="closePopup"><i class="fa fa-times"></i></div>
+                <h1>Student Registration</h1>
+                <p>Complete your enrollment in just 3 easy steps</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 33%;"></div>
+                </div>
+            </div>
+
+            <div class="step-indicators">
+                <div class="step-indicator active" id="indicator1">
+                    <div class="step-circle">1</div>
+                    <span>Personal Info</span>
+                </div>
+                <div class="step-indicator" id="indicator2">
+                    <div class="step-circle">2</div>
+                    <span>Academic Details</span>
+                </div>
+                <div class="step-indicator" id="indicator3">
+                    <div class="step-circle">3</div>
+                    <span>Review & Submit</span>
+                </div>
+            </div>
+
+            <div class="step" id="successStep" style="padding: 20px">
+                <div class="success-message">
+                    <div class="success-icon">✓</div>
+                    <h2>Registration Successful!</h2>
+                    <p>Welcome to EdTech Portal! Your registration has been completed successfully. You will
+                        receive a confirmation email shortly.</p>
+                    <button type="button" class="btn btn-primary" data-resetBtn style="margin-top: 20px;">Register
+                        Another Student</button>
+                </div>
+            </div>
+
+            <div class="form-content">
+                <form id="registrationForm">
+                    <div class="step active" id="step1">
+                        <h2>Personal Information</h2>
+                        <p>Let's start with your basic details</p>
+
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required
+                                placeholder="Enter your full name">
+                            <div class="error-message" id="fullNameError"
+                                style="display:none; color:red; font-size:12px;">Full Name is required</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                            <div class="error-message" id="emailError" style="display:none; color:red; font-size:12px;">
+                                Please enter a valid email</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth *</label>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                                <div class="error-message" id="dobError"
+                                    style="display:none; color:red; font-size:12px;"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender *</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="male" name="gender" value="male" required>
+                                        <label for="male">Male</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="female" name="gender" value="female" required>
+                                        <label for="female">Female</label>
+                                    </div>
+                                    <div class="error-message" id="genderError"
+                                        style="display:none; color:red; font-size:12px;">Please select a gender</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                        <h3>Parent/Guardian Information</h3>
+                        <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Search for an existing parent
+                            by phone number or add a new one.</p>
+
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <input type="text" id="parentSearchPhone" placeholder="Enter Parent Phone Number..."
+                                style="flex: 1; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; outline: none;">
+                            <button type="button" id="searchParentBtn" class="btn btn-secondary"
+                                style="margin: 0;">Search Parent</button>
+                        </div>
+                        <div id="parentSearchMessage" style="font-size: 13px; margin-bottom: 15px;"></div>
+
+                        <input type="hidden" id="linkedParentId" name="linkedParentId" value="">
+
+                        <div class="form-group">
+                            <label for="parentFullName">Parent Full Name *</label>
+                            <input type="text" id="parentFullName" name="parentFullName" required
+                                placeholder="Parent's full name">
+                            <div class="error-message" id="parentFullNameError"
+                                style="display:none; color:red; font-size:12px;">Parent Full Name is required</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="parentEmail">Parent Email Address *</label>
+                            <input type="email" id="parentEmail" name="parentEmail" required
+                                placeholder="parent.email@example.com">
+                            <div class="error-message" id="parentEmailError"
+                                style="display:none; color:red; font-size:12px;">Please enter a valid email</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="parentPhone">Parent Phone Number *</label>
+                                <input type="tel" id="parentPhone" name="parentPhone" required
+                                    placeholder="e.g., 08012345678">
+                                <div class="error-message" id="parentPhoneError"
+                                    style="display:none; color:red; font-size:12px;">Parent Phone is required</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="relationship">Relationship *</label>
+                                <select id="relationship" name="relationship" required>
+                                    <option value="">Select Relationship</option>
+                                    <option value="Father">Father</option>
+                                    <option value="Mother">Mother</option>
+                                    <option value="Guardian">Guardian</option>
+                                </select>
+                                <div class="error-message" id="relationshipError"
+                                    style="display:none; color:red; font-size:12px;">Relationship is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="parentOccupation">Parent Occupation</label>
+                                <input type="text" id="parentOccupation" name="parentOccupation"
+                                    placeholder="e.g., Engineer">
+                            </div>
+                            <div class="form-group">
+                                <label for="parentAddress">Home Address</label>
+                                <input type="text" id="parentAddress" name="parentAddress"
+                                    placeholder="e.g., 123 Main St">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step" id="step2">
+                        <h2>Academic Details</h2>
+                        <p>Tell us about your academic information</p>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="class">Class/Grade *</label>
+                                <select id="class" name="class" required>
+                                </select>
+                                <div class="error-message" id="classError"
+                                    style="display:none; color:red; font-size:12px;">Please select a class</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="admissionDate">Admission Date *</label>
+                                <input type="date" id="admissionDate" name="admissionDate" required>
+                                <div class="error-message" id="admissionDateError"
+                                    style="display:none; color:red; font-size:12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step" id="step3">
+                        <h2>Review Your Information</h2>
+                        <p>Please review your details before submitting</p>
+                        <div id="reviewContent"
+                            style="background: #f8fafc; padding: 24px; border-radius: 8px; margin: 20px 0;">
+                            <p><strong>Name:</strong> <span id="reviewName"></span></p>
+                            <p><strong>Email:</strong> <span id="reviewEmail"></span></p>
+                            <p><strong>Class:</strong> <span id="reviewClass"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="button" class="btn btn-secondary" id="prevBtn"
+                            style="display: none;">Previous</button>
+                        <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Submit
+                            Registration</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar" data-sideBar></div>
+
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Student Registration</h1>
+                    <p class="page-subtitle">Complete your enrollment in just 3 easy steps</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="action-cards">
+            <div class="action-card" id="openPopupBtn">
+                <div class="action-icon add-single">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Add New Student</h3>
+                    <p>Add a single student to the system</p>
+                </div>
+            </div>
+
+            <div class="action-card" id="openExcelUploadBtn">
+                <div class="action-icon add-multiple">
+                    <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Upload Excel Sheet</h3>
+                    <p>Bulk import students from Excel file</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="students-section">
+            <div class="section-header">
+                <h2 class="section-title">Students List</h2>
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <select id="statusFilter"
+                        style="padding:8px 12px; border:1px solid #e2e8f0; border-radius:8px; font-size:13px; font-weight:600; color:#1e293b; background:#fff; outline:none; cursor:pointer;">
+                        <option value="active">Active Students</option>
+                        <option value="graduated">Alumni / Graduated</option>
+                        <option value="withdrawn">Withdrawn</option>
+                        <option value="expelled">Expelled</option>
+                    </select>
+                    <div class="filter-tabs">
+                        <div class="filter-tab active">All</div>
+                        <div class="filter-tab">Primary</div>
+                        <div class="filter-tab">Secondary</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="students-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Student</th>
+                            <th>Age</th>
+                            <th>Class</th>
+                            <th>Attendance</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Change Overlay -->
+    <div id="statusChangeOverlay"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:10002;">
+    </div>
+
+    <!-- Status Change Modal -->
+    <div id="statusChangeModal"
+        style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10003; width:90%; max-width:440px;">
+        <div
+            style="background:#fff; border-radius:16px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1); border:1px solid #e2e8f0; overflow:hidden;">
+            <div
+                style="background:#d97706; padding:20px 24px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="color:#fff; font-size:18px; font-weight:700; margin:0;">Update Student Status</h2>
+                    <p style="color:rgba(255,255,255,0.85); font-size:13px; margin:2px 0 0;">Change enrollment status
+                    </p>
+                </div>
+                <button onclick="window.closeStatusModal()"
+                    style="background:rgba(255,255,255,0.2); border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; color:#fff; font-size:16px; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
+            <div style="padding:24px;">
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">New
+                        Enrollment Status</label>
+                    <select id="newStatusSelect"
+                        style="width:100%; padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; font-size:14px; outline:none; color:#1e293b; background:#fff;">
+                        <option value="active">Active</option>
+                        <option value="graduated">Alumni / Graduated</option>
+                        <option value="withdrawn">Withdrawn</option>
+                        <option value="expelled">Expelled</option>
+                    </select>
+                </div>
+                <div id="statusReasonGroup" style="display:none; margin-bottom:16px;">
+                    <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">
+                        Reason <span style="color:#dc2626;">*</span>
+                    </label>
+                    <textarea id="statusReasonInput" rows="3" placeholder="Provide a reason for this status change..."
+                        style="width:100%; padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; font-size:14px; outline:none; color:#1e293b; resize:vertical; box-sizing:border-box;"></textarea>
+                </div>
+            </div>
+            <div
+                style="display:flex; justify-content:flex-end; gap:10px; padding:16px 24px; border-top:1px solid #e2e8f0; background:#f8fafc;">
+                <button onclick="window.closeStatusModal()"
+                    style="padding:10px 20px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; font-size:14px; font-weight:600; cursor:pointer; color:#1e293b;">Cancel</button>
+                <button id="statusSubmitBtn" onclick="window.submitStatusChange()"
+                    style="padding:10px 20px; border:none; border-radius:8px; background:#d97706; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">Save
+                    Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Migration Modal -->
+    <div id="migrationOverlay"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); z-index:10000;">
+    </div>
+    <div id="migrationModal"
+        style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10001; width:90%; max-width:440px;">
+        <div
+            style="background:#fff; border-radius:16px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1); border:1px solid #e2e8f0; overflow:hidden;">
+            <div
+                style="background:#6200ea; padding:20px 24px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="color:#fff; font-size:18px; font-weight:700; margin:0;">Change Class</h2>
+                    <p id="migrationStudentName" style="color:rgba(255,255,255,0.8); font-size:13px; margin:2px 0 0;">
+                    </p>
+                </div>
+                <button onclick="window.closeMigrationModal()"
+                    style="background:rgba(255,255,255,0.2); border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; color:#fff; font-size:16px; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
+            <div style="padding:24px;">
+                <label style="display:block; font-size:13px; font-weight:500; color:#64748b; margin-bottom:8px;">Move to
+                    Class</label>
+                <select id="migrationClassSelect"
+                    style="width:100%; padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; font-size:14px; outline:none; color:#1e293b; background:#fff;">
+                    <option value="">Select a class...</option>
+                </select>
+                <p id="migrationCapacityWarning"
+                    style="display:none; margin-top:8px; font-size:12px; color:#f59e0b; font-weight:500;">
+                    ⚠️ This class already has 40+ students.
+                </p>
+            </div>
+            <div
+                style="display:flex; justify-content:flex-end; gap:10px; padding:16px 24px; border-top:1px solid #e2e8f0; background:#f8fafc;">
+                <button onclick="window.closeMigrationModal()"
+                    style="padding:10px 20px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; font-size:14px; font-weight:600; cursor:pointer; color:#1e293b;">Cancel</button>
+                <button id="migrationConfirmBtn"
+                    style="padding:10px 20px; border:none; border-radius:8px; background:#6200ea; color:#fff; font-size:14px; font-weight:600; cursor:pointer;">Move
+                    Student</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../../core/config.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+
+    <!-- Simple UI Handlers -->
+    <script>
+        // Popup functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const popup = document.getElementById('registrationPopup');
+            const openPopupBtn = document.getElementById('openPopupBtn');
+            const closePopupBtn = document.getElementById('closePopup');
+
+            if (openPopupBtn && popup) {
+                openPopupBtn.addEventListener('click', () => {
+                    popup.style.display = 'flex';
+                });
+            }
+
+            if (closePopupBtn && popup) {
+                closePopupBtn.addEventListener('click', () => {
+                    popup.style.display = 'none';
+                });
+            }
+
+            // Excel upload functionality
+            const excelUploadBtn = document.getElementById('openExcelUploadBtn');
+            if (excelUploadBtn) {
+                excelUploadBtn.addEventListener('click', () => {
+                    if (typeof window.openStudentsExcelUpload === 'function') {
+                        window.openStudentsExcelUpload();
+                    } else {
+                        alert('Upload module is still loading, please try again.');
+                    }
+                });
+            }
+        });
+
+        // Migration modal functions
+        window.closeMigrationModal = function () {
+            const overlay = document.getElementById('migrationOverlay');
+            const modal = document.getElementById('migrationModal');
+            if (overlay) overlay.style.display = 'none';
+            if (modal) modal.style.display = 'none';
+        };
+    </script>
+
+    <!-- Student Management Scripts -->
+    <script src="./students_scripts/singleStudentRegScript.js" type="module"></script>
+    <script src="./students_scripts/singleStudentRegForm.js" type="module"></script>
+    <script src="./students_scripts/viewAllStudents.js" type="module"></script>
+    <script src="./students_scripts/multipleStudentReg.js" type="module"></script>
+    <script type="module" src="./students_scripts/students_upload_modal.js"></script>
+    <!-- <script type="module" src="../../assets/js-shared/detailsModal.js"></script> -->
+    <!-- Global Details Modal -->
+    <script type="module" src="../../core/universalRouter.js"></script>
+
+</body>
+
+</html>

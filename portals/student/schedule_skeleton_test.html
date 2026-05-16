@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Skeleton Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .status-indicator.warning { background: #fff3cd; color: #856404; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .implementation-details {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .schedule-table-wrapper {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>📅 Schedule Skeleton Test</h1>
+        <p>Testing the skeleton loading implementation for the schedule page.</p>
+        
+        <div class="status-indicator success">✅ Added static skeleton elements</div>
+        <div class="status-indicator success">✅ Updated JavaScript to hide/show content</div>
+        <div class="status-indicator success">✅ Added error handling for skeleton hiding</div>
+        <div class="status-indicator info">📅 Matches studentPortal.html skeleton style</div>
+        
+        <div class="test-section">
+            <h2>🔧 Implementation Details</h2>
+            <div class="implementation-details">
+                <strong>HTML Structure:</strong><br>
+                &lt;div class="schedule-table-wrapper" id="weeklyScheduleContainer"&gt;<br>
+                &nbsp;&nbsp;&lt;div class="skeleton skeleton-card"&gt;&lt;/div&gt;<br>
+                &nbsp;&nbsp;&lt;div class="skeleton skeleton-card"&gt;&lt;/div&gt;<br>
+                &nbsp;&nbsp;&lt;!-- 6 more skeleton cards --&gt;<br>
+                &lt;/div&gt;<br><br>
+                
+                &lt;div class="schedule-table-wrapper" id="weeklyScheduleContent" style="display:none;"&gt;<br>
+                &nbsp;&nbsp;&lt;!-- Real content --&gt;<br>
+                &lt;/div&gt;<br><br>
+                
+                <strong>JavaScript Logic:</strong><br>
+                // Hide skeleton and show content<br>
+                document.getElementById('weeklyScheduleContainer').style.display = 'none';<br>
+                document.getElementById('weeklyScheduleContent').style.display = 'block';<br>
+                document.getElementById('weeklyScheduleContent').innerHTML = html;
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Live Skeleton Test</h2>
+            <button class="test-btn" onclick="showSkeleton()">🎬 Show Skeleton</button>
+            <button class="test-btn success" onclick="hideSkeleton()">✅ Hide Skeleton</button>
+            <button class="test-btn" onclick="showContent()">📅 Show Schedule</button>
+            <button class="test-btn" onclick="showError()">❌ Show Error</button>
+            
+            <div style="margin-top: 20px;">
+                <div class="section-header">
+                    <h2 class="section-title">Weekly Schedule</h2>
+                </div>
+                
+                <!-- Skeleton State -->
+                <div class="schedule-table-wrapper" id="weeklyScheduleContainer">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+                
+                <!-- Content State -->
+                <div class="schedule-table-wrapper" id="weeklyScheduleContent" style="display:none;">
+                    <!-- Content will be injected here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Skeleton Count</h2>
+            <div class="implementation-details">
+                <strong>Why 8 skeleton cards?</strong><br>
+                - Represents a typical weekly schedule grid<br>
+                - Shows loading state for multiple time slots<br>
+                - Matches the visual density of real schedule<br>
+                - Provides adequate loading feedback<br><br>
+                
+                <strong>Skeleton Properties:</strong><br>
+                - Class: "skeleton skeleton-card"<br>
+                - Animated shine effect<br>
+                - Consistent with studentPortal.html<br>
+                - Responsive design
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./schedule.html" class="test-btn success">📅 Schedule (With Skeleton)</a>
+            <a href="./studentPortal.html" class="test-btn">🏠 Dashboard</a>
+            <a href="./studyMaterials.html" class="test-btn">📚 Study Materials</a>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Expected Behavior</h2>
+            <ol>
+                <li>✅ <strong>Skeleton Appears</strong> - 8 skeleton cards show on page load</li>
+                <li>✅ <strong>Animated Shine</strong> - Skeletons have loading animation</li>
+                <li>✅ <strong>Content Loads</strong> - Real schedule data replaces skeletons</li>
+                <li>✅ <strong>Error Handling</strong> - Skeletons hide even on errors</li>
+                <li>✅ <strong>Consistent Style</strong> - Matches other pages' skeleton loading</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showSkeleton() {
+            document.getElementById('weeklyScheduleContainer').style.display = 'block';
+            document.getElementById('weeklyScheduleContent').style.display = 'none';
+        }
+        
+        function hideSkeleton() {
+            document.getElementById('weeklyScheduleContainer').style.display = 'none';
+            document.getElementById('weeklyScheduleContent').style.display = 'block';
+            document.getElementById('weeklyScheduleContent').innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #10b981;">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Schedule Loaded Successfully</h3>
+                    <p>Skeletons hidden and content displayed</p>
+                </div>
+            `;
+        }
+        
+        function showContent() {
+            document.getElementById('weeklyScheduleContainer').style.display = 'none';
+            document.getElementById('weeklyScheduleContent').style.display = 'block';
+            document.getElementById('weeklyScheduleContent').innerHTML = `
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb;">Time</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb;">Monday</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb;">Tuesday</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb;">Wednesday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb;">08:00 - 09:00</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb; background: #eff6ff;">Mathematics</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb; background: #f0fdf4;">Biology</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb; background: #fff7ed;">Physics</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb;">09:00 - 10:00</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb; background: #faf5ff;">Chemistry</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb; background: #fdf2f8;">English</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb; background: #fefce8;">History</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb;">10:00 - 11:00</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb;">Break</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb;">Break</td>
+                            <td style="padding: 12px; border: 1px solid #e5e7eb;">Break</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function showError() {
+            document.getElementById('weeklyScheduleContainer').style.display = 'none';
+            document.getElementById('weeklyScheduleContent').style.display = 'block';
+            document.getElementById('weeklyScheduleContent').innerHTML = `
+                <div style="padding: 40px; text-align: center; color: #ef4444;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Failed to load schedule</h3>
+                    <p>Please try again later</p>
+                </div>
+            `;
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showSkeleton();
+                setTimeout(() => {
+                    showContent();
+                }, 3000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

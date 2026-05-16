@@ -1,0 +1,82 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/public/html/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/public/html/login.html"
+    },
+    {
+      "source": "/signup",
+      "destination": "/public/html/signup.html"
+    },
+    {
+      "source": "/signup/step1",
+      "destination": "/public/html/signup_step1.html"
+    },
+    {
+      "source": "/signup/step2",
+      "destination": "/public/html/signup_step2.html"
+    },
+    {
+      "source": "/signup/step2b_academic",
+      "destination": "/public/html/signup_step2b_academic.html"
+    },
+    {
+      "source": "/signup/step3",
+      "destination": "/public/html/signup_step3.html"
+    },
+    {
+      "source": "/signup/step4",
+      "destination": "/public/html/signup_step4.html"
+    },
+    {
+      "source": "/signup/step5",
+      "destination": "/public/html/signup_step5.html"
+    },
+    {
+      "source": "/onboarding",
+      "destination": "/public/html/onboarding.html"
+    },
+    {
+      "source": "/reset-password",
+      "destination": "/public/reset_password.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/portals/admin/schoolAdminDashboard.html"
+    },
+    {
+      "source": "/admin/:page",
+      "destination": "/portals/admin/:page.html"
+    },
+    {
+      "source": "/teacher",
+      "destination": "/portals/teacher/teachersPortal.html"
+    },
+    {
+      "source": "/teacher/:page",
+      "destination": "/portals/teacher/:page.html"
+    },
+    {
+      "source": "/parent",
+      "destination": "/portals/parent/parentsPortal.html"
+    },
+    {
+      "source": "/parent/:page",
+      "destination": "/portals/parent/:page.html"
+    },
+    {
+      "source": "/student",
+      "destination": "/portals/student/studentPortal.html"
+    },
+    {
+      "source": "/student/:page",
+      "destination": "/portals/student/:page.html"
+    }
+  ]
+}

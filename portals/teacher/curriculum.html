@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta charset="UTF-8">
+    
+    <title>Scheme of Work — TeachSmart</title>
+    <link rel="stylesheet" href="./teachersPortalStyles/sidebar.css?v=1.1">
+    <link rel="stylesheet" href="./teachersPortalStyles/tp-shared.css?v=1.1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../core/authGuard.js" type="module" defer></script>
+</head>
+
+<body>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar" id="mobileTopBar">
+        <span class="brand">TeachSmart</span>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Scheme of Work</h1>
+            <p>View and manage your curriculum topics by class and subject</p>
+        </div>
+
+        <!-- Curriculum Card -->
+        <div class="tp-card">
+            <div class="tp-section-header">
+                <div>
+                    <span class="tp-section-title">Curriculum Topics</span>
+                    <span id="completionText" style="font-size:13px; color:#718096; margin-left:10px;">0 of 0 topics
+                        completed</span>
+                </div>
+                <div class="tp-filters-row">
+                    <select id="classSelect" class="tp-select">
+                        <option value="">Select Class</option>
+                    </select>
+                    <select id="subjectSelect" class="tp-select">
+                        <option value="">Select Subject</option>
+                    </select>
+                    <button id="uploadBtn" class="tp-btn tp-btn-primary">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M16 12l-4-4m0 0l-4 4m4-4v12" />
+                        </svg>
+                        Upload Scheme
+                    </button>
+                </div>
+            </div>
+
+            <table class="tp-table">
+                <thead>
+                    <tr>
+                        <th>Topic Name</th>
+                        <th>Week</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="curriculumTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:32px; color:#a0aec0;">
+                            Please select a Class and Subject to view the Scheme of Work.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
+    <script type="module" src="./curriculum.js"></script>
+    <script src="./teachers_portal_sidebar.js" type="module"></script>
+    <script>
+        (function () {
+            const btn = document.getElementById('hamburgerBtn');
+            const sidebar = document.querySelector('[data-sideBar]');
+            const overlay = document.getElementById('sidebarOverlay');
+            const open = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+            const close = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+            if (btn) btn.addEventListener('click', () => sidebar.classList.contains('active') ? close() : open());
+            overlay.addEventListener('click', close);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+            window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
+        })();
+    </script>
+
+    <style>
+        /* Curriculum-specific: status badges and progress bar */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 500;
+            gap: 6px;
+        }
+
+        .status.completed {
+            color: #27ae60;
+        }
+
+        .status.pending {
+            color: #a0aec0;
+        }
+
+        .progress-bar {
+            display: inline-block;
+            width: 80px;
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #27ae60;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .curriculum-action-btn {
+            padding: 6px 14px;
+            background: transparent;
+            color: #3182ce;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .curriculum-action-btn:hover {
+            background: #ebf8ff;
+        }
+
+        .action-btn {
+            background: transparent;
+            color: #3182ce;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        /* Responsive Table for Curriculum */
+        @media (max-width: 768px) {
+            .tp-filters-row {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .tp-filters-row .tp-select,
+            .tp-filters-row .tp-btn {
+                width: 100%;
+                margin-bottom: 8px; /* add some spacing between stacked elements */
+            }
+
+            .tp-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #f5f5f5;
+                padding: 10px 0;
+                font-size: 13px;
+                text-align: right;
+            }
+
+            .tp-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--tp-text-muted);
+                font-size: 11px;
+                text-transform: uppercase;
+                flex-shrink: 0;
+                margin-right: 12px;
+                text-align: left;
+            }
+
+            .tp-table td[data-label="Topic"] {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .tp-table td[data-label="Topic"]::before {
+                margin-bottom: 8px;
+            }
+
+            .tp-table td[data-label="Progress"] {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+
+            .tp-table td[data-label="Progress"]::before {
+                align-self: flex-start;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</body>
+
+</html>

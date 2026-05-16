@@ -1,0 +1,207 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+  }
+  body{
+    background-color: #F9FAFB;
+  }
+/* Side bar Styles */
+/* Header/Welcome message styles */
+.sidebar-container{
+    position: fixed;
+    display: none;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    /* min-height: 100vh; */
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+}
+.sidebar{
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    padding: 20px;
+    right: 0;
+    top: 0;
+    transform: translateX(100vw);
+    /* transition: all 5s ease-in-out; */
+}
+.show{
+    display: flex;
+}
+.display{
+    transform: translate(0);
+}
+.sidebar > header{
+    height: 7%;
+    width: 100%;
+    font-size: 1.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+.sidebar > header .sideBarClsoeIcon, .wrapper > header  .sideBarOpenIcon{
+    cursor: pointer;
+}
+.sidebar > .content{
+    height: 93%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    /* align-items: center; */
+}
+.sidebar > .content > ul > .item{
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 25px;
+    border-radius: 4px;
+}
+.sidebar > .content > ul > .item > li{
+    list-style: none;
+}
+.sidebar > .content > ul > .item > li > a{
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #000;
+}
+.sidebar > .content > ul > .item:hover{
+    background-color: #ccc;
+}
+.sidebar > .content > .profileSettings{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sidebar > .content > .profileSettings > .userSettings{
+    width: 100%;
+    height: 50px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: #ccc;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 4px;
+}
+.sidebar > .content > .profileSettings > .userSettings > a{
+    text-decoration: none;
+    color: #000;
+}
+.sidebar > .content > .profileSettings > .logout > button{
+    width: 100%;
+    height: 50px;
+    margin-bottom: 20px;
+    border: none;
+    outline: none;
+    background-color: #ff0000;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 1.5rem;
+    text-align: start;
+    padding: 20px;
+}
+
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding: 2rem 1.5rem;
+  }
+/* Header/ welcome Message */
+.wrapper > header{
+    flex-direction: row;
+    padding: 1rem 0;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.5px;
+    justify-content: space-between;
+}
+
+header > .welcomeMsg{
+    line-height: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+header > .welcomeMsg > h2{
+    font-size: 1.5rem;
+    color: #111827;
+    font-weight: 600;
+}
+header > .welcomeMsg > p{
+    font-size: 1.1rem;
+    color: #6B7280;
+    font-weight: 400;
+}
+header .profilePic{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+header .profilePic > .icon{
+    margin: 8px;
+    font-size: 2rem;
+}
+header .profilePic > .user{
+    width: 40px;
+    height: 40px;
+    background: #ff0000;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 800px){
+    /* .wrapper > header > .sideBarOpenIcon {
+        display: flex;
+    } */
+    
+    /* 
+     */
+    .wrapper > header{
+      /* flex-direction: column; */
+      align-items: flex-start;
+      gap: 8px;
+      height: auto;
+    }
+    .wrapper > header > .welcomeMsg h2 {
+        font-size: 1.4rem;
+        line-height: 1.8rem;
+    }
+    
+    .wrapper > header > .welcomeMsg p {
+        font-size: 1rem;
+    }
+}
+
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+
+

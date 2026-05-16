@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+
+    <title>Promotions - EduHubAdmin</title>
+    <link rel="stylesheet" href="./schoolAdminStyles/promotions.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+</head>
+
+<body>
+    <div class="sidebar" data-sideBar></div>
+
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Promotions</h1>
+                    <p class="page-subtitle">Move students between classes or graduate a cohort</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <i class="fas fa-info-circle"></i>
+            <span>Select a <strong>Source Class</strong> and a <strong>Target Class</strong> (or select <em>Graduate /
+                    Alumni</em>), preview the affected students, then click <strong>Execute Promotion</strong>.</span>
+        </div>
+
+        <!-- Promotion Builder -->
+        <div class="promotion-grid">
+
+            <!-- Source Column -->
+            <div class="promo-card">
+                <div class="promo-card-icon source-icon"><i class="fas fa-door-open"></i></div>
+                <h3>Source Class</h3>
+                <p class="promo-card-subtitle">Students will be moved <em>from</em> here</p>
+                <select id="sourceClassSelect" class="promo-select">
+                    <option value="">Loading classes...</option>
+                </select>
+                <div id="sourcePreview" class="promo-preview" style="display:none;">
+                    <i class="fas fa-users"></i>
+                    <span id="sourceCountText">0 students</span>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="promo-arrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+
+            <!-- Target Column -->
+            <div class="promo-card">
+                <div class="promo-card-icon target-icon"><i class="fas fa-door-closed"></i></div>
+                <h3>Target Class</h3>
+                <p class="promo-card-subtitle">Students will be moved <em>to</em> here</p>
+                <select id="targetClassSelect" class="promo-select">
+                    <option value="">Select source first...</option>
+                </select>
+                <div id="capacityWarning" class="capacity-warning" style="display:none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span id="capacityText"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Confirmation & Execute -->
+        <div class="execute-section">
+            <div id="promotionSummary" class="promotion-summary" style="display:none;">
+                <i class="fas fa-arrow-right-arrow-left"></i>
+                <span id="summaryText"></span>
+            </div>
+            <button id="executeBtn" class="btn-execute" disabled>
+                <i class="fas fa-bolt"></i>
+                Execute Promotion
+            </button>
+        </div>
+
+        <!-- Result Message -->
+        <div id="resultMessage" class="result-message" style="display:none;"></div>
+
+    </div>
+
+    <script type="module" src="./promotions.js"></script>
+
+</body>
+
+</html>

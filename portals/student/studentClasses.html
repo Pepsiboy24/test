@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+    <meta charset="UTF-8">
+
+    <title>Classes - EduHub Student Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css?v=1.1">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentClasses.css?v=1.1">
+    <script type="module" src="./student_sidebar.js" defer></script>
+    <script type="module" src="../../assets/js-shared/ui-engine.js"></script>
+    <!-- Auth Guard: must load before page content renders -->
+    <script type="module" src="../../core/authGuard.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Dynamic Sidebar Anchor -->
+        <div id="sidebarAnchor"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="welcome-section">
+                    <h1>My Classes</h1>
+                    <p>Manage your classes, assignments, and projects</p>
+                </div>
+                <div class="header-actions">
+                    <button class="notification-btn" aria-label="Notifications">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="profile-btn" id="profileInitial">S</button>
+                    <button class="nav-btn" data-nav-display aria-label="Toggle menu">
+                        <i class="fa fa-bars" data-ie></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ── My Subjects (LIVE) ───────────────────────────────── -->
+            <section class="section" id="subjectsSection">
+                <div class="section-header">
+                    <h2 class="section-title">My Subjects</h2>
+                    <span id="subjectsCount" style="font-size:13px;color:#64748b;"></span>
+                </div>
+
+                <!-- Loading skeleton -->
+                <div id="subjectsLoading" class="subjects-grid">
+                    <div class="subject-card skeleton"></div>
+                    <div class="subject-card skeleton"></div>
+                    <div class="subject-card skeleton"></div>
+                </div>
+
+                <!-- Live subject cards injected here -->
+                <div id="subjectsGrid" class="subjects-grid" style="display:none;"></div>
+
+                <!-- Empty state -->
+                <div id="subjectsEmpty" style="display:none;text-align:center;padding:48px 24px;">
+                    <div style="font-size:48px;margin-bottom:16px;">📚</div>
+                    <h3 style="color:#1e293b;margin-bottom:8px;">No classes assigned yet</h3>
+                    <p style="color:#64748b;max-width:380px;margin:0 auto;">You haven't been assigned to any classes
+                        yet. Please contact your administrator to get enrolled.</p>
+                </div>
+            </section>
+
+            <!-- Weekly Timetable -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Today's Schedule</h2>
+                    <button id="viewFullScheduleBtn" class="view-all-btn">View Full Schedule</button>
+                </div>
+                <div class="timetable-grid" id="timetableGrid" style="display:block;">
+                    <!-- Live timetable entries injected here -->
+                    <div class="empty-notice" style="grid-column: 1 / -1;">Loading your schedule...</div>
+                </div>
+            </section>
+
+            <!-- Full Timetable Modal -->
+            <div id="timetableModal" class="timetable-modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="modal-close" id="closeModalBtn">&times;</span>
+                    <h2 style="margin-top:0; margin-bottom:16px; font-size:20px; color:#1e293b;">Full Weekly Timetable
+                    </h2>
+                    <div id="fullTimetableGrid" class="full-timetable-grid">
+                        <div class="empty-notice" style="grid-column: 1 / -1;">Loading your schedule...</div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    
+    <!-- Sidebar toggle (plain JS, no module needed) -->
+    <!-- <script>
+        function initSidebarToggle() {
+            const navOpen = document.querySelector('[data-nav-display]');
+            const nav = document.querySelector('[data-nav]');
+            const icon = document.querySelector('[data-ie]');
+            
+            if (!navOpen || !nav || !icon) {
+                // Sidebar not yet injected, try again in 100ms
+                setTimeout(initSidebarToggle, 100);
+                return;
+            }
+            
+            navOpen.addEventListener('click', () => {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+                nav.classList.toggle('show');
+            });
+        }
+        
+        // Initialize sidebar toggle
+        initSidebarToggle();
+    </script> -->
+
+    <!-- ── Live Classes Integration ────────────────────────────────────── -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const SUPABASE_URL = 'https://dzotwozhcxzkxtunmqth.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6b3R3b3poY3h6a3h0dW5tcXRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODk5NzAsImV4cCI6MjA3MDY2NTk3MH0.KJfkrRq46c_Fo7ujkmvcue4jQAzIaSDfO3bU7YqMZdE';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ── Subject → colour + icon theme map ──────────────────────────────────
+        // Matched by keyword (case‑insensitive substring). Falls back to default.
+        const SUBJECT_THEMES = [
+            { keywords: ['math'], color: '#3b82f6', bg: '#eff6ff', icon: 'fa-square-root-variable' },
+            { keywords: ['science', 'biology'], color: '#22c55e', bg: '#f0fdf4', icon: 'fa-flask' },
+            { keywords: ['chemistry'], color: '#a855f7', bg: '#faf5ff', icon: 'fa-atom' },
+            { keywords: ['physics'], color: '#f97316', bg: '#fff7ed', icon: 'fa-bolt' },
+            { keywords: ['english', 'literature'], color: '#ec4899', bg: '#fdf2f8', icon: 'fa-book-open' },
+            { keywords: ['history'], color: '#854d0e', bg: '#fefce8', icon: 'fa-landmark' },
+            { keywords: ['geography'], color: '#0d9488', bg: '#f0fdfa', icon: 'fa-earth-africa' },
+            { keywords: ['ict', 'computer', 'tech'], color: '#6366f1', bg: '#eef2ff', icon: 'fa-computer' },
+            { keywords: ['art', 'creative'], color: '#f59e0b', bg: '#fffbeb', icon: 'fa-palette' },
+            { keywords: ['music'], color: '#14b8a6', bg: '#f0fdfa', icon: 'fa-music' },
+            { keywords: ['sport', 'physical', 'pe'], color: '#ef4444', bg: '#fef2f2', icon: 'fa-person-running' },
+        ];
+        const DEFAULT_THEME = { color: '#64748b', bg: '#f8fafc', icon: 'fa-book' };
+
+        function getTheme(subjectName = '') {
+            const lower = subjectName.toLowerCase();
+            return SUBJECT_THEMES.find(t => t.keywords.some(k => lower.includes(k))) || DEFAULT_THEME;
+        }
+
+        // ── Card renderer ───────────────────────────────────────────────────────
+        function buildSubjectCard(subject, teacher) {
+            const theme = getTheme(subject.subject_name);
+            const teacherLine = teacher
+                ? `${teacher.first_name} ${teacher.last_name}`
+                : 'Teacher TBA';
+
+            return `
+                <div class="subject-card" style="--card-color:${theme.color};--card-bg:${theme.bg};">
+                    <div class="subject-card-icon" style="background:${theme.bg};color:${theme.color};">
+                        <i class="fas ${theme.icon}"></i>
+                    </div>
+                    <div class="subject-card-body">
+                        <h3 class="subject-card-name">${subject.subject_name}</h3>
+                        <p class="subject-card-teacher"><i class="fas fa-user-tie"></i> ${teacherLine}</p>
+                    </div>
+                    <div class="subject-card-accent" style="background:${theme.color};"></div>
+                </div>`;
+        }
+
+        // ── Main data loader ────────────────────────────────────────────────────
+        async function loadLiveClasses() {
+            try {
+                // STEP 1 ── Auth handshake: confirm session + student identity
+                const { data: { user }, error: authErr } = await supabase.auth.getUser();
+                if (authErr || !user) return; // auth_guard_student.js already handles redirect
+
+                // STEP 2 ── Fetch student's class_id from Students table
+                const { data: student, error: sErr } = await supabase
+                    .from('Students')
+                    .select('class_id, full_name')   // schema: full_name, not first_name
+                    .eq('student_id', user.id)
+                    .maybeSingle();
+
+                if (sErr || !student) {
+                    console.error('[Classes] Student fetch failed:', sErr?.message);
+                    showEmpty();
+                    return;
+                }
+
+                // Personalise header with student's full name
+                if (student.full_name) {
+                    const h1 = document.querySelector('.welcome-section h1');
+                    if (h1) h1.textContent = `${student.full_name}'s Classes`;
+                }
+
+                const classId = student.class_id;
+                console.log('[DEBUG] Student Class ID:', classId);
+
+                // MISSION: The Independent Timetable Circuit (The Breakaway)
+                // Load timetable ASAP, independently of subjects grid success
+                if (classId) loadTimetable(classId);
+
+                if (!classId) { showEmpty(); return; }
+
+                // STEP 3 ── Fetch Class_Subjects for this class (subject_ids + teacher_ids)
+                const { data: csRows, error: csErr } = await supabase
+                    .from('Class_Subjects')
+                    .select('subject_id, teacher_id')
+                    .eq('class_id', classId);
+
+                if (csErr) { console.error('[Classes] Class_Subjects:', csErr.message); showEmpty(); return; }
+                if (!csRows?.length) { showEmpty(); return; }
+
+                const subjectIds = csRows.map(r => r.subject_id).filter(Boolean);
+                const teacherIds = [...new Set(csRows.map(r => r.teacher_id).filter(Boolean))];
+
+                // STEP 4 ── Fetch Subjects + Teachers in parallel
+                const [subjectsRes, teachersRes] = await Promise.all([
+                    supabase.from('Subjects').select('subject_id, subject_name').in('subject_id', subjectIds),
+                    teacherIds.length
+                        ? supabase.from('Teachers').select('teacher_id, first_name, last_name').in('teacher_id', teacherIds)
+                        : Promise.resolve({ data: [] })
+                ]);
+
+                const subjects = subjectsRes.data || [];
+                const teachers = teachersRes.data || [];
+
+                // STEP 5 ── Render cards
+                if (!subjects.length) { showEmpty(); return; }
+
+                const grid = document.getElementById('subjectsGrid');
+                grid.innerHTML = csRows.map(cs => {
+                    const subject = subjects.find(s => s.subject_id === cs.subject_id);
+                    const teacher = teachers.find(t => t.teacher_id === cs.teacher_id);
+                    if (!subject) return '';
+                    return buildSubjectCard(subject, teacher);
+                }).join('');
+
+                // Update count badge
+                const countEl = document.getElementById('subjectsCount');
+                if (countEl) countEl.textContent = `${subjects.length} subject${subjects.length !== 1 ? 's' : ''}`;
+
+                document.getElementById('subjectsLoading').style.display = 'none';
+                document.getElementById('subjectsGrid').style.display = 'grid';
+
+            } catch (err) {
+                console.error('[Classes] Unexpected error:', err);
+                showEmpty();
+            }
+        }
+
+        function showEmpty() {
+            document.getElementById('subjectsLoading').style.display = 'none';
+            document.getElementById('subjectsGrid').style.display = 'none';
+            document.getElementById('subjectsEmpty').style.display = 'block';
+        }
+
+        async function loadTimetable(classId) {
+            const grid = document.getElementById('timetableGrid');
+            if (!grid) return;
+
+            try {
+                // MISSION: The Independent Timetable Circuit (Self-Sufficient Fetcher)
+                const [configRes, entriesRes, csRes, subjectsRes, teachersRes] = await Promise.all([
+                    supabase.from('schedule_configs').select('*').eq('class_id', classId).maybeSingle(),
+                    supabase.from('timetable_entries').select('*').eq('class_id', classId),
+                    supabase.from('Class_Subjects').select('subject_id, teacher_id').eq('class_id', classId),
+                    supabase.from('Subjects').select('subject_id, subject_name'),
+                    supabase.from('Teachers').select('teacher_id, first_name, last_name')
+                ]);
+
+                if (configRes.error) throw configRes.error;
+                if (entriesRes.error) throw entriesRes.error;
+
+                const config = configRes.data;
+                const entries = entriesRes.data || [];
+                const csRows = csRes.data || [];
+                const subjects = subjectsRes.data || [];
+                const teachers = teachersRes.data || [];
+
+                console.log('[DEBUG] Timetable Data:', { classId, entriesCount: entries.length, subjectsCount: subjects.length });
+
+                if (!config) {
+                    grid.innerHTML = '<div class="empty-notice">You haven\'t been assigned to a class schedule yet. Please contact the administrator.</div>';
+                    return;
+                }
+
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                const periods = config.periods_per_day || 8;
+                const startTime = config.start_time || '08:00';
+                const duration = config.period_duration || 40;
+
+                const matrix = Array.from({ length: periods }, () => Array(days.length).fill(null));
+
+                entries.forEach(entry => {
+                    // MISSION: The "First-Three" Day Matcher (Admin Style)
+                    const entryDaySub = (entry.day_of_week || "").substring(0, 3).toLowerCase();
+                    const col = days.findIndex(d => d.substring(0, 3).toLowerCase() === entryDaySub);
+                    if (col === -1) return;
+
+                    const entryMins = timeToMins(entry.start_time.substring(0, 5));
+                    const schoolStartMins = timeToMins(startTime);
+
+                    // MISSION: The "Time Window" Anchor (Instead of division)
+                    let row = -1;
+                    for (let p = 0; p < periods; p++) {
+                        const slotStart = schoolStartMins + (p * duration);
+                        const slotEnd = slotStart + duration;
+                        // Matches if class starts within the slot window
+                        if (entryMins >= slotStart && entryMins < slotEnd) {
+                            row = p;
+                            break;
+                        }
+                    }
+
+                    if (row >= 0 && row < periods) {
+                        matrix[row][col] = entry;
+                    }
+                });
+
+                const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+
+                // Determine which day to show in Main View
+                const todayPrefix = today.substring(0, 3).toLowerCase();
+                let todayColIndex = days.findIndex(d => d.substring(0, 3).toLowerCase() === todayPrefix);
+                if (todayColIndex === -1) todayColIndex = 0; // Fallback to Monday if weekend
+                const mainViewDay = days[todayColIndex];
+
+                let mainGridHtml = `
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <h3 style="margin:0; font-size:16px; color:#3b82f6;">${mainViewDay}</h3>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">
+                `;
+
+                let fullGridHtml = '';
+
+                days.forEach((day, colIndex) => {
+                    const isToday = day === today;
+
+                    fullGridHtml += `
+                        <div class="day-column ${isToday ? 'current-day-column' : ''}">
+                            <h3 style="text-align:center; padding-bottom:8px; border-bottom:1px solid #e2e8f0; margin-bottom:12px;">${day}</h3>
+                    `;
+
+                    matrix.forEach((rowArr, rowIndex) => {
+                        const entry = rowArr[colIndex];
+                        const periodStartStr = addMinutes(startTime, rowIndex * duration);
+                        const periodEndStr = addMinutes(periodStartStr, duration);
+
+                        let subjectName = '';
+                        let teacherName = '';
+
+                        if (entry) {
+                            const subject = subjects.find(s => s.subject_id === entry.subject_id);
+
+                            // MISSION: The "Ghost Data" Reveal
+                            subjectName = subject
+                                ? subject.subject_name
+                                : (entry.subject_id ? `Subject TBA (${entry.subject_id.substring(0, 5)})` : 'Subject TBA');
+
+                            const csMapping = csRows.find(cs => cs.subject_id === entry.subject_id);
+                            if (csMapping) {
+                                const teacher = teachers.find(t => t.teacher_id === csMapping.teacher_id);
+                                teacherName = teacher ? `${teacher.first_name} ${teacher.last_name}` : 'Assigned';
+                            } else {
+                                teacherName = 'Assigned';
+                            }
+                        }
+
+                        // Full Modal View cell
+                        const theme = entry ? getTheme(subjectName) : null;
+
+                        fullGridHtml += `
+                            <div class="class-slot ${entry ? 'has-entry' : 'is-empty'}" style="${entry ? `border-left-color: ${theme.color};` : ''}">
+                                <div class="time">${formatTime(periodStartStr)} - ${formatTime(periodEndStr)}</div>
+                                <div class="subject" title="${entry ? (entry.subject_id || '') : ''}">
+                                    ${entry ? subjectName : '<span style="color:#cbd5e1;font-weight:400;font-size:12px;">Break / Flex Time</span>'}
+                                </div>
+                                <div class="teacher">${entry ? teacherName : ''}</div>
+                            </div>
+                        `;
+
+                        // Main View Today's Cards
+                        if (colIndex === todayColIndex) {
+                            if (entry) {
+                                mainGridHtml += `
+                                    <div class="subject-card" style="--card-color:${theme.color};--card-bg:${theme.bg}; border-left: 4px solid ${theme.color};">
+                                        <div class="subject-card-icon" style="background:${theme.bg};color:${theme.color};">
+                                            <i class="fas ${theme.icon}"></i>
+                                        </div>
+                                        <div class="subject-card-body">
+                                            <div style="font-size: 11px; color: #64748b; margin-bottom: 4px; display:flex; gap:8px;">
+                                                <span><i class="far fa-clock"></i> ${formatTime(periodStartStr)} - ${formatTime(periodEndStr)}</span>
+                                                ${entry.room ? `<span><i class="fas fa-door-open"></i> Rm ${entry.room}</span>` : ''}
+                                            </div>
+                                            <h3 class="subject-card-name">${subjectName}</h3>
+                                            <p class="subject-card-teacher"><i class="fas fa-user-tie"></i> ${teacherName}</p>
+                                        </div>
+                                    </div>
+                                `;
+                            } else {
+                                mainGridHtml += `
+                                    <div class="subject-card is-empty" style="background:#f8fafc; border: 1px dashed #e2e8f0; display:flex; align-items:center; justify-content:center; padding:16px;">
+                                        <div style="text-align:center;">
+                                            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">
+                                                <i class="far fa-clock"></i> ${formatTime(periodStartStr)} - ${formatTime(periodEndStr)}
+                                            </div>
+                                            <div style="color:#94a3b8;font-weight:500;font-size:14px;">Break / Flex Time</div>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        }
+                    });
+
+                    fullGridHtml += `</div>`;
+                });
+
+                mainGridHtml += `</div></div>`;
+
+                grid.innerHTML = mainGridHtml;
+
+                const fullGrid = document.getElementById('fullTimetableGrid');
+                if (fullGrid) fullGrid.innerHTML = fullGridHtml;
+
+            } catch (err) {
+                console.error('[Timetable] Matrix Error:', err.message);
+                grid.innerHTML = `<div class="error-notice">Failed to generate matrix: ${err.message}</div>`;
+            }
+        }
+
+        function timeToMins(t) {
+            const [h, m] = t.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function addMinutes(time, mins) {
+            const [h, m] = time.split(':').map(Number);
+            const total = h * 60 + m + mins;
+            const nh = Math.floor(total / 60) % 24;
+            const nm = total % 60;
+            return `${String(nh).padStart(2, '0')}:${String(nm).padStart(2, '0')}`;
+        }
+
+        function formatTime(time) {
+            const [h, m] = time.split(':').map(Number);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const displayH = h % 12 || 12;
+            return `${displayH}:${String(m).padStart(2, '0')} ${ampm}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLiveClasses();
+
+            const viewFullBtn = document.getElementById('viewFullScheduleBtn');
+            const toggleModal = document.getElementById('timetableModal');
+            const closeBtn = document.getElementById('closeModalBtn');
+
+            if (viewFullBtn && toggleModal) {
+                viewFullBtn.addEventListener('click', () => {
+                    toggleModal.style.display = 'flex';
+                });
+            }
+
+            if (closeBtn && toggleModal) {
+                closeBtn.addEventListener('click', () => {
+                    toggleModal.style.display = 'none';
+                });
+            }
+
+            window.addEventListener('click', (event) => {
+                if (event.target === toggleModal) {
+                    toggleModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    <!-- Subject card styles (scoped here to avoid touching shared CSS) -->
+    <style>
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            padding: 4px 0 8px;
+        }
+
+        .subject-card {
+            position: relative;
+            border-radius: 16px;
+            background: var(--card-bg, #f8fafc);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15), 0 4px 8px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subject-card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .subject-card-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .subject-card-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .subject-card-teacher {
+            font-size: 12px;
+            color: #64748b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .subject-card-accent {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        /* Skeleton shimmer */
+        .subject-card.skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            min-height: 80px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0
+            }
+
+            100% {
+                background-position: -200% 0
+            }
+        }
+
+        /* Timetable Modal Styles */
+        .timetable-modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 24px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-top: -10px;
+            margin-right: -10px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+            background: #f1f5f9;
+        }
+
+        .full-timetable-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .current-day-column {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 12px;
+            padding: 8px;
+        }
+
+        .current-day-column h3 {
+            color: #3b82f6;
+        }
+
+        .class-slot {
+            min-height: 85px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 12px;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        .class-slot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .class-slot.has-entry {
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            border-left-width: 4px;
+        }
+
+        .class-slot.is-empty {
+            border: 1px dashed #e2e8f0;
+            background: #f8fafc;
+        }
+
+        .class-slot .time {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .class-slot .subject {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            line-height: 1.2;
+        }
+
+        .class-slot .teacher {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .empty-notice,
+        .error-notice {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px dashed #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .full-timetable-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+
+</html>

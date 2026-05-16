@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+
+    <title>Parent Portal - Child's Result</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    <link rel="stylesheet" href="./parentsPortalStyles/childsResult.css?v=1.1">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar" data-sideBar>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="welcome-section">
+                    <h1>Academic Performance</h1>
+                    <p>Track your child's progress and achievements</p>
+                </div>
+                <div class="header-actions">
+
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card average">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-title">Average Grade</div>
+                    </div>
+                    <div class="stat-value" id="averageGrade">-</div>
+                    <div class="stat-subtitle">Overall performance</div>
+                </div>
+
+                <div class="stat-card position">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-title">Class Position</div>
+                    </div>
+                    <div class="stat-value" id="classPosition">-</div>
+                    <div class="stat-subtitle" id="classSizeSubtitle">-</div>
+                </div>
+
+                <div class="stat-card attendance">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-title">Days Present</div>
+                    </div>
+                    <div class="stat-value" id="daysPresent">-</div>
+                    <div class="stat-subtitle">This session</div>
+                </div>
+
+                <div class="stat-card absent">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+                        <div class="stat-title">Days Absent</div>
+                    </div>
+                    <div class="stat-value" id="daysAbsent">-</div>
+                    <div class="stat-subtitle">This semester</div>
+                </div>
+            </div>
+
+            <!-- Grades Table -->
+            <div class="grades-section" id="subjectGradesSection">
+                <div class="section-header">
+                    <h2>Subject Grades</h2>
+                </div>
+
+                <table class="grades-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Term</th>
+                            <th>Score (100%)</th>
+                            <th>Grade</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjectGradesTableBody">
+                        <!-- Rows will be populated dynamically -->
+                        <tr>
+                            <td colspan="5" style="text-align:center;">Loading grades...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="./parents_portal_sidebar.js"></script>
+    <script type="module" src="./childResult.js"></script>
+</body>
+
+</html>

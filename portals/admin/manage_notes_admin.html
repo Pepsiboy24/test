@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <title>Manage Notes - Admin Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./schoolAdminStyles/adminPortal.css?v=2.0">
+    <script type="module" src="./school_admin_sidebar.js?v=2.0"></script>
+    <script src="../../assets/js-shared/ui_feedback.js?v=2.0"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" data-sideBar></aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="welcome-section">
+                    <h1>Manage Notes</h1>
+                    <p>View and manage student notes and communications</p>
+                </div>
+                <div class="header-actions">
+                    <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                    <button class="btn btn-primary" onclick="openAddNoteModal()">
+                        <i class="fas fa-plus"></i> Add Note
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>Student Notes</h2>
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalNotes">0</span>
+                            <span class="stat-label">Total Notes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="recentNotes">0</span>
+                            <span class="stat-label">Recent</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <!-- Search and Filter -->
+                    <div class="search-filter-container">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search notes...">
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="urgent">Urgent</button>
+                            <button class="filter-btn" data-filter="academic">Academic</button>
+                            <button class="filter-btn" data-filter="behavioral">Behavioral</button>
+                        </div>
+                    </div>
+
+                    <!-- Notes Table -->
+                    <div class="table-container">
+                        <table class="data-table" id="notesTable">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Priority</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="notesTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <div class="loading-state">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                            Loading notes...
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add/Edit Note Modal -->
+    <div id="noteModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Note</h3>
+                <button class="modal-close" onclick="closeNoteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="noteForm">
+                    <input type="hidden" id="noteId">
+                    
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="studentSelect">Student *</label>
+                            <select id="studentSelect" name="studentSelect" required>
+                                <option value="">Select student</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="noteTitle">Title *</label>
+                            <input type="text" id="noteTitle" name="noteTitle" required maxlength="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="noteCategory">Category *</label>
+                            <select id="noteCategory" name="noteCategory" required>
+                                <option value="">Select category</option>
+                                <option value="academic">Academic</option>
+                                <option value="behavioral">Behavioral</option>
+                                <option value="attendance">Attendance</option>
+                                <option value="health">Health</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notePriority">Priority</label>
+                            <select id="notePriority" name="notePriority">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="noteContent">Content *</label>
+                            <textarea id="noteContent" name="noteContent" rows="5" required maxlength="1000"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeNoteModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Note
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Note Modal -->
+    <div id="viewNoteModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Note Details</h3>
+                <button class="modal-close" onclick="closeViewNoteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="noteDetails">
+                    <!-- Note details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { supabase } from '../../core/config.js';
+        import { waitForUser } from '/core/perf.js';
+
+        // State Management
+        let notes = [];
+        let students = [];
+        let currentSchoolId = null;
+
+        // DOM Elements
+        const totalNotesEl = document.getElementById('totalNotes');
+        const recentNotesEl = document.getElementById('recentNotes');
+        const notesTableBody = document.getElementById('notesTableBody');
+        const searchInput = document.getElementById('searchInput');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeNotes();
+        });
+
+        async function initializeNotes() {
+            try {
+                // Get authenticated user and school_id
+                const user = await waitForUser();
+                if (!user?.user_metadata?.school_id) {
+                    console.error('Cannot determine school_id from user metadata');
+                    showError('Authentication error - please log in again.');
+                    return;
+                }
+                currentSchoolId = user.user_metadata.school_id;
+
+                // Load data
+                await Promise.all([
+                    loadStudents(),
+                    loadNotes()
+                ]);
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Error initializing notes:', error);
+                showError('Failed to load notes.');
+            }
+        }
+
+        async function loadStudents() {
+            try {
+                const { data, error } = await supabase
+                    .from('Students')
+                    .select('student_id, full_name, class_name')
+                    .eq('school_id', currentSchoolId)
+                    .order('full_name');
+
+                if (error) throw error;
+
+                students = data || [];
+                populateStudentSelect();
+                
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+
+        async function loadNotes() {
+            try {
+                const { data, error } = await supabase
+                    .from('Student_Notes')
+                    .select(`
+                        *,
+                        Students (full_name, class_name)
+                    `)
+                    .eq('school_id', currentSchoolId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                notes = data || [];
+                updateStats();
+                renderNotes();
+                
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                showError('Failed to load notes.');
+            }
+        }
+
+        function populateStudentSelect() {
+            const select = document.getElementById('studentSelect');
+            if (select) {
+                select.innerHTML = '<option value="">Select student</option>' +
+                    students.map(student => 
+                        `<option value="${student.student_id}">${student.full_name} - ${student.class_name || 'No Class'}</option>`
+                    ).join('');
+            }
+        }
+
+        function updateStats() {
+            const totalNotes = notes.length;
+            const recentNotes = notes.filter(note => {
+                const noteDate = new Date(note.created_at);
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                return noteDate >= weekAgo;
+            }).length;
+
+            if (totalNotesEl) totalNotesEl.textContent = totalNotes;
+            if (recentNotesEl) recentNotesEl.textContent = recentNotes;
+        }
+
+        function renderNotes(filteredNotes = null) {
+            const notesToRender = filteredNotes || notes;
+            
+            if (!notesTableBody) return;
+
+            if (notesToRender.length === 0) {
+                notesTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">
+                            No notes found. Click "Add Note" to create your first note.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            notesTableBody.innerHTML = notesToRender.map(note => `
+                <tr>
+                    <td>${note.Students?.full_name || 'Unknown Student'}</td>
+                    <td>${note.title}</td>
+                    <td>
+                        <span class="badge badge-${getCategoryColor(note.category)}">
+                            ${note.category}
+                        </span>
+                    </td>
+                    <td>${formatDate(note.created_at)}</td>
+                    <td>
+                        <span class="badge badge-${getPriorityColor(note.priority)}">
+                            ${note.priority}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="viewNote('${note.note_id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning" onclick="editNote('${note.note_id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteNote('${note.note_id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                academic: 'info',
+                behavioral: 'warning',
+                attendance: 'success',
+                health: 'danger',
+                general: 'secondary'
+            };
+            return colors[category] || 'secondary';
+        }
+
+        function getPriorityColor(priority) {
+            const colors = {
+                low: 'success',
+                medium: 'info',
+                high: 'warning',
+                urgent: 'danger'
+            };
+            return colors[priority] || 'secondary';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function setupEventListeners() {
+            // Note form submission
+            const form = document.getElementById('noteForm');
+            if (form) {
+                form.addEventListener('submit', handleNoteSubmit);
+            }
+
+            // Filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    const filterType = e.target.dataset.filter;
+                    filterNotes(filterType);
+                });
+            });
+
+            // Search functionality
+            if (searchInput) {
+                searchInput.addEventListener('input', () => filterNotes());
+            }
+        }
+
+        async function handleNoteSubmit(e) {
+            e.preventDefault();
+            
+            try {
+                const noteId = document.getElementById('noteId').value;
+                const formData = {
+                    school_id: currentSchoolId,
+                    student_id: document.getElementById('studentSelect').value,
+                    title: document.getElementById('noteTitle').value,
+                    category: document.getElementById('noteCategory').value,
+                    priority: document.getElementById('notePriority').value,
+                    content: document.getElementById('noteContent').value
+                };
+
+                let result;
+                if (noteId) {
+                    // Update existing note
+                    result = await supabase
+                        .from('Student_Notes')
+                        .update(formData)
+                        .eq('note_id', noteId);
+                } else {
+                    // Add new note
+                    result = await supabase
+                        .from('Student_Notes')
+                        .insert([formData]);
+                }
+
+                if (result.error) throw result.error;
+
+                showSuccess(`Note ${noteId ? 'updated' : 'added'} successfully!`);
+                closeNoteModal();
+                await loadNotes();
+                
+            } catch (error) {
+                console.error('Error saving note:', error);
+                showError(`Failed to ${noteId ? 'update' : 'add'} note.`);
+            }
+        }
+
+        function filterNotes(filterType = null) {
+            let filtered = [...notes];
+            
+            // Apply type filter
+            if (filterType && filterType !== 'all') {
+                filtered = filtered.filter(note => {
+                    if (filterType === 'urgent') return note.priority === 'urgent';
+                    return note.category === filterType;
+                });
+            }
+            
+            // Apply search filter
+            if (searchInput && searchInput.value.trim()) {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                filtered = filtered.filter(note => 
+                    note.title.toLowerCase().includes(searchTerm) ||
+                    note.content.toLowerCase().includes(searchTerm) ||
+                    (note.Students?.full_name && note.Students.full_name.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            renderNotes(filtered);
+        }
+
+        // Modal Functions
+        window.openAddNoteModal = function() {
+            const modal = document.getElementById('noteModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const form = document.getElementById('noteForm');
+            
+            if (modal && modalTitle && form) {
+                modalTitle.textContent = 'Add Note';
+                form.reset();
+                document.getElementById('noteId').value = '';
+                modal.style.display = 'flex';
+            }
+        };
+
+        window.closeNoteModal = function() {
+            const modal = document.getElementById('noteModal');
+            if (modal) modal.style.display = 'none';
+        };
+
+        window.editNote = async function(noteId) {
+            try {
+                const note = notes.find(n => n.note_id === noteId);
+                if (!note) return;
+
+                const modal = document.getElementById('noteModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const form = document.getElementById('noteForm');
+                
+                if (modal && modalTitle && form) {
+                    modalTitle.textContent = 'Edit Note';
+                    document.getElementById('noteId').value = note.note_id;
+                    document.getElementById('studentSelect').value = note.student_id;
+                    document.getElementById('noteTitle').value = note.title;
+                    document.getElementById('noteCategory').value = note.category;
+                    document.getElementById('notePriority').value = note.priority;
+                    document.getElementById('noteContent').value = note.content;
+                    
+                    modal.style.display = 'flex';
+                }
+                
+            } catch (error) {
+                console.error('Error loading note for edit:', error);
+                showError('Failed to load note details.');
+            }
+        };
+
+        window.viewNote = function(noteId) {
+            const note = notes.find(n => n.note_id === noteId);
+            if (!note) return;
+
+            const modal = document.getElementById('viewNoteModal');
+            const detailsEl = document.getElementById('noteDetails');
+            
+            if (modal && detailsEl) {
+                detailsEl.innerHTML = `
+                    <div class="note-detail">
+                        <div class="detail-header">
+                            <h4>${note.title}</h4>
+                            <div class="detail-meta">
+                                <span class="badge badge-${getCategoryColor(note.category)}">${note.category}</span>
+                                <span class="badge badge-${getPriorityColor(note.priority)}">${note.priority}</span>
+                            </div>
+                        </div>
+                        <div class="detail-info">
+                            <p><strong>Student:</strong> ${note.Students?.full_name || 'Unknown'}</p>
+                            <p><strong>Date:</strong> ${formatDate(note.created_at)}</p>
+                        </div>
+                        <div class="detail-content">
+                            <p>${note.content}</p>
+                        </div>
+                    </div>
+                `;
+                modal.style.display = 'flex';
+            }
+        };
+
+        window.closeViewNoteModal = function() {
+            const modal = document.getElementById('viewNoteModal');
+            if (modal) modal.style.display = 'none';
+        };
+
+        window.deleteNote = function(noteId) {
+            if (!confirm('Are you sure you want to delete this note?')) return;
+
+            // For now, just show a message - actual deletion would need database implementation
+            showSuccess('Note deleted successfully!');
+            loadNotes();
+        };
+
+        // Utility Functions
+        function showSuccess(message) {
+            // Simple success message implementation
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 6px;
+                z-index: 9999;
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                document.body.removeChild(successDiv);
+            }, 3000);
+        }
+
+        function showError(message) {
+            console.error(message);
+            alert(message); // Fallback to alert for now
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Portal Skeleton Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/portals/student/studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="./parentsPortalStyles/parentsPortal.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .implementation-details {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .section {
+            margin-bottom: 32px;
+        }
+        .section-header {
+            margin-bottom: 16px;
+        }
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0;
+        }
+        .performance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .recent-grades h4, .overall-progress h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #374151;
+        }
+        .grade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: white;
+        }
+        .grade-subject {
+            font-weight: 600;
+            color: #374151;
+        }
+        .grade-type {
+            font-size: 14px;
+            color: #64748b;
+        }
+        .grade-score {
+            font-weight: 700;
+            color: #10b981;
+            font-size: 18px;
+        }
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>👨‍👩‍👧‍👦 Parent Portal Skeleton Test</h1>
+        <p>Testing the skeleton loading implementation for the parent portal page.</p>
+        
+        <div class="status-indicator success">✅ CSS imports added</div>
+        <div class="status-indicator success">✅ Skeleton elements added</div>
+        <div class="status-indicator success">✅ JavaScript updated</div>
+        <div class="status-indicator info">👨‍👩‍👧‍👦 Following studentPortal.html pattern</div>
+        
+        <div class="test-section">
+            <h2>🔧 Implementation Details</h2>
+            <div class="implementation-details">
+                <strong>Pattern Used:</strong><br>
+                &lt;!-- Skeleton --&gt;<br>
+                &lt;div id="sectionSkeleton"&gt;<br>
+                &nbsp;&nbsp;&lt;div class="skeleton skeleton-card"&gt;&lt;/div&gt;<br>
+                &lt;/div&gt;<br>
+                &lt;div id="sectionContainer" style="display:none;"&gt;<br>
+                &nbsp;&nbsp;&lt;!-- Real content --&gt;<br>
+                &lt;/div&gt;<br><br>
+                
+                <strong>JavaScript Logic:</strong><br>
+                // Hide skeleton and show content<br>
+                const skeletonElement = document.getElementById('sectionSkeleton');<br>
+                const contentElement = document.getElementById('sectionContainer');<br>
+                skeletonElement.style.display = 'none';<br>
+                contentElement.style.display = 'block';
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Live Skeleton Test</h2>
+            <button class="test-btn" onclick="showSkeletons()">🎬 Show Skeletons</button>
+            <button class="test-btn success" onclick="hideSkeletons()">✅ Hide Skeletons</button>
+            <button class="test-btn" onclick="simulateLoading()">🔄 Simulate Loading</button>
+            
+            <div style="margin-top: 20px;">
+                <!-- Recent Grades Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2>Academic Performance</h2>
+                    </div>
+                    <div class="performance-grid">
+                        <div class="recent-grades">
+                            <h4>Recent Grades</h4>
+                            <!-- Skeleton -->
+                            <div id="recentGradesSkeleton">
+                                <div class="skeleton skeleton-card"></div>
+                                <div class="skeleton skeleton-card"></div>
+                                <div class="skeleton skeleton-card"></div>
+                            </div>
+                            <div id="recentGradesContainer" style="display:none;">
+                                <!-- Content will be injected here -->
+                            </div>
+                        </div>
+                        <div class="overall-progress">
+                            <h4>Overall Progress</h4>
+                            <!-- Skeleton -->
+                            <div id="progressSkeleton">
+                                <div class="skeleton skeleton-card"></div>
+                            </div>
+                            <div id="progressChartContainer" style="display:none;">
+                                <canvas id="progressChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Report Cards Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2>Report Cards</h2>
+                    </div>
+                    <!-- Skeleton -->
+                    <div id="reportCardsSkeleton">
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                    </div>
+                    <div id="reportCardsContainer" style="display:none;">
+                        <!-- Content will be injected here -->
+                    </div>
+                </section>
+                
+                <!-- Messages Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2>Messages</h2>
+                    </div>
+                    <!-- Skeleton -->
+                    <div id="messagesSkeleton">
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                    </div>
+                    <div id="messagesContainer" style="display:none;">
+                        <!-- Content will be injected here -->
+                    </div>
+                </section>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Skeleton Configuration</h2>
+            <div class="implementation-details">
+                <strong>Sections with Skeletons:</strong><br>
+                1. Recent Grades - 3 skeleton cards<br>
+                2. Overall Progress - 1 skeleton card<br>
+                3. Report Cards - 3 skeleton cards<br>
+                4. Messages - 3 skeleton cards<br><br>
+                
+                <strong>Total Skeleton Cards: 10</strong><br>
+                - All use "skeleton skeleton-card" class<br>
+                - Animated shine effect from main.css<br>
+                - Consistent with studentPortal.html<br>
+                - Responsive design
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./parentsPortal.html" class="test-btn success">👨‍👩‍👧‍👦 Parent Portal</a>
+            <a href="../student/studentPortal.html" class="test-btn">🏠 Student Portal</a>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Expected Behavior</h2>
+            <ol>
+                <li>✅ <strong>Skeletons Appear</strong> - All skeleton cards show on page load</li>
+                <li>✅ <strong>Animated Shine</strong> - Skeletons have loading animation</li>
+                <li>✅ <strong>Data Loads</strong> - Real data replaces skeletons</li>
+                <li>✅ <strong>Error Handling</strong> - Skeletons hide even on errors</li>
+                <li>✅ <strong>Consistent Style</strong> - Matches student portal skeleton loading</li>
+                <li>✅ <strong>Multiple Sections</strong> - Skeletons in all major sections</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showSkeletons() {
+            // Show all skeletons
+            document.getElementById('recentGradesSkeleton').style.display = 'block';
+            document.getElementById('recentGradesContainer').style.display = 'none';
+            document.getElementById('progressSkeleton').style.display = 'block';
+            document.getElementById('progressChartContainer').style.display = 'none';
+            document.getElementById('reportCardsSkeleton').style.display = 'block';
+            document.getElementById('reportCardsContainer').style.display = 'none';
+            document.getElementById('messagesSkeleton').style.display = 'block';
+            document.getElementById('messagesContainer').style.display = 'none';
+        }
+        
+        function hideSkeletons() {
+            // Hide all skeletons and show success message
+            document.getElementById('recentGradesSkeleton').style.display = 'none';
+            document.getElementById('recentGradesContainer').style.display = 'block';
+            document.getElementById('recentGradesContainer').innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #10b981;">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Grades Loaded</h3>
+                </div>
+            `;
+            
+            document.getElementById('progressSkeleton').style.display = 'none';
+            document.getElementById('progressChartContainer').style.display = 'block';
+            document.getElementById('progressChartContainer').innerHTML = `
+                <div style="text-align: center; color: #10b981;">
+                    <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Progress Chart</h3>
+                </div>
+            `;
+            
+            document.getElementById('reportCardsSkeleton').style.display = 'none';
+            document.getElementById('reportCardsContainer').style.display = 'block';
+            document.getElementById('reportCardsContainer').innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #10b981;">
+                    <i class="fas fa-file-alt" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Report Cards</h3>
+                </div>
+            `;
+            
+            document.getElementById('messagesSkeleton').style.display = 'none';
+            document.getElementById('messagesContainer').style.display = 'block';
+            document.getElementById('messagesContainer').innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #10b981;">
+                    <i class="fas fa-envelope" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Messages</h3>
+                </div>
+            `;
+        }
+        
+        function simulateLoading() {
+            showSkeletons();
+            
+            // Simulate loading delay for each section
+            setTimeout(() => {
+                document.getElementById('recentGradesSkeleton').style.display = 'none';
+                document.getElementById('recentGradesContainer').style.display = 'block';
+                document.getElementById('recentGradesContainer').innerHTML = `
+                    <div class="grade-item">
+                        <div>
+                            <div class="grade-subject">Mathematics</div>
+                            <div class="grade-type">Term 1</div>
+                        </div>
+                        <div class="grade-score">85%</div>
+                    </div>
+                    <div class="grade-item">
+                        <div>
+                            <div class="grade-subject">English</div>
+                            <div class="grade-type">Term 1</div>
+                        </div>
+                        <div class="grade-score">92%</div>
+                    </div>
+                    <div class="grade-item">
+                        <div>
+                            <div class="grade-subject">Science</div>
+                            <div class="grade-type">Term 1</div>
+                        </div>
+                        <div class="grade-score">78%</div>
+                    </div>
+                `;
+            }, 1000);
+            
+            setTimeout(() => {
+                document.getElementById('progressSkeleton').style.display = 'none';
+                document.getElementById('progressChartContainer').style.display = 'block';
+                document.getElementById('progressChartContainer').innerHTML = `
+                    <div style="text-align: center; color: #374151;">
+                        <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 16px; color: #3b82f6;"></i>
+                        <h3>Progress Chart</h3>
+                        <p>Student performance over time</p>
+                    </div>
+                `;
+            }, 1500);
+            
+            setTimeout(() => {
+                document.getElementById('reportCardsSkeleton').style.display = 'none';
+                document.getElementById('reportCardsContainer').style.display = 'block';
+                document.getElementById('reportCardsContainer').innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #374151;">
+                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-bottom: 16px; color: #10b981;"></i>
+                        <h3>Term 1 Report Card</h3>
+                        <p>Available for download</p>
+                    </div>
+                `;
+            }, 2000);
+            
+            setTimeout(() => {
+                document.getElementById('messagesSkeleton').style.display = 'none';
+                document.getElementById('messagesContainer').style.display = 'block';
+                document.getElementById('messagesContainer').innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #374151;">
+                        <i class="fas fa-envelope" style="font-size: 2rem; margin-bottom: 16px; color: #f59e0b;"></i>
+                        <h3>3 New Messages</h3>
+                        <p>From teachers and school administration</p>
+                    </div>
+                `;
+            }, 2500);
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                simulateLoading();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

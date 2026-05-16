@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+    
+    <title>Curriculum Tracker - EduHubAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+    <style>
+        :root {
+            --primary: #6200ea;
+            --primary-light: #ede7f6;
+            --primary-hover: #5000c2;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            padding: 0 12px 32px 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 32px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 300px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+        }
+
+        .profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+        }
+
+        /* Teacher Cards */
+        .teachers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .teacher-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .teacher-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .teacher-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .teacher-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .teacher-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .teacher-info p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .teacher-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        /* Teacher Detail Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-gray);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* Accordion Styles */
+        .accordion {
+            margin-bottom: 16px;
+        }
+
+        .accordion-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 16px 20px;
+            background: var(--bg-light);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: #e2e8f0;
+        }
+
+        .accordion-header.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .subject-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bar {
+            width: 120px;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-gray);
+            min-width: 45px;
+        }
+
+        .accordion-body {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-body.active {
+            max-height: 500px;
+            padding: 20px;
+        }
+
+        .topic-list {
+            list-style: none;
+        }
+
+        .topic-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+
+        .topic-item.completed {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+        }
+
+        .topic-item.pending {
+            background: #fefce8;
+            border-left: 4px solid var(--warning);
+        }
+
+        .topic-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .topic-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-gray);
+        }
+
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 24px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .teachers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .teacher-stats {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .progress-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body data-parent-link="./dashboard.html">
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Curriculum Tracker</h1>
+                    <p class="page-subtitle">Monitor teacher progress and curriculum coverage</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" id="teacherSearch" placeholder="Search teachers...">
+                </div>
+                <div class="profile"></div>
+            </div>
+        </div>
+
+        <!-- Teachers Grid -->
+        <div id="teachersContainer" class="teachers-grid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading teachers...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Detail Modal -->
+    <div id="teacherModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTeacherName">Teacher Details</h2>
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be dynamically inserted -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js-shared/sideBar.js"></script>
+    <script src="../../core/config.js" type="module"></script>
+    <script src="./curriculum_tracker.js" type="module"></script>
+</body>
+</html>

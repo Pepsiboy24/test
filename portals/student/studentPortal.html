@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta charset="UTF-8">
+    <title>EduHub - Student Dashboard</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    
+    <link rel="stylesheet" href="/portals/student/studentsPortalStyles/studentPortal.css?v=1.1">
+
+    <script type="module" src="/assets/js-shared/ui-engine.js"></script>
+    
+    <script type="module" src="/core/authGuard.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Dynamic Sidebar Anchor -->
+        <div id="sidebarAnchor"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="welcome-section">
+                    <h1>Welcome back, <span id="studentName">Student</span>!</h1>
+                    <p id="newNotesMsg">Loading your dashboard…</p>
+                </div>
+                <div class="header-actions">
+                    <button class="notification-btn" aria-label="Notifications">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="profile-btn" id="profileInitial">S</button>
+                    <button class="nav-btn" data-nav-display aria-label="Toggle menu">
+                        <i class="fa fa-bars" data-ie></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon rank">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div class="stat-label">Rank</div>
+                    <div class="stat-value" id="rankValue">—</div>
+                    <div class="stat-description">In Class</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon points">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-label">Points</div>
+                    <div class="stat-value" id="pointsValue">—</div>
+                    <div class="stat-description">Total Points</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon subjects">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="stat-label">Subjects</div>
+                    <div class="stat-value" id="subjectsCount">—</div>
+                    <div class="stat-description">Enrolled</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon today">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-label">Today</div>
+                    <div class="stat-value" id="todayClasses">—</div>
+                    <div class="stat-description">Classes</div>
+                </div>
+            </div>
+
+            <!-- Two-column layout -->
+            <div class="dashboard-grid">
+                <!-- LEFT COLUMN -->
+                <div class="dashboard-col-main">
+                    <!-- Upcoming Classes Today -->
+                    <section class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Today's Classes</h2>
+                            <a href="/student/schedule" class="view-all-btn">Full Schedule</a>
+                        </div>
+                        <div class="upcoming-classes-grid" id="upcomingClassesGrid">
+                            <div class="skeleton skeleton-card"></div>
+                            <div class="skeleton skeleton-card"></div>
+                            <div class="skeleton skeleton-card"></div>
+                        </div>
+                    </section>
+
+                    <!-- My Subjects -->
+                    <section class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">My Subjects</h2>
+                            <a href="/student/studentClasses" class="view-all-btn">View All</a>
+                        </div>
+                        <!-- Skeleton -->
+                        <div id="subjectsSkeleton" class="subjects-grid">
+                            <div class="skeleton skeleton-subject"></div>
+                            <div class="skeleton skeleton-subject"></div>
+                            <div class="skeleton skeleton-subject"></div>
+                            <div class="skeleton skeleton-subject"></div>
+                        </div>
+                        <div id="subjectsGrid" class="subjects-grid" style="display:none;"></div>
+                    </section>
+
+                </div>
+
+                <!-- RIGHT COLUMN — Live Activity Feed -->
+                <div class="dashboard-col-side">
+                    <section class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Latest Updates</h2>
+                        </div>
+                        <!-- Skeleton -->
+                        <div id="activitySkeleton">
+                            <div class="skeleton skeleton-activity"></div>
+                            <div class="skeleton skeleton-activity"></div>
+                            <div class="skeleton skeleton-activity"></div>
+                            <div class="skeleton skeleton-activity"></div>
+                            <div class="skeleton skeleton-activity"></div>
+                        </div>
+                        <div id="activityFeed" style="display:none;"></div>
+                    </section>
+                </div>
+
+            </div><!-- /.dashboard-grid -->
+        </main>
+    </div>
+
+    <script type="module" src="/core/config.js"></script>
+    <script type="module" src="./student_sidebar.js"></script>
+    <script type="module" src="./studentProfileAchivement.js" defer></script>
+</body>
+
+</html>

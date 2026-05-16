@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta charset="UTF-8">
+    
+    <title>Upload Results — TeachSmart</title>
+    <script type="module" src="../../core/authGuard.js"></script>
+    <link rel="stylesheet" href="./teachersPortalStyles/sidebar.css?v=1.1">
+    <link rel="stylesheet" href="./teachersPortalStyles/tp-shared.css?v=1.1">
+</head>
+
+<body>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar" id="mobileTopBar">
+        <span class="brand">TeachSmart</span>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" data-sideBar></nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Upload Results</h1>
+            <p>Enter student scores by class, subject, and term.</p>
+        </div>
+
+        <div class="tp-card">
+            <form id="resultsForm">
+                <span class="tp-section-title" style="display:block; margin-bottom:20px;">Result Entry Details</span>
+
+                <!-- Row 1: Session, Term, Assessment, Max Score -->
+                <div class="tp-filters-row" style="margin-bottom:16px;">
+                    <select id="academicSessionSelect" class="tp-select" required>
+                        <option value="">Select Session</option>
+                        <option value="2024/2025">2024/2025</option>
+                        <option value="2025/2026">2025/2026</option>
+                        <option value="2026/2027">2026/2027</option>
+                    </select>
+
+                    <select id="termSelect" class="tp-select" required>
+                        <option value="">Select Term</option>
+                        <option value="1st Term">1st Term</option>
+                        <option value="2nd Term">2nd Term</option>
+                        <option value="3rd Term">3rd Term</option>
+                    </select>
+
+                    <select id="assessmentTypeSelect" class="tp-select" required>
+                        <option value="">Assessment Type</option>
+                        <option value="CA1">1st CA</option>
+                        <option value="CA2">2nd CA</option>
+                        <option value="Exam">Exam</option>
+                    </select>
+
+                    <input type="number" id="maxScoreInput" class="tp-input" placeholder="Max Score (e.g. 100)" min="1"
+                        required>
+                </div>
+
+                <div class="tp-divider"></div>
+
+                <!-- Row 2: Class, Subject, Import -->
+                <div class="tp-filters-row" style="margin-bottom:16px;">
+                    <select id="classSelect" class="tp-select" required>
+                        <option value="">Loading Classes...</option>
+                    </select>
+
+                    <select id="subjectSelect" class="tp-select" required>
+                        <option value="">Select Subject</option>
+                    </select>
+
+                    <div style="flex-grow:1;"></div>
+
+                    <input type="file" id="excelUpload" accept=".xlsx,.xls,.csv" style="display:none;">
+                    <button type="button" id="importExcelBtn" class="tp-btn tp-btn-secondary">
+                        <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Import Excel
+                    </button>
+                </div>
+
+                <!-- Student Table -->
+                <table class="tp-table" id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Student ID</th>
+                            <th>Score</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding:32px; color:#a0aec0;">
+                                Please select a Class and Subject to load the student list.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tp-actions-row">
+                    <span style="color:#a0aec0; font-size:13px;">Scores are auto-saved using upsert — re-submitting will
+                        update existing entries.</span>
+                    <button type="submit" class="tp-btn tp-btn-primary">
+                        <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save Results
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="./teachers_portal_sidebar.js" type="module"></script>
+    <script type="module" src="./teacher_results.js"></script>
+    <script>
+        (function () {
+            const btn = document.getElementById('hamburgerBtn');
+            const sidebar = document.querySelector('[data-sideBar]');
+            const overlay = document.getElementById('sidebarOverlay');
+            const open = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+            const close = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+            if (btn) btn.addEventListener('click', () => sidebar.classList.contains('active') ? close() : open());
+            overlay.addEventListener('click', close);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+            window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
+
+            document.getElementById('importExcelBtn').addEventListener('click', () => {
+                document.getElementById('excelUpload').click();
+            });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Loading Verification</title>
+    <link rel="stylesheet" href="/portals/student/studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="./parentsPortalStyles/parentsPortal.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .verification-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.error { background: #f8d7da; color: #721c24; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .css-info {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <h1>🔍 CSS Loading Verification</h1>
+        <p>Checking if the skeleton animation CSS is loading correctly.</p>
+        
+        <div id="status-container">
+            <div class="status-indicator info">🔍 Checking CSS files...</div>
+        </div>
+        
+        <div class="css-info">
+            <strong>Expected CSS Files:</strong><br>
+            ✅ /portals/student/studentsPortalStyles/studentPortal.css<br>
+            ✅ /assets/css/main.css<br>
+            ✅ ./parentsPortalStyles/parentsPortal.css<br><br>
+            
+            <strong>Key Animation Classes:</strong><br>
+            ✅ .skeleton - Base skeleton with shimmer animation<br>
+            ✅ .skeleton-card - Card sizing (100px height)<br>
+            ✅ @keyframes shimmer - Animation definition<br><br>
+            
+            <strong>Animation Properties:</strong><br>
+            - background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%)<br>
+            - background-size: 600px 100%<br>
+            - animation: shimmer 1.4s infinite linear
+        </div>
+        
+        <div class="css-info">
+            <strong>Test Skeleton Elements:</strong><br>
+            <div class="skeleton skeleton-card" style="margin: 10px 0; height: 100px;"></div>
+            <div class="skeleton skeleton-card" style="margin: 10px 0; height: 100px;"></div>
+            <div class="skeleton skeleton-card" style="margin: 10px 0; height: 100px;"></div>
+        </div>
+        
+        <div class="css-info">
+            <strong>JavaScript Verification:</strong><br>
+            <div id="verification-results"></div>
+        </div>
+        
+        <div>
+            <button class="test-btn" onclick="checkCSS()">🔍 Check CSS</button>
+            <button class="test-btn success" onclick="testAnimation()">🎬 Test Animation</button>
+            <a href="./parentsPortal.html" class="test-btn success">👨‍👩‍👧‍👦 Parent Portal</a>
+            <a href="../student/studentPortal.html" class="test-btn">🏠 Student Portal</a>
+        </div>
+    </div>
+
+    <script>
+        function checkCSS() {
+            const results = document.getElementById('verification-results');
+            const statusContainer = document.getElementById('status-container');
+            
+            // Test if skeleton styles are loaded
+            const testElement = document.createElement('div');
+            testElement.className = 'skeleton skeleton-card';
+            document.body.appendChild(testElement);
+            
+            const styles = window.getComputedStyle(testElement);
+            
+            const checks = {
+                'Background Gradient': styles.background && styles.background.includes('linear-gradient'),
+                'Background Size': styles.backgroundSize === '600px 100%',
+                'Animation': styles.animation && styles.animation !== 'none',
+                'Animation Name': styles.animationName === 'shimmer',
+                'Animation Duration': styles.animationDuration === '1.4s',
+                'Height': styles.height === '100px',
+                'Border Radius': styles.borderRadius && styles.borderRadius !== '0px'
+            };
+            
+            document.body.removeChild(testElement);
+            
+            // Display results
+            let html = '<strong>CSS Verification Results:</strong><br>';
+            let allPassed = true;
+            
+            for (const [check, passed] of Object.entries(checks)) {
+                const status = passed ? '✅' : '❌';
+                html += `${status} ${check}<br>`;
+                if (!passed) allPassed = false;
+            }
+            
+            results.innerHTML = html;
+            
+            // Update status
+            if (allPassed) {
+                statusContainer.innerHTML = '<div class="status-indicator success">✅ All CSS loaded correctly - Animation should work!</div>';
+            } else {
+                statusContainer.innerHTML = '<div class="status-indicator error">❌ Some CSS not loading - Animation may not work</div>';
+            }
+        }
+        
+        function testAnimation() {
+            const skeletons = document.querySelectorAll('.skeleton');
+            skeletons.forEach((skeleton, index) => {
+                skeleton.style.opacity = '0';
+                setTimeout(() => {
+                    skeleton.style.opacity = '1';
+                }, index * 200);
+            });
+        }
+        
+        // Auto-check on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkCSS();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

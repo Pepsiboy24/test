@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeleton Animation Comparison</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/portals/student/studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="./parentsPortalStyles/parentsPortal.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .comparison-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .comparison-section {
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .comparison-section h3 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .skeleton-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .css-details {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+    </style>
+</head>
+<body>
+    <div class="comparison-container">
+        <h1>🎬 Skeleton Animation Comparison</h1>
+        <p>Comparing skeleton animations between Student Portal and Parent Portal</p>
+        
+        <div class="status-indicator success">✅ Both portals now use the same animation</div>
+        <div class="status-indicator info">🎬 Using studentPortal.css shimmer animation</div>
+        
+        <div class="css-details">
+            <strong>Animation Source:</strong><br>
+            📁 File: ../studentsPortalStyles/studentPortal.css<br>
+            🎬 Keyframe: @keyframes shimmer<br>
+            ⏱️ Duration: 1.4s infinite linear<br>
+            🎨 Colors: #e2e8f0 → #f1f5f9 → #e2e8f0<br>
+            📏 Size: 600px 100% background
+        </div>
+        
+        <div class="comparison-grid">
+            <div class="comparison-section">
+                <h3>🏠 Student Portal</h3>
+                <p>Original implementation using studentPortal.css</p>
+                <div class="skeleton-demo">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+                <div class="css-details">
+                    <strong>Classes:</strong><br>
+                    - skeleton<br>
+                    - skeleton-card<br><br>
+                    <strong>No skeleton-shine class</strong><br>
+                    Animation applied automatically
+                </div>
+            </div>
+            
+            <div class="comparison-section">
+                <h3>👨‍👩‍👧‍👦 Parent Portal</h3>
+                <p>Updated to match student portal exactly</p>
+                <div class="skeleton-demo">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+                <div class="css-details">
+                    <strong>Classes:</strong><br>
+                    - skeleton<br>
+                    - skeleton-card<br><br>
+                    <strong>No skeleton-shine class</strong><br>
+                    Animation applied automatically
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h3>🔧 Implementation Details</h3>
+            <div class="css-details">
+                <strong>Student Portal CSS (studentPortal.css):</strong><br>
+                @keyframes shimmer {<br>
+                &nbsp;&nbsp;0% { background-position: -600px 0; }<br>
+                &nbsp;&nbsp;100% { background-position: 600px 0; }<br>
+                }<br><br>
+                
+                .skeleton {<br>
+                &nbsp;&nbsp;border-radius: var(--radius-sm);<br>
+                &nbsp;&nbsp;background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);<br>
+                &nbsp;&nbsp;background-size: 600px 100%;<br>
+                &nbsp;&nbsp;animation: shimmer 1.4s infinite linear;<br>
+                }<br><br>
+                
+                .skeleton-card {<br>
+                &nbsp;&nbsp;height: 100px;<br>
+                &nbsp;&nbsp;border-radius: var(--radius-sm);<br>
+                }
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h3>🎯 Animation Characteristics</h3>
+            <div class="css-details">
+                <strong>Visual Effect:</strong><br>
+                - Light gray background (#e2e8f0)<br>
+                - Moving shimmer/light effect (#f1f5f9)<br>
+                - Smooth linear motion left to right<br>
+                - Continuous 1.4 second loop<br><br>
+                
+                <strong>Technical Details:</strong><br>
+                - Linear gradient background<br>
+                - Background position animation<br>
+                - No additional classes needed<br>
+                - Applied automatically to .skeleton elements
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h3>🔗 Test Links</h3>
+            <a href="../student/studentPortal.html" class="test-btn success">🏠 Student Portal</a>
+            <a href="./parentsPortal.html" class="test-btn success">👨‍👩‍👧‍👦 Parent Portal</a>
+            <a href="./skeleton_test.html" class="test-btn">🧪 Skeleton Test</a>
+        </div>
+        
+        <div class="comparison-section">
+            <h3>✅ Verification Checklist</h3>
+            <div class="css-details">
+                <strong>Both portals should have:</strong><br>
+                ✅ Same gray background color (#e2e8f0)<br>
+                ✅ Same shimmer/light effect (#f1f5f9)<br>
+                ✅ Same animation speed (1.4s)<br>
+                ✅ Same smooth linear motion<br>
+                ✅ Same continuous looping<br>
+                ✅ Same card height (100px)<br>
+                ✅ Same border radius<br><br>
+                
+                <strong>Classes used:</strong><br>
+                ✅ skeleton (base + animation)<br>
+                ✅ skeleton-card (sizing)<br>
+                ❌ skeleton-shine (removed)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity to show the animations are identical
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎬 Skeleton animation comparison loaded');
+            console.log('Both portals now use the same shimmer animation from studentPortal.css');
+        });
+    </script>
+</body>
+</html>

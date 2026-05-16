@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Engine Skeleton Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .status-indicator.warning { background: #fff3cd; color: #856404; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .implementation-details {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .subject-grid-container {
+            background: var(--card-background);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .subject-grid-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .subject-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--background-color);
+        }
+        .subject-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎓 CBT Engine Skeleton Test</h1>
+        <p>Testing the skeleton loading implementation for the CBT engine page.</p>
+        
+        <div class="status-indicator success">✅ Added static skeleton elements</div>
+        <div class="status-indicator success">✅ Updated JavaScript to hide/show content</div>
+        <div class="status-indicator success">✅ Added error handling for skeleton hiding</div>
+        <div class="status-indicator info">🎓 Matches studentPortal.html skeleton style</div>
+        
+        <div class="test-section">
+            <h2>🔧 Implementation Details</h2>
+            <div class="implementation-details">
+                <strong>HTML Structure:</strong><br>
+                &lt;div class="subject-grid" id="subjectGrid"&gt;<br>
+                &nbsp;&nbsp;&lt;div class="skeleton skeleton-card"&gt;&lt;/div&gt;<br>
+                &nbsp;&nbsp;&lt;div class="skeleton skeleton-card"&gt;&lt;/div&gt;<br>
+                &nbsp;&nbsp;&lt;!-- 6 more skeleton cards --&gt;<br>
+                &lt;/div&gt;<br><br>
+                
+                &lt;div class="subject-grid" id="subjectContent" style="display:none;"&gt;<br>
+                &nbsp;&nbsp;&lt;!-- Real content --&gt;<br>
+                &lt;/div&gt;<br><br>
+                
+                <strong>JavaScript Logic:</strong><br>
+                function renderLobbySubjects() {<br>
+                &nbsp;&nbsp;const grid = document.getElementById('subjectGrid');<br>
+                &nbsp;&nbsp;const content = document.getElementById('subjectContent');<br>
+                &nbsp;&nbsp;// Hide skeleton and show content<br>
+                &nbsp;&nbsp;grid.style.display = 'none';<br>
+                &nbsp;&nbsp;content.style.display = 'grid';<br>
+                &nbsp;&nbsp;content.innerHTML = '';<br>
+                }
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Live Skeleton Test</h2>
+            <button class="test-btn" onclick="showSkeleton()">🎬 Show Skeleton</button>
+            <button class="test-btn success" onclick="hideSkeleton()">✅ Hide Skeleton</button>
+            <button class="test-btn" onclick="showContent()">🎓 Show Subjects</button>
+            <button class="test-btn" onclick="showError()">❌ Show Error</button>
+            
+            <div style="margin-top: 20px;">
+                <div class="subject-grid-container">
+                    <h3 class="subject-grid-title">Choose a Subject</h3>
+                    
+                    <!-- Skeleton State -->
+                    <div class="subject-grid" id="subjectGrid">
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                    </div>
+                    
+                    <!-- Content State -->
+                    <div class="subject-grid" id="subjectContent" style="display:none;">
+                        <!-- Content will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Subject Grid Configuration</h2>
+            <div class="implementation-details">
+                <strong>Grid Properties:</strong><br>
+                display: grid;<br>
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));<br>
+                gap: 16px;<br><br>
+                
+                <strong>Skeleton Count: 8 cards</strong><br>
+                - Represents typical subject selection grid<br>
+                - Shows loading state for subject cards<br>
+                - Matches visual density of real content<br>
+                - Provides adequate loading feedback<br><br>
+                
+                <strong>Subject Card Structure:</strong><br>
+                - Icon (FontAwesome)<br>
+                - Subject name<br>
+                - Hover effects<br>
+                - Click interaction
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./cbtEngine.html" class="test-btn success">🎓 CBT Engine (With Skeleton)</a>
+            <a href="./studentPortal.html" class="test-btn">🏠 Dashboard</a>
+            <a href="./schedule.html" class="test-btn">📅 Schedule</a>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Expected Behavior</h2>
+            <ol>
+                <li>✅ <strong>Skeleton Appears</strong> - 8 skeleton cards show on page load</li>
+                <li>✅ <strong>Animated Shine</strong> - Skeletons have loading animation</li>
+                <li>✅ <strong>Subjects Load</strong> - Real subject cards replace skeletons</li>
+                <li>✅ <strong>Error Handling</strong> - Skeletons hide even on errors</li>
+                <li>✅ <strong>Consistent Style</strong> - Matches other pages' skeleton loading</li>
+                <li>✅ <strong>Interactive Cards</strong> - Subject cards remain clickable</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Mock subjects data
+        const mockSubjects = [
+            { name: "Mathematics", icon: "fa-calculator" },
+            { name: "English Language", icon: "fa-book" },
+            { name: "Physics", icon: "fa-atom" },
+            { name: "Chemistry", icon: "fa-flask" },
+            { name: "Biology", icon: "fa-dna" },
+            { name: "Economics", icon: "fa-chart-line" },
+            { name: "Government", icon: "fa-landmark" },
+            { name: "Literature", icon: "fa-feather" }
+        ];
+
+        function showSkeleton() {
+            document.getElementById('subjectGrid').style.display = 'grid';
+            document.getElementById('subjectContent').style.display = 'none';
+        }
+        
+        function hideSkeleton() {
+            document.getElementById('subjectGrid').style.display = 'none';
+            document.getElementById('subjectContent').style.display = 'grid';
+            document.getElementById('subjectContent').innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #10b981;">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Subjects Loaded Successfully</h3>
+                    <p>Skeletons hidden and content displayed</p>
+                </div>
+            `;
+        }
+        
+        function showContent() {
+            document.getElementById('subjectGrid').style.display = 'none';
+            document.getElementById('subjectContent').style.display = 'grid';
+            document.getElementById('subjectContent').innerHTML = '';
+            
+            mockSubjects.forEach(subject => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.innerHTML = `
+                    <i class="fas ${subject.icon}" style="font-size: 24px; color: var(--primary-color); width: 32px; text-align: center;"></i>
+                    <span style="font-weight: 600; font-size: 15px;">${subject.name}</span>
+                `;
+                card.addEventListener('click', () => {
+                    alert(`Clicked on ${subject.name}`);
+                });
+                document.getElementById('subjectContent').appendChild(card);
+            });
+        }
+        
+        function showError() {
+            document.getElementById('subjectGrid').style.display = 'none';
+            document.getElementById('subjectContent').style.display = 'grid';
+            document.getElementById('subjectContent').innerHTML = `
+                <div style="padding: 40px; text-align: center; color: #ef4444;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 16px;"></i>
+                    <h3>Failed to load subjects</h3>
+                    <p>Please try again later</p>
+                </div>
+            `;
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showSkeleton();
+                setTimeout(() => {
+                    showContent();
+                }, 3000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

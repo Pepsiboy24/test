@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrected Skeleton Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studyMaterials.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .status-indicator.warning { background: #fff3cd; color: #856404; }
+        .status-indicator.error { background: #f8d7da; color: #721c24; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .test-btn.danger { background: #dc3545; }
+        .test-btn.danger:hover { background: #c82333; }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .comparison-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            background: white;
+        }
+        .comparison-item h3 {
+            margin: 0 0 8px 0;
+            color: #374151;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .comparison-item p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Corrected Skeleton Implementation Test</h1>
+        <p>Testing the corrected skeleton loading that uses the existing material-category structure.</p>
+        
+        <div class="status-indicator success">✅ Fixed: Using existing material-category structure</div>
+        <status-indicator error">❌ Removed: Incorrect materials-grid implementation</div>
+        <div class="status-indicator info">📊 Skeleton loading now properly integrated</div>
+        
+        <div class="test-section">
+            <h2>🔧 Implementation Changes</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h3>✅ Correct Implementation</h3>
+                    <p>Using existing material-category structure</p>
+                    <div class="code-block">
+&lt;div class="material-category notes"&gt;
+    &lt;!-- Skeleton elements --&gt;
+    &lt;div class="category-header skeleton"&gt;
+        &lt;div class="category-title skeleton"&gt;&lt;/div&gt;
+        &lt;div class="category-count skeleton"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="materials-list skeleton"&gt;
+        &lt;div class="material-card skeleton"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="material-category notes" id="notesContent" style="display:none;"&gt;
+    &lt;!-- Real content --&gt;
+&lt;/div&gt;
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <h3>❌ Previous Implementation</h3>
+                    <p>Incorrect materials-grid structure</p>
+                    <div class="code-block">
+&lt;div class="materials-grid" id="materialsGrid"&gt;
+    &lt;div class="skeleton skeleton-card"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="materials-grid" id="materialsContent"&gt;
+    &lt;!-- Wrong structure --&gt;
+&lt;/div&gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Live Skeleton Test</h2>
+            <button class="test-btn" onclick="showSkeleton()">🎬 Show Skeleton</button>
+            <button class="test-btn success" onclick="hideSkeleton()">✅ Hide Skeleton</button>
+            <button class="test-btn danger" onclick="resetTest()">🔄 Reset</button>
+            
+            <div style="margin-top: 20px;">
+                <!-- Skeleton State -->
+                <div class="material-category notes" id="skeletonCategory">
+                    <div class="category-header skeleton">
+                        <div class="category-title skeleton"></div>
+                        <div class="category-count skeleton"></div>
+                    </div>
+                    <div class="materials-list skeleton">
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                    </div>
+                </div>
+                
+                <!-- Real Content State -->
+                <div class="material-category notes" id="notesContent" style="display:none;">
+                    <div class="category-header">
+                        <h3 class="category-title">Notes</h3>
+                        <p class="category-count"><span class="number" id="notes-number">6</span> books</p>
+                    </div>
+                    <div class="materials-list" id="notes-list">
+                        <div class="material-card">
+                            <div class="material-icon">
+                                <i class="fas fa-sticky-note"></i>
+                            </div>
+                            <div class="material-info">
+                                <h4>Mathematics Notes</h4>
+                                <p class="material-subject">Mathematics</p>
+                                <p class="material-description">Complete study notes for calculus</p>
+                                <div class="material-meta">
+                                    <span class="material-type">notes</span>
+                                    <span class="material-date">2024-01-15</span>
+                                </div>
+                                <button class="download-btn">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                        <div class="material-card">
+                            <div class="material-icon">
+                                <i class="fas fa-sticky-note"></i>
+                            </div>
+                            <div class="material-info">
+                                <h4>Physics Notes</h4>
+                                <p class="material-subject">Physics</p>
+                                <p class="material-description">Mechanics and thermodynamics</p>
+                                <div class="material-meta">
+                                    <span class="material-type">notes</span>
+                                    <span class="material-date">2024-01-12</span>
+                                </div>
+                                <button class="download-btn">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                        <div class="material-card">
+                            <div class="material-icon">
+                                <i class="fas fa-sticky-note"></i>
+                            </div>
+                            <div class="material-info">
+                                <h4>Chemistry Notes</h4>
+                                <p class="material-subject">Chemistry</p>
+                                <p class="material-description">Organic chemistry fundamentals</p>
+                                <div class="material-meta">
+                                    <span class="material-type">notes</span>
+                                    <span class="material-date">2024-01-10</span>
+                                </div>
+                                <button class="download-btn">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Stats Section Test</h2>
+            <div class="stats-grid" id="statsGrid">
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+            <div class="stats-grid" id="statsContent" style="display:none;">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-sticky-note"></i>
+                    </div>
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Notes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Past Papers</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./studyMaterials.html" class="test-btn success">📚 Study Materials (Fixed)</a>
+            <a href="./studentPortal.html" class="test-btn">🏠 Dashboard</a>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Expected Behavior</h2>
+            <ol>
+                <li>✅ <strong>Proper Structure</strong> - Uses existing material-category layout</li>
+                <li>✅ <strong>Skeleton Loading</strong> - Shows skeleton elements during load</li>
+                <li>✅ <strong>Smooth Transition</strong> - Skeletons hide when content loads</li>
+                <li>✅ <strong>Consistent Styling</strong> - Matches existing design patterns</li>
+                <li>✅ <strong>No Layout Issues</strong> - Properly contained within existing structure</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showSkeleton() {
+            document.getElementById('skeletonCategory').style.display = 'block';
+            document.getElementById('notesContent').style.display = 'none';
+            document.getElementById('statsGrid').style.display = 'grid';
+            document.getElementById('statsContent').style.display = 'none';
+        }
+        
+        function hideSkeleton() {
+            document.getElementById('skeletonCategory').style.display = 'none';
+            document.getElementById('notesContent').style.display = 'block';
+            document.getElementById('statsGrid').style.display = 'none';
+            document.getElementById('statsContent').style.display = 'grid';
+        }
+        
+        function resetTest() {
+            showSkeleton();
+            setTimeout(() => {
+                hideSkeleton();
+            }, 2000);
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                resetTest();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

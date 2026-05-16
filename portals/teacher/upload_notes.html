@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta charset="UTF-8">
+    
+    <title>Upload Lesson Notes — TeachSmart</title>
+
+    <link rel="stylesheet" href="./teachersPortalStyles/sidebar.css?v=1.1">
+    <link rel="stylesheet" href="./teachersPortalStyles/tp-shared.css?v=1.1">
+    <link rel="stylesheet" href="./teachersPortalStyles/upload_notes.css?v=1.1">
+    <script src="../../core/authGuard.js" type="module" defer></script>
+    <script src="./teachers_portal_sidebar.js" type="module"></script>
+
+    <!-- CDN Libraries for processing pipeline -->
+    <!-- mammoth.js: DOCX → raw text extraction -->
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <!-- jsPDF: text → PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- pdf-lib: PDF compression -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar" id="mobileTopBar">
+        <span class="brand">TeachSmart</span>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" data-sideBar>
+        <!-- Injected by teachers_portal_sidebar.js -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <div class="page-header">
+            <h1>📄 Upload Lesson Notes</h1>
+            <p>Convert, compress, and share notes with your students</p>
+        </div>
+
+        <!-- Body -->
+        <div class="upload-body">
+
+            <!-- ─── LEFT PANEL ─── -->
+            <div class="left-panel">
+
+                <!-- Step 1: Context -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="step-badge">1</span>
+                        Select Subject &amp; Class
+                    </h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="classSelect">Class</label>
+                            <select id="classSelect">
+                                <option value="">Loading classes…</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subjectSelect">Subject</label>
+                            <select id="subjectSelect" disabled>
+                                <option value="">Select a Class first</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-top: 14px;">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="noteTitle">Note Title</label>
+                            <input type="text" id="noteTitle" placeholder="e.g. Chapter 3 — Laws of Motion">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Upload -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="step-badge">2</span>
+                        Upload Your File
+                    </h2>
+
+                    <div class="drop-zone" id="dropZone">
+                        <input type="file" id="fileInput" accept=".pdf,.docx,.doc">
+                        <div class="drop-zone-icon">☁️</div>
+                        <h3>Drag &amp; Drop your file here</h3>
+                        <p>or click to browse from your device</p>
+                        <div class="file-types">
+                            <span class="file-type-badge">PDF</span>
+                            <span class="file-type-badge">DOCX</span>
+                            <span class="file-type-badge">DOC</span>
+                        </div>
+                    </div>
+
+                    <div class="file-name-display" id="fileNameDisplay">
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- Processing Status Stepper -->
+                <div class="card">
+                    <h2 class="card-title">
+                        <span class="step-badge">3</span>
+                        Processing Status
+                    </h2>
+
+                    <div class="stepper">
+                        <div class="step-item inactive" id="stepConvert">
+                            <div class="step-dot" data-num="1">1</div>
+                            <div class="step-text">
+                                <h4>Converting Document</h4>
+                                <p>Word file → PDF layout (skipped for PDF uploads)</p>
+                            </div>
+                        </div>
+                        <div class="step-item inactive" id="stepCompress">
+                            <div class="step-dot" data-num="2">2</div>
+                            <div class="step-text">
+                                <h4>Compressing for Speed</h4>
+                                <p>Optimising file size for fast student downloads</p>
+                            </div>
+                        </div>
+                        <div class="step-item inactive" id="stepUpload">
+                            <div class="step-dot" data-num="3">3</div>
+                            <div class="step-text">
+                                <h4>Uploading to Cloud</h4>
+                                <p>Saving to Supabase and updating the database</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div class="alert alert-success" id="alertSuccess">
+                    <span>✅</span> <span></span>
+                </div>
+                <div class="alert alert-error" id="alertError">
+                    <span>❌</span> <span></span>
+                </div>
+
+            </div><!-- /left-panel -->
+
+            <!-- ─── RIGHT PANEL ─── -->
+            <div class="right-panel">
+
+                <!-- Action Buttons -->
+                <div class="card" style="gap: 12px; display: flex; flex-direction: column;">
+                    <h2 class="card-title" style="margin-bottom: 4px;">
+                        <span class="step-badge">↑</span>
+                        Actions
+                    </h2>
+                    <button class="btn btn-primary" id="processBtn">
+                        ⚡ Process &amp; Preview
+                    </button>
+                    <button class="btn btn-primary" id="confirmBtn"
+                        style="background: linear-gradient(135deg,#38a169,#276749);">
+                        ✅ Confirm Upload
+                    </button>
+                    <button class="btn btn-outline" id="resetBtn">
+                        ↺ Reset
+                    </button>
+                </div>
+
+                <!-- PDF Preview -->
+                <div class="card" style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
+                    <h2 class="card-title" style="margin-bottom: 4px;">
+                        <span class="step-badge">👁</span>
+                        PDF Preview
+                    </h2>
+                    <div class="preview-frame-wrap" style="flex: 1;">
+                        <div class="preview-placeholder" id="previewPlaceholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                            </svg>
+                            <p>No preview yet — upload and process a file</p>
+                        </div>
+                        <iframe id="pdfPreviewFrame" title="PDF Preview"></iframe>
+                    </div>
+                </div>
+
+            </div><!-- /right-panel -->
+
+        </div><!-- /upload-body -->
+    </main>
+
+    <!-- Scripts -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Mobile sidebar toggle -->
+    <script>
+        (function () {
+            const btn = document.getElementById('hamburgerBtn');
+            const sidebar = document.querySelector('[data-sideBar]');
+            const overlay = document.getElementById('sidebarOverlay');
+            const open = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+            const close = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+            if (btn) btn.addEventListener('click', () => sidebar.classList.contains('active') ? close() : open());
+            overlay.addEventListener('click', close);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+            window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
+        })();
+    </script>
+
+    <!-- Main upload logic (ES module) -->
+    <script type="module" src="./upload_notes.js"></script>
+
+</body>
+
+</html>

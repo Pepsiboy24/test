@@ -1,0 +1,597 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles Removed - Moved to sidebar.css */
+
+/* Main Content */
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 24px 32px;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.full-width {
+    margin-left: 0;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.welcome-msg h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.welcome-msg p {
+    font-size: 14px;
+    color: #718096;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.notification-btn,
+.menu-btn {
+    width: 40px;
+    height: 40px;
+    background: #f7fafc;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #4a5568;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.notification-btn:hover,
+.menu-btn:hover {
+    background: #edf2f7;
+}
+
+.menu-btn {
+    display: none;
+}
+
+/* Students Section */
+.students-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.add-student-btn {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.add-student-btn:hover {
+    background: #2c5aa0;
+}
+
+/* Students Table */
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.students-table thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 12px;
+    border-bottom: 2px solid #e2e8f0;
+    background: #f8f9fa;
+}
+
+.students-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s;
+}
+
+.students-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.students-table tbody td {
+    padding: 16px 12px;
+    font-size: 14px;
+    color: #2d3748;
+}
+
+.student-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.student-info p {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.class-badge {
+    background: #e2e8f0;
+    color: #4a5568;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.class-badge .highlight {
+    color: #3182ce;
+    font-weight: 600;
+}
+
+.performance-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.performance-bar {
+    width: 60px;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.performance-fill {
+    height: 100%;
+    background: #48bb78;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.performance-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2d3748;
+    min-width: 35px;
+}
+
+.view-all-btn {
+    color: #3182ce;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.view-all-btn:hover {
+    background: #ebf8ff;
+    text-decoration: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.mobile-visible {
+        transform: translateX(0);
+    }
+
+    .close-btn {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 80px 16px 24px;
+    }
+
+    .menu-btn {
+        display: flex;
+    }
+
+    .students-table {
+        font-size: 12px;
+    }
+
+    .students-table thead th,
+    .students-table tbody td {
+        padding: 8px 6px;
+    }
+
+    .student-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .performance-bar {
+        width: 40px;
+    }
+}
+
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* POPUP STYLES */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.containment {
+    width: 100%;
+    max-width: 600px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    margin: 20px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-header {
+    background: #3182ce;
+    color: #ffffff;
+    padding: 32px;
+    text-align: center;
+    position: relative;
+}
+
+.popup-header .icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.popup-header .icon:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.popup-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.popup-header p {
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    margin-top: 24px;
+    border-radius: 2px;
+    width: 100%;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.step-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #718096;
+    font-weight: 500;
+}
+
+.step-indicator.active {
+    color: #3182ce;
+    font-weight: 600;
+}
+
+.step-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    background: #ffffff;
+}
+
+.step-indicator.active .step-circle {
+    border-color: #3182ce;
+    background: #3182ce;
+    color: #ffffff;
+}
+
+.form-content {
+    padding: 32px;
+    overflow-y: auto;
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step h2 {
+    font-size: 20px;
+    color: #1a202c;
+    margin-bottom: 8px;
+}
+
+.step p {
+    color: #718096;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    color: #1a202c;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #ffffff;
+    font-family: inherit;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.radio-group {
+    display: flex;
+    gap: 24px;
+    margin-top: 8px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+    width: auto;
+    margin: 0;
+    accent-color: #3182ce;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 32px;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: #3182ce;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #2c5aa0;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #1a202c;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}
+
+.success-message {
+    text-align: center;
+    color: #1a202c;
+}
+
+.success-icon {
+    font-size: 48px;
+    color: #10b981;
+    margin-bottom: 16px;
+}
+
+.success-message h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1a202c;
+}
+
+.success-message p {
+    color: #718096;
+    margin-bottom: 24px;
+}
+
+/* Mobile Responsiveness for Popup */
+@media (max-width: 768px) {
+    .popup {
+        align-items: flex-end;
+    }
+
+    .containment {
+        margin: 0;
+        border-radius: 16px 16px 0 0;
+        max-height: 85vh;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+

@@ -1,0 +1,400 @@
+:root {
+    --primary: #6200ea;
+    --primary-light: #ede7f6;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    --border: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --billing-green: #059669;
+    --billing-red: #dc2626;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.logo {
+    padding: 0 12px 32px 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-icon {
+    color: var(--primary);
+    font-size: 24px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--text-gray);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.nav-item:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.nav-icon {
+    width: 20px;
+    margin-right: 12px;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Main Content */
+.main {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    padding: 32px 40px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.page-subtitle {
+    color: var(--text-gray);
+    font-size: 14px;
+}
+
+.stuff {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.stat-icon-wrapper.students {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.stat-icon-wrapper.teachers {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.stat-icon-wrapper.attendance {
+    background: #fffbeb;
+    color: #f59e0b;
+}
+
+.stat-icon-wrapper.revenue {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.stat-change {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stat-change.positive {
+    color: var(--success);
+}
+
+.stat-change.negative {
+    color: var(--danger);
+}
+
+/* Recent Activity */
+.activity-section {
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 24px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 24px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--bg-light);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.activity-text {
+    color: var(--text-dark);
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.activity-time {
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 24px;
+    }
+}
+
+@media (max-width: 767px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .stuff {
+        align-self: flex-end;
+    }
+}
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+
+/* Billing Section Styles */
+.billing-section {
+    margin: 32px 0;
+    padding: 24px;
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.billing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.billing-card {
+    background: var(--bg-light);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid var(--border);
+}
+
+.billing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.billing-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.billing-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.billing-status.active {
+    background: var(--success);
+    color: var(--white);
+}
+
+.billing-status.pending {
+    background: var(--warning);
+    color: var(--white);
+}
+
+.billing-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.billing-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.billing-item:last-child {
+    border-bottom: none;
+}
+
+.billing-label {
+    font-size: 14px;
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+.billing-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.total-amount {
+    color: var(--billing-green);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .billing-grid {
+        grid-template-columns: 1fr;
+    }
+}

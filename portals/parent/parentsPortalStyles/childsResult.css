@@ -1,0 +1,245 @@
+/* =========================================================
+   childsResult.css — Parent Portal Child Performance
+   ========================================================= */
+
+/* --- 1. GLOBAL RESET & MOBILE ZOOM PROTECTION --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    overflow-x: hidden;
+    /* Stops horizontal "wobble" */
+    position: relative;
+    -webkit-text-size-adjust: 100%;
+    /* Prevents iPhone font-scaling */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+/* --- 2. LAYOUT STRUCTURE --- */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    padding: 2rem 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 2000;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+    padding: 0 2rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 2rem;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-right: 3px solid transparent;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: #f1f5f9;
+    color: #3b82f6;
+    border-right-color: #3b82f6;
+}
+
+/* --- 3. MAIN CONTENT & HEADER --- */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem;
+    max-width: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.welcome-section h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Dropdown styling */
+.child-select-dropdown {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background-color: #ffffff;
+    font-size: 16px !important;
+    /* Fixed for iOS zoom */
+    font-weight: 500;
+}
+
+/* --- 4. STATS GRID --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #3b82f6;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* --- 5. GRADES TABLE (RESPONSIVE) --- */
+.grades-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    /* Important for table clipping */
+}
+
+/* Add a horizontal wrapper for the table on mobile */
+#subjectGradesSection {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    /* Forces scroll instead of squishing text */
+}
+
+.grades-table th {
+    background: #f8fafc;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: #475569;
+    text-transform: uppercase;
+}
+
+.grades-table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* --- 6. MOBILE RESPONSIVENESS (THE LOCKDOWN) --- */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 12px !important;
+        /* Tighter padding for mobile */
+        width: 100% !important;
+        overflow-x: hidden;
+    }
+
+    .header {
+        padding: 1rem !important;
+        flex-direction: column !important;
+        /* Stack header items */
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .mobile-menu-btn {
+        display: flex !important;
+    }
+}
+
+/* --- 7. UNIVERSAL INPUT PROTECTION --- */
+/* Strictly enforces 16px font to prevent iOS Safari auto-zoom */
+input,
+select,
+textarea,
+button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+
+.mobile-menu-btn {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #f1f5f9;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}

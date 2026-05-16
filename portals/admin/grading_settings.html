@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+    
+    <title>Grading Configuration - EduHubAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="./schoolAdminStyles/schooladmins.css?v=1.1">
+    <!-- Page Specific Styles -->
+    <link rel="stylesheet" href="./schoolAdminStyles/grading_settings.css?v=1.1">
+
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Grading Configuration</h1>
+                    <p class="page-subtitle">Configure assessments and grade weights for the school year.</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="profile"></div>
+            </div>
+        </div>
+
+        <div class="grading-container">
+            <div class="config-header">
+                <h2>Grading Structure</h2>
+                <p>Define the assessments (CA, Exams) and their maximum scores. The total must equal 100.</p>
+            </div>
+
+            <!-- Session & Term Selection -->
+            <div class="session-selector">
+                <div class="form-group">
+                    <label for="academicSession">Academic Session</label>
+                    <select id="academicSession" class="form-control">
+                        <option value="">Loading sessions...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="term">Term</label>
+                    <select id="term" class="form-control">
+                        <option value="1st Term">1st Term</option>
+                        <option value="2nd Term">2nd Term</option>
+                        <option value="3rd Term">3rd Term</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dynamic Assessment Rows -->
+            <div id="assessmentList" class="assessment-list">
+                <!-- Rows will be injected here via JS -->
+            </div>
+
+            <div class="add-btn-container">
+                <button id="addAssessmentBtn" class="add-btn">
+                    <i class="fa fa-plus"></i> Add Assessment
+                </button>
+            </div>
+
+            <!-- Validation & Save -->
+            <div class="validation-section">
+                <div class="total-display">
+                    <span>Total Max Score:</span>
+                    <span id="totalScore" class="total-score">0</span>
+                </div>
+
+                <div id="validationMessage" class="validation-message">
+                    Initializing...
+                </div>
+
+                <div class="action-buttons">
+                    <button id="saveConfigBtn" class="save-btn" disabled>
+                        <i class="fa fa-save"></i> Save Configuration
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Script -->
+    <script>
+        // Sidebar Init
+        const sidebar = document.querySelector('[data-sideBar]');
+        const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+
+        if (sidebarOpenBtn && sidebar) {
+            sidebarOpenBtn.addEventListener('click', () => {
+                sidebar.classList.add('show');
+            });
+        }
+
+        // Close on outside click for mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 991 &&
+                sidebar.classList.contains('show') &&
+                !sidebar.contains(e.target) &&
+                !sidebarOpenBtn.contains(e.target)) {
+                sidebar.classList.remove('show');
+            }
+        });
+    </script>
+
+    <!-- Config & Logic -->
+    <script type="module" src="../../core/config.js"></script>
+    <script type="module" src="./grading_settings.js"></script>
+</body>
+
+</html>

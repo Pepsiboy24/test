@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - EduHub</title>
+    <meta name="description" content="Sign in to your EduHub account to manage your school.">
+    <link rel="stylesheet" href="../styles/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>EduHub</span>
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Sign in to your account to continue managing your school</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email address"
+                        autocomplete="email">
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required placeholder="Enter your password"
+                            autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span class="checkmark"></span>
+                        Remember me
+                    </label>
+                    <a href="/forgot-password" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+                    <div class="loading-spinner" style="display: none;"></div>
+                    <span id="btnText">Sign In</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from '../../core/config.js';
+
+        class LoginForm {
+            constructor() {
+                this.form = document.getElementById('loginForm');
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.checkForMessages();
+                this.checkExistingSession();
+            }
+
+            setupEventListeners() {
+                // Form submission
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+                // Password visibility toggle
+                document.getElementById('passwordToggle').addEventListener('click', () => {
+                    this.togglePasswordVisibility();
+                });
+
+                // Real-time validation
+                document.getElementById('email').addEventListener('blur', () => this.validateEmail());
+            }
+
+            checkForMessages() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const message = urlParams.get('message');
+
+                if (message) {
+                    switch (message) {
+                        case 'email_confirmation':
+                            this.showSuccess('Please check your email to confirm your account before signing in.');
+                            break;
+                        case 'password_reset':
+                            this.showSuccess('Your password has been reset. Please sign in with your new password.');
+                            break;
+                        case 'account_created':
+                            this.showSuccess('Account created successfully! Please sign in.');
+                            break;
+                        case 'session_expired':
+                            this.showError('Your session has expired. Please sign in again.');
+                            break;
+                    }
+                }
+            }
+
+            async checkExistingSession() {
+                try {
+                    // Use getUser() instead of getSession() to bypass stale local storage
+                    const { data: { user }, error } = await supabase.auth.getUser();
+
+                    if (user && !error) {
+                        console.log('Fresh user data found, proceeding to redirect...');
+                        this.redirectUser(user);
+                    }
+                } catch (error) {
+                    console.error('Session check error:', error);
+                }
+            }
+
+            togglePasswordVisibility() {
+                const passwordField = document.getElementById('password');
+                const toggle = document.getElementById('passwordToggle');
+                const icon = toggle.querySelector('i');
+
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    passwordField.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+
+                if (!this.validateForm()) {
+                    return;
+                }
+
+                const submitBtn = document.getElementById('loginBtn');
+                const btnText = document.getElementById('btnText');
+                const spinner = submitBtn.querySelector('.loading-spinner');
+
+                try {
+                    // Show loading state
+                    submitBtn.disabled = true;
+                    spinner.style.display = 'inline-block';
+                    btnText.textContent = 'Signing In...';
+
+                    const formData = new FormData(this.form);
+                    const email = formData.get('email');
+                    const password = formData.get('password');
+                    const remember = formData.get('remember');
+
+                    // Sign in user
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email,
+                        password,
+                        options: {
+                            // Set session duration based on remember me
+                            expiresIn: remember ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 7 // 30 days or 7 days
+                        }
+                    });
+
+                    if (error) {
+                        throw new Error(this.getErrorMessage(error.message));
+                    }
+
+                    if (data.user && data.session) {
+                        // Successful login
+                        this.showSuccess('Login successful! Redirecting...');
+
+                        // Force identity refresh to ensure school_id and user_type are loaded
+                        const { data: { user: refreshedUser }, error: refreshError } = await supabase.auth.getUser();
+
+                        if (refreshError) {
+                            console.error('Error refreshing user identity:', refreshError);
+                            // Continue with original user data if refresh fails
+                        }
+
+                        // Use refreshed user data if available, otherwise use original
+                        const userToRedirect = refreshedUser || data.user;
+
+                        // Redirect user to appropriate portal
+                        setTimeout(() => {
+                            this.redirectUser(userToRedirect);
+                        }, 1000);
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showError(error.message || 'Failed to sign in. Please try again.');
+                } finally {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    spinner.style.display = 'none';
+                    btnText.textContent = 'Sign In';
+                }
+            }
+
+            getErrorMessage(error) {
+                const errorMessages = {
+                    'Invalid login credentials': 'Invalid email or password. Please try again.',
+                    'Email not confirmed': 'Please check your email to confirm your account before signing in.',
+                    'Too many requests': 'Too many login attempts. Please try again later.',
+                    'User not found': 'No account found with this email address.',
+                    'Invalid password': 'Incorrect password. Please try again.'
+                };
+
+                return errorMessages[error] || error;
+            }
+
+            redirectUser(user) {
+                const userMetadata = user.user_metadata || {};
+                const userType = userMetadata.user_type;
+                const schoolId = userMetadata.school_id;
+                const isReturningFromOnboarding = window.location.search.includes('status=complete');
+
+                console.log('Redirecting user:', { userType, schoolId });
+
+                // Redirect logic based on user state
+                // STRICT: Always redirect to onboarding if school_id is missing, regardless of user_type
+                if (!schoolId && !isReturningFromOnboarding) {
+                    window.location.href = '/onboarding';
+                    return;
+                }
+
+                if (userType === 'pending') {
+                    // User with pending status
+                        window.location.href = '/onboarding';
+                    return;
+                }
+
+                if (userType === 'school_admin' && schoolId) {
+                    // School admin with completed onboarding
+                    window.location.href = '/admin';
+                    return;
+                }
+
+                if (userType === 'teacher' && schoolId) {
+                    // Teacher user
+                    window.location.href = '/teacher';
+                    return;
+                }
+
+                if (userType === 'student' && schoolId) {
+                    // Student user
+                    window.location.href = '/student';
+                    return;
+                }
+
+                if (userType === 'parent' && schoolId) {
+                    // Parent user
+                    window.location.href = '/parent';
+                    return;
+                }
+
+                // Fallback to onboarding if user type is unknown
+                console.warn('Unknown user type or missing school_id, redirecting to onboarding');
+                window.location.href = '/onboarding';
+            }
+
+            validateForm() {
+                let isValid = true;
+
+                // Validate email
+                if (!this.validateEmail()) {
+                    isValid = false;
+                }
+
+                // Validate password
+                const password = document.getElementById('password').value;
+                if (password.length === 0) {
+                    this.showFieldError('password', 'Password is required');
+                    isValid = false;
+                } else {
+                    this.clearFieldError('password');
+                }
+
+                return isValid;
+            }
+
+            validateEmail() {
+                const email = document.getElementById('email').value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!email) {
+                    this.showFieldError('email', 'Email address is required');
+                    return false;
+                }
+
+                if (!emailRegex.test(email)) {
+                    this.showFieldError('email', 'Please enter a valid email address');
+                    return false;
+                }
+
+                this.clearFieldError('email');
+                return true;
+            }
+
+            showFieldError(fieldId, message) {
+                const errorElement = document.getElementById(fieldId + 'Error');
+                const fieldElement = document.getElementById(fieldId);
+
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+
+                if (fieldElement) {
+                    fieldElement.classList.add('error');
+                    fieldElement.setAttribute('aria-invalid', 'true');
+                }
+            }
+
+            clearFieldError(fieldId) {
+                const errorElement = document.getElementById(fieldId + 'Error');
+                const fieldElement = document.getElementById(fieldId);
+
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    errorElement.style.display = 'none';
+                }
+
+                if (fieldElement) {
+                    fieldElement.classList.remove('error');
+                    fieldElement.removeAttribute('aria-invalid');
+                }
+            }
+
+            showError(message) {
+                this.showMessage(message, 'error');
+            }
+
+            showSuccess(message) {
+                this.showMessage(message, 'success');
+            }
+
+            showMessage(message, type) {
+                // Remove any existing messages
+                const existingMessage = document.querySelector('.auth-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                // Create message element
+                const messageEl = document.createElement('div');
+                messageEl.className = `auth-message ${type}`;
+                messageEl.textContent = message;
+
+                // Add styles
+                messageEl.style.cssText = `
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    ${type === 'error' ? 'background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;' : 'background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0;'}
+                `;
+
+                // Add icon
+                const icon = document.createElement('i');
+                icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+                messageEl.insertBefore(icon, messageEl.firstChild);
+
+                // Insert after header
+                const header = document.querySelector('.auth-header');
+                header.parentNode.insertBefore(messageEl, header.nextSibling);
+
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    messageEl.remove();
+                }, 5000);
+            }
+        }
+
+        // Initialize login form
+        new LoginForm();
+    </script>
+</body>
+
+</html>

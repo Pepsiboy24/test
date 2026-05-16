@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exact Match Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/portals/student/studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 32px;
+        }
+        .section-header {
+            margin-bottom: 16px;
+        }
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0;
+        }
+        .upcoming-classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎬 Exact Student Portal Match Test</h1>
+        <p>Testing skeleton animation using exact student portal structure and classes.</p>
+        
+        <div class="status-indicator success">✅ Using exact studentPortal.css</div>
+        <div class="status-indicator info">🎬 Testing all skeleton types</div>
+        
+        <!-- Test 1: skeleton-card (like upcoming classes) -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Test 1: skeleton-card (Upcoming Classes Style)</h2>
+            </div>
+            <div class="upcoming-classes-grid">
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+        </section>
+        
+        <!-- Test 2: skeleton-subject (like subjects) -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Test 2: skeleton-subject (Subjects Style)</h2>
+            </div>
+            <div class="subjects-grid">
+                <div class="skeleton skeleton-subject"></div>
+                <div class="skeleton skeleton-subject"></div>
+                <div class="skeleton skeleton-subject"></div>
+                <div class="skeleton skeleton-subject"></div>
+            </div>
+        </section>
+        
+        <!-- Test 3: skeleton-activity (like activity feed) -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Test 3: skeleton-activity (Activity Feed Style)</h2>
+            </div>
+            <div id="activitySkeleton">
+                <div class="skeleton skeleton-activity"></div>
+                <div class="skeleton skeleton-activity"></div>
+                <div class="skeleton skeleton-activity"></div>
+                <div class="skeleton skeleton-activity"></div>
+                <div class="skeleton skeleton-activity"></div>
+            </div>
+        </section>
+        
+        <!-- Test 4: Parent Portal Structure -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Test 4: Parent Portal Structure</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div>
+                    <h4>Recent Grades</h4>
+                    <div id="recentGradesSkeleton">
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                    </div>
+                </div>
+                <div>
+                    <h4>Overall Progress</h4>
+                    <div id="progressSkeleton">
+                        <div class="skeleton skeleton-card"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div>
+            <button class="test-btn" onclick="testAnimation()">🎬 Test Animation</button>
+            <button class="test-btn success" onclick="checkStyles()">🔍 Check Styles</button>
+            <a href="../student/studentPortal.html" class="test-btn success">🏠 Student Portal</a>
+            <a href="./parentsPortal.html" class="test-btn">👨‍👩‍👧‍👦 Parent Portal</a>
+        </div>
+        
+        <div id="results" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        function checkStyles() {
+            const results = document.getElementById('results');
+            let html = '<h3>🔍 Style Check Results:</h3>';
+            
+            // Test each skeleton type
+            const skeletonTypes = ['skeleton-card', 'skeleton-subject', 'skeleton-activity'];
+            
+            skeletonTypes.forEach(type => {
+                const testElement = document.createElement('div');
+                testElement.className = `skeleton ${type}`;
+                document.body.appendChild(testElement);
+                
+                const styles = window.getComputedStyle(testElement);
+                
+                html += `<div style="background: #f8fafc; padding: 12px; margin: 8px 0; border-radius: 6px;">`;
+                html += `<strong>${type}:</strong><br>`;
+                html += `Height: ${styles.height}<br>`;
+                html += `Animation: ${styles.animation}<br>`;
+                html += `Background: ${styles.background.substring(0, 50)}...<br>`;
+                html += `Border Radius: ${styles.borderRadius}<br>`;
+                
+                // Check if animation is working
+                const hasAnimation = styles.animation && styles.animation !== 'none';
+                html += `Animation Working: ${hasAnimation ? '✅' : '❌'}`;
+                html += `</div>`;
+                
+                document.body.removeChild(testElement);
+            });
+            
+            results.innerHTML = html;
+        }
+        
+        function testAnimation() {
+            const skeletons = document.querySelectorAll('.skeleton');
+            skeletons.forEach((skeleton, index) => {
+                skeleton.style.opacity = '0';
+                setTimeout(() => {
+                    skeleton.style.opacity = '1';
+                }, index * 100);
+            });
+        }
+        
+        // Auto-check on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkStyles();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

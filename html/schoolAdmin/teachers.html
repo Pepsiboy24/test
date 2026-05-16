@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../scripts/authGuard.js"></script>
+    <meta charset="UTF-8">
+    
+    <title>Teacher Management - EduHubAdmin</title>
+    <link rel="stylesheet" href="../../styles/schoolAdminStyles/teachers.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../scripts/ui_feedback.js"></script>
+    <script src="../../scripts/schoolAdminScripts/school_admin_sidebar.js"></script>
+</head>
+
+<body>
+    <!-- Popup -->
+    <div class="popup" id="registrationPopup">
+        <div class="containment">
+            <div class="popup-header">
+                <div class="icon" id="closePopup"><i class="fa fa-times"></i></div>
+                <h1>Teacher Registration</h1>
+                <p>Complete your professional profile in 7 steps</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 14%;"></div>
+                </div>
+            </div>
+
+            <div class="step-indicators">
+                <div class="step-indicator active" id="indicator1">
+                    <div class="step-circle">1</div>
+                    <span>Personal</span>
+                </div>
+                <div class="step-indicator" id="indicator2">
+                    <div class="step-circle">2</div>
+                    <span>Contact</span>
+                </div>
+                <div class="step-indicator" id="indicator3">
+                    <div class="step-circle">3</div>
+                    <span>Qualifications</span>
+                </div>
+                <div class="step-indicator" id="indicator4">
+                    <div class="step-circle">4</div>
+                    <span>Experience</span>
+                </div>
+                <div class="step-indicator" id="indicator5">
+                    <div class="step-circle">5</div>
+                    <span>Employment</span>
+                </div>
+                <div class="step-indicator" id="indicator6">
+                    <div class="step-circle">6</div>
+                    <span>Background</span>
+                </div>
+                <div class="step-indicator" id="indicator7">
+                    <div class="step-circle">7</div>
+                    <span>Review</span>
+                </div>
+            </div>
+
+            <div class="form-content">
+                <form id="teacherForm">
+                    <!-- Step 1: Personal Information -->
+                    <div class="step active" id="step1">
+                        <h2>Personal Information</h2>
+                        <p>Basic identifying information for official records</p>
+
+                        <div class="form-group">
+                            <label for="firstName">First Name <span class="required">*</span></label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="middleName">Middle Name</label>
+                            <input type="text" id="middleName" name="middleName">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name <span class="required">*</span></label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender <span class="required">*</span></label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="male" name="gender" value="male" required>
+                                        <label for="male">Male</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="female" name="gender" value="female" required>
+                                        <label for="female">Female</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="other" name="gender" value="other" required>
+                                        <label for="other">Other</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Contact Details -->
+                    <div class="step" id="step2">
+                        <h2>Contact Information</h2>
+                        <p>Address and contact details for communication</p>
+
+                        <div class="form-group">
+                            <label for="address">Residential Address <span class="required">*</span></label>
+                            <textarea id="address" name="address" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="mobilePhone">Mobile Phone <span class="required">*</span></label>
+                                <input type="tel" id="mobilePhone" name="mobilePhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="homePhone">Home Phone</label>
+                                <input type="tel" id="homePhone" name="homePhone">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="personalEmail">Personal Email <span class="required">*</span></label>
+                            <input type="email" id="personalEmail" name="personalEmail" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="emergencyContactName">Emergency Contact Name <span
+                                        class="required">*</span></label>
+                                <input type="text" id="emergencyContactName" name="emergencyContactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="emergencyContactRelation">Relationship <span
+                                        class="required">*</span></label>
+                                <select id="emergencyContactRelation" name="emergencyContactRelation" required>
+                                    <option value="">Select relationship</option>
+                                    <option value="spouse">Spouse</option>
+                                    <option value="parent">Parent</option>
+                                    <option value="sibling">Sibling</option>
+                                    <option value="child">Child</option>
+                                    <option value="friend">Friend</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emergencyContactPhone">Emergency Contact Phone <span
+                                    class="required">*</span></label>
+                            <input type="tel" id="emergencyContactPhone" name="emergencyContactPhone" required>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Professional Qualifications -->
+                    <div class="step" id="step3">
+                        <h2>Professional Qualifications</h2>
+                        <p>Academic credentials and professional certifications</p>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="highestDegree">Highest Degree <span class="required">*</span></label>
+                                <select id="highestDegree" name="highestDegree" required>
+                                    <option value="">Select degree</option>
+                                    <option value="bachelor">Bachelor's Degree</option>
+                                    <option value="master">Master's Degree</option>
+                                    <option value="doctorate">Doctorate/PhD</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="degreeMajor">Major/Field of Study <span class="required">*</span></label>
+                                <input type="text" id="degreeMajor" name="degreeMajor" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="institution">Institution <span class="required">*</span></label>
+                                <input type="text" id="institution" name="institution" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="graduationYear">Graduation Year <span class="required">*</span></label>
+                                <input type="number" id="graduationYear" name="graduationYear" required min="1950"
+                                    max="2024">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="teachingLicense">Teaching License Number</label>
+                                <input type="text" id="teachingLicense" name="teachingLicense">
+                            </div>
+                            <div class="form-group">
+                                <label for="licenseExpiry">License Expiry Date</label>
+                                <input type="date" id="licenseExpiry" name="licenseExpiry">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Certified Subjects <span class="required">*</span></label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="math" name="subjects" value="mathematics">
+                                    <label for="math">Mathematics</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="english" name="subjects" value="english">
+                                    <label for="english">English</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="science" name="subjects" value="science">
+                                    <label for="science">Science</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="history" name="subjects" value="history">
+                                    <label for="history">History</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="arts" name="subjects" value="arts">
+                                    <label for="arts">Arts</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="pe" name="subjects" value="physical_education">
+                                    <label for="pe">Physical Education</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Grade Levels <span class="required">*</span></label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="elementary" name="gradeLevels" value="elementary">
+                                    <label for="elementary">Elementary (K-5)</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="middle" name="gradeLevels" value="middle">
+                                    <label for="middle">Middle School (6-8)</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="high" name="gradeLevels" value="high">
+                                    <label for="high">High School (9-12)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Teaching Experience -->
+                    <div class="step" id="step4">
+                        <h2>Teaching Experience</h2>
+                        <p>Previous employment and professional development history</p>
+
+                        <div class="form-group">
+                            <label for="totalExperience">Total Years of Teaching Experience <span
+                                    class="required">*</span></label>
+                            <select id="totalExperience" name="totalExperience" required>
+                                <option value="">Select experience</option>
+                                <option value="new">New Teacher (0 years)</option>
+                                <option value="1-2">1-2 years</option>
+                                <option value="3-5">3-5 years</option>
+                                <option value="6-10">6-10 years</option>
+                                <option value="11-15">11-15 years</option>
+                                <option value="16-20">16-20 years</option>
+                                <option value="20+">20+ years</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="previousSchool">Most Recent School/Institution</label>
+                            <input type="text" id="previousSchool" name="previousSchool">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="previousPosition">Position Held</label>
+                                <input type="text" id="previousPosition" name="previousPosition">
+                            </div>
+                            <div class="form-group">
+                                <label for="previousDuration">Duration</label>
+                                <input type="text" id="previousDuration" name="previousDuration">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="professionalDevelopment">Recent Professional Development</label>
+                            <textarea id="professionalDevelopment" name="professionalDevelopment"
+                                placeholder="List workshops, certifications, training programs attended in the last 3 years"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Employment Details -->
+                    <div class="step" id="step5">
+                        <h2>Employment Information</h2>
+                        <p>Position details and work arrangements</p>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date <span class="required">*</span></label>
+                                <input type="date" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="jobTitle">Job Title <span class="required">*</span></label>
+                                <select id="jobTitle" name="jobTitle" required>
+                                    <option value="">Select position</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="lead_teacher">Lead Teacher</option>
+                                    <option value="department_head">Department Head</option>
+                                    <option value="assistant_principal">Assistant Principal</option>
+                                    <option value="substitute">Substitute Teacher</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contractType">Contract Type <span class="required">*</span></label>
+                                <select id="contractType" name="contractType" required>
+                                    <option value="">Select contract type</option>
+                                    <option value="full_time_permanent">Full-time Permanent</option>
+                                    <option value="full_time_temporary">Full-time Temporary</option>
+                                    <option value="part_time_permanent">Part-time Permanent</option>
+                                    <option value="part_time_temporary">Part-time Temporary</option>
+                                    <option value="substitute">Substitute</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="salary">Annual Salary</label>
+                                <input type="number" id="salary" name="salary" placeholder="50000">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Specialized Roles</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="coach" name="specializedRoles" value="coach">
+                                    <label for="coach">Sports Coach</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="clubLeader" name="specializedRoles" value="club_leader">
+                                    <label for="clubLeader">Club Leader</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="mentor" name="specializedRoles" value="mentor">
+                                    <label for="mentor">Mentor Teacher</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="coordinator" name="specializedRoles" value="coordinator">
+                                    <label for="coordinator">Program Coordinator</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Background & Medical Info -->
+                    <div class="step" id="step6">
+                        <h2>Background & Medical Information</h2>
+                        <p>Safety and compliance requirements</p>
+
+                        <div class="form-group">
+                            <label for="workAuthorization">Legal Authorization to Work <span
+                                    class="required">*</span></label>
+                            <select id="workAuthorization" name="workAuthorization" required>
+                                <option value="">Select status</option>
+                                <option value="citizen">U.S. Citizen</option>
+                                <option value="permanent_resident">Permanent Resident</option>
+                                <option value="work_visa">Work Visa</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="backgroundCheck">Background Check Status</label>
+                            <select id="backgroundCheck" name="backgroundCheck">
+                                <option value="">Select status</option>
+                                <option value="completed">Completed - Clear</option>
+                                <option value="pending">Pending</option>
+                                <option value="not_started">Not Started</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="references">Professional References</label>
+                            <textarea id="references" name="references"
+                                placeholder="List 3 professional references with contact information"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="allergies">Known Allergies</label>
+                            <textarea id="allergies" name="allergies"
+                                placeholder="List any severe allergies that may require emergency attention"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="medicalConditions">Medical Conditions</label>
+                            <textarea id="medicalConditions" name="medicalConditions"
+                                placeholder="List any medical conditions relevant to your work environment"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="medications">Current Medications</label>
+                            <textarea id="medications" name="medications"
+                                placeholder="List any medications that may affect your work performance"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 7: Review & Submit -->
+                    <div class="step" id="step7">
+                        <h2>Review Your Information</h2>
+                        <p>Please review all details before submitting</p>
+
+                        <div id="reviewContent"
+                            style="background: #f8fafc; padding: 24px; border-radius: 8px; margin: 20px 0;">
+                            <!-- Review content populated by JavaScript -->
+                            <p><strong>Name:</strong> <span id="reviewName"></span></p>
+                            <p><strong>Email:</strong> <span id="reviewEmail"></span></p>
+                            <p><strong>Phone:</strong> <span id="reviewPhone"></span></p>
+                            <p><strong>Degree:</strong> <span id="reviewDegree"></span></p>
+                            <p><strong>Experience:</strong> <span id="reviewExperience"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="step" id="successStep">
+                        <div class="success-message">
+                            <div class="success-icon"><i class="fa fa-check"></i></div>
+                            <h2>Registration Successful!</h2>
+                            <p>Welcome to our teaching staff! Your registration has been submitted for HR review. You
+                                will receive confirmation within 2-3 business days.</p>
+                            <button type="button" class="btn btn-primary" onclick="location.reload()"
+                                style="margin-top: 20px;">Register Another Teacher</button>
+                        </div>
+                    </div>
+                    <div id="errorStep" class="step">
+                        <div class="error-message" style="text-align: center; padding: 40px;">
+                            <i class="fa fa-exclamation-circle"
+                                style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"></i>
+                            <h2>Registration Failed</h2>
+                            <p id="errorMessage">The server rejected the registration. The email might already be in
+                                use.</p>
+
+                            <button type="button" class="btn btn-secondary" id="backToEditBtn"
+                                style="margin-top: 20px;">
+                                <i class="fa fa-arrow-left"></i> Back to Edit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button type="button" class="btn btn-secondary" id="prevBtn"
+                            style="display: none;">Previous</button>
+                        <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Submit
+                            Registration</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Details Popup -->
+    <div class="popup" id="teacherDetailsPopup">
+        <div class="containment">
+            <div class="popup-header">
+                <div class="icon" id="closeTeacherDetailsPopup"><i class="fa fa-times"></i></div>
+                <h1>Teacher Details</h1>
+                <p>Complete teacher profile information</p>
+            </div>
+
+            <div class="teacher-details-content">
+                <div class="teacher-profile-header">
+                    <div class="teacher-avatar-large" id="teacherAvatarLarge"></div>
+                    <div class="teacher-basic-info">
+                        <h2 id="teacherFullName"></h2>
+                        <p id="teacherId"></p>
+                        <div class="teacher-status">
+                            <span class="status-badge" id="teacherJobTitle"></span>
+                            <span class="class-badge" id="teacherClass"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <!-- Personal Information -->
+                    <div class="detail-section">
+                        <h3>Personal Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>First Name:</label>
+                                <span id="detailFirstName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Middle Name:</label>
+                                <span id="detailMiddleName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Last Name:</label>
+                                <span id="detailLastName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Date of Birth:</label>
+                                <span id="detailDateOfBirth"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Age:</label>
+                                <span id="detailAge"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Gender:</label>
+                                <span id="detailGender"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="detail-section">
+                        <h3>Contact Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Address:</label>
+                                <span id="detailAddress"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Mobile Phone:</label>
+                                <span id="detailMobilePhone"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Home Phone:</label>
+                                <span id="detailHomePhone"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Personal Email:</label>
+                                <span id="detailPersonalEmail"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Emergency Contact:</label>
+                                <span id="detailEmergencyContact"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Emergency Phone:</label>
+                                <span id="detailEmergencyPhone"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Qualifications -->
+                    <div class="detail-section">
+                        <h3>Professional Qualifications</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Highest Degree:</label>
+                                <span id="detailHighestDegree"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Major:</label>
+                                <span id="detailDegreeMajor"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Institution:</label>
+                                <span id="detailInstitution"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Graduation Year:</label>
+                                <span id="detailGraduationYear"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Teaching License:</label>
+                                <span id="detailTeachingLicense"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>License Expiry:</label>
+                                <span id="detailLicenseExpiry"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Certified Subjects:</label>
+                                <div class="subjects-list" id="detailSubjects"></div>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Grade Levels:</label>
+                                <div class="grade-levels-list" id="detailGradeLevels"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Teaching Experience -->
+                    <div class="detail-section">
+                        <h3>Teaching Experience</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Total Experience:</label>
+                                <span id="detailTotalExperience"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Previous School:</label>
+                                <span id="detailPreviousSchool"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Previous Position:</label>
+                                <span id="detailPreviousPosition"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Previous Duration:</label>
+                                <span id="detailPreviousDuration"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Professional Development:</label>
+                                <span id="detailProfessionalDevelopment"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employment Details -->
+                    <div class="detail-section">
+                        <h3>Employment Details</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Start Date:</label>
+                                <span id="detailStartDate"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Job Title:</label>
+                                <span id="detailJobTitle"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Contract Type:</label>
+                                <span id="detailContractType"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Salary:</label>
+                                <span id="detailSalary"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Specialized Roles:</label>
+                                <div class="roles-list" id="detailSpecializedRoles"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Background & Medical Info -->
+                    <div class="detail-section">
+                        <h3>Background & Medical Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Work Authorization:</label>
+                                <span id="detailWorkAuthorization"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Background Check:</label>
+                                <span id="detailBackgroundCheck"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>References:</label>
+                                <span id="detailReferences"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Allergies:</label>
+                                <span id="detailAllergies"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Medical Conditions:</label>
+                                <span id="detailMedicalConditions"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Medications:</label>
+                                <span id="detailMedications"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Teacher Registration</h1>
+                    <p class="page-subtitle">Complete your professional profile in 7 steps</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-cards">
+            <div class="action-card" id="openPopupBtn">
+                <div class="action-icon add-single">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Add New Teacher</h3>
+                    <p>Add a single teacher to the system</p>
+                </div>
+            </div>
+
+            <div class="action-card" id="openTeacherExcelUploadBtn">
+                <div class="action-icon add-multiple">
+                    <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Upload Excel Sheet</h3>
+                    <p>Bulk import teachers from Excel file</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teachers Table Section -->
+        <div class="students-section">
+            <div class="section-header">
+                <h2 class="section-title">Teacher List</h2>
+                <div class="filter-tabs">
+                    <div class="filter-tab active">All</div>
+                    <div class="filter-tab">Primary</div>
+                    <div class="filter-tab">Secondary</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="students-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Experience</th>
+                            <th>Class/Grade</th>
+                            <th>Attendance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../scripts/font-awesome.js"></script>
+    <!-- <script src="../../scripts/side.js"></script> -->
+    <!-- <script src="../../scripts/schoolAdminScripts/popup.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../scripts/sideBar.js"></script>
+    <!-- <script src="../../scripts/config.js"></script> -->
+    <script src="../../scripts/schoolAdminScripts/teachersForm.js" type="module"></script>
+    <script src="../../scripts/schoolAdminScripts/teachersFormDB.js" type="module"></script>
+    <script src="../../scripts/schoolAdminScripts/viewAllTeachers.js" type="module"></script>
+
+    <script>
+        // // Sidebar Toggle
+        // const sidebar = document.querySelector('[data-sideBar]');
+        // const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+        // const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+        // if (sidebarOpenBtn && sidebar) {
+        //     sidebarOpenBtn.addEventListener('click', () => sidebar.classList.add('show'));
+        // }
+        // if (sidebarCloseBtn && sidebar) {
+        //     sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('show'));
+        // }
+
+        // Popup Logic
+        const popup = document.getElementById('registrationPopup');
+        const openPopupBtn = document.getElementById('openPopupBtn');
+        const closePopupBtn = document.getElementById('closePopup');
+
+        if (openPopupBtn && popup) {
+            openPopupBtn.addEventListener('click', () => {
+                popup.style.display = 'flex';
+            });
+        }
+
+        if (closePopupBtn && popup) {
+            closePopupBtn.addEventListener('click', () => {
+                popup.style.display = 'none';
+            });
+        }
+
+        // Multi-Step Form Logic
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7'];
+        let currentStep = 0;
+
+        function updateSteps() {
+            // Hide all steps
+            steps.forEach((stepId, index) => {
+                const stepEl = document.getElementById(stepId);
+                if (stepEl) stepEl.classList.remove('active');
+
+                const indicator = document.getElementById(`indicator${index + 1}`);
+                if (indicator) indicator.classList.remove('active');
+            });
+
+            // Show current step
+            document.getElementById(steps[currentStep]).classList.add('active');
+            const currentIndicator = document.getElementById(`indicator${currentStep + 1}`);
+            if (currentIndicator) currentIndicator.classList.add('active');
+
+            // Update buttons
+            prevBtn.style.display = currentStep === 0 ? 'none' : 'block';
+
+            if (currentStep === steps.length - 1) {
+                // Review Step
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+                populateReview();
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+
+            // Update progress
+            document.getElementById('progressFill').style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+        }
+
+        function populateReview() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('personalEmail').value;
+            const phone = document.getElementById('mobilePhone').value;
+            const degree = document.getElementById('highestDegree').value;
+            const experience = document.getElementById('totalExperience').value;
+
+            document.getElementById('reviewName').textContent = `${firstName} ${lastName}`;
+            document.getElementById('reviewEmail').textContent = email;
+            document.getElementById('reviewPhone').textContent = phone;
+            document.getElementById('reviewDegree').textContent = degree;
+            document.getElementById('reviewExperience').textContent = experience;
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                // Basic validation could go here
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    updateSteps();
+                }
+            });
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 0) {
+                    currentStep--;
+                    updateSteps();
+                }
+            });
+        }
+
+
+
+        // Attach upload function to the button
+        document.getElementById('openTeacherExcelUploadBtn')?.addEventListener('click', () => {
+            if (typeof window.openTeachersExcelUpload === 'function') {
+                window.openTeachersExcelUpload();
+            } else {
+                showToast('Upload module is still loading, please try again.', 'info');
+            }
+        });
+    </script>
+    <script type="module" src="../../scripts/schoolAdminScripts/teachers_upload_modal.js"></script>
+</body>
+
+</html>

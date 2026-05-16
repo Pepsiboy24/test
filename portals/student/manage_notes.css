@@ -1,0 +1,474 @@
+/* Import Admin Portal Base Styles */
+@import url('../admin/schoolAdminStyles/adminPortal.css');
+
+/* Local Variables Override */
+:root {
+    --primary: #6200ea;
+    --primary-light: #ede7f6;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    --border: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Layout */
+.sidebar {
+    width: 250px;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s ease;
+}
+
+/* Main Layout */
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--bg-light);
+    margin-left: 250px;
+    flex: 1;
+}
+
+/* Header Styles */
+.header {
+    background: var(--white);
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.welcome-section h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 8px 0;
+}
+
+.welcome-section p {
+    color: var(--text-gray);
+    margin: 0;
+    font-size: 14px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Section Styles */
+.section {
+    padding: 32px !important;
+    margin: 10px;
+    flex: 1;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.section-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.header-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.stat-item {
+    background: var(--white);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    text-align: center;
+    min-width: 100px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+    display: block;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-gray);
+    margin-top: 4px;
+}
+
+/* Search and Filter */
+.search-filter-container {
+    display: flex;
+    gap: 16px;
+    margin: 0 16px 24px 16px;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-gray);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 12px 10px 40px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--white);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: var(--bg-light);
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+/* Table Styles */
+.table-container {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin: 0 16px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background: var(--bg-light);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--border);
+    font-size: 14px;
+}
+
+.data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover {
+    background: var(--bg-light);
+}
+
+/* Button Styles */
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: #5547d0;
+}
+
+.btn-secondary {
+    background: var(--text-gray);
+    color: var(--white);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+.modal-sm {
+    max-width: 400px;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-gray);
+    padding: 4px;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    background: var(--white);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 16px;
+}
+
+/* Loading State */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-gray);
+}
+
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Utility Classes */
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-info { background: #3b82f6; color: white; }
+.badge-success { background: var(--success); color: white; }
+.badge-warning { background: var(--warning); color: white; }
+.badge-danger { background: var(--danger); color: white; }
+.badge-secondary { background: var(--text-gray); color: white; }
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main {
+        margin-left: 0;
+    }
+    
+    .header {
+        padding: 16px 20px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .welcome-section {
+        text-align: center;
+        margin-bottom: 8px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 22px;
+        margin-bottom: 4px;
+    }
+    
+    .welcome-section p {
+        font-size: 13px;
+        margin-bottom: 0;
+    }
+    
+    .header-actions {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+        color: white !important;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+    
+    .search-filter-container {
+        flex-direction: column;
+        margin: 0 16px 16px 16px;
+    }
+    
+    .filter-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+}

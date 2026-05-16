@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+    
+    <title>Timetable Management - EduHubAdmin</title>
+    <link rel="stylesheet" href="./schoolAdminStyles/timeTable.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+</head>
+
+<body>
+    <div class="sidebar" data-sideBar></div>
+
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Timetable Management</h1>
+                    <p class="page-subtitle">Manage class schedules and events</p>
+                </div>
+            </div>
+            <div class="header-right">
+
+            </div>
+        </div>
+
+
+        <div class="toolbar">
+            <button class="btn btn-primary" onclick="window.location.href='/admin/create_timetable_setup'">
+                <i class="fa-solid fa-plus"></i> Create New Timetable
+            </button>
+            <button class="btn active" onclick="filterTimetables('all')">All Timetables</button>
+            <button class="btn" onclick="filterTimetables('week')">Current Week</button>
+        </div>
+
+        <div class="timetables-grid" id="timetablesGrid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Loading timetables...
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Timetable Modal -->
+    <div id="editTimetableModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Timetable Configuration</h2>
+                <button class="modal-close" onclick="closeEditModal()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editTimetableForm">
+                    <div class="form-section">
+                        <h3>Class Information</h3>
+                        <div class="form-group">
+                            <label>Class:</label>
+                            <input type="text" id="editClassName" readonly>
+                            <input type="hidden" id="editClassId">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Time Settings</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editStartTime">Start Time *</label>
+                                <input type="time" id="editStartTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editEndTime">School End Time *</label>
+                                <input type="time" id="editEndTime" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editPeriodDuration">Period Duration (minutes) *</label>
+                                <input type="number" id="editPeriodDuration" min="15" max="120" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Active Days</h3>
+                        <div class="days-selection">
+                            <label class="day-checkbox">
+                                <input type="checkbox" name="editActiveDays" value="Mon">
+                                <span>Monday</span>
+                            </label>
+                            <label class="day-checkbox">
+                                <input type="checkbox" name="editActiveDays" value="Tue">
+                                <span>Tuesday</span>
+                            </label>
+                            <label class="day-checkbox">
+                                <input type="checkbox" name="editActiveDays" value="Wed">
+                                <span>Wednesday</span>
+                            </label>
+                            <label class="day-checkbox">
+                                <input type="checkbox" name="editActiveDays" value="Thu">
+                                <span>Thursday</span>
+                            </label>
+                            <label class="day-checkbox">
+                                <input type="checkbox" name="editActiveDays" value="Fri">
+                                <span>Friday</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Break Times</h3>
+                        <div id="editBreaksContainer">
+                            <!-- Breaks will be populated here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addEditBreakField()">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Break
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveTimetableChanges()">
+                    <i class="fa-solid fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Entry Modal -->
+    <div id="editEntryModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Timetable Entry</h2>
+                <button class="modal-close" onclick="closeEditEntryModal()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editEntryForm">
+                    <div class="form-section">
+                        <h3>Entry Details</h3>
+                        <div class="form-group">
+                            <label for="editEntryDay">Day:</label>
+                            <input type="text" id="editEntryDay" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEntryTime">Time:</label>
+                            <input type="text" id="editEntryTime" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEntrySubject">Subject *</label>
+                            <select id="editEntrySubject" required>
+                                <option value="">-- Select Subject --</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeEditEntryModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveEntryChanges()">
+                    <i class="fa-solid fa-save"></i> Save Entry
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Full Timetable Modal -->
+    <div id="viewFullTimetableModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 900px; width: 95%;">
+            <div class="modal-header">
+                <h2 id="viewFullTimetableTitle">Full Timetable</h2>
+                <button class="modal-close" onclick="closeViewFullModal()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="overflow-x: auto;">
+                <div class="schedule-grid">
+                    <table class="timetable-table" id="fullTimetableTable" style="min-width: 700px;">
+                        <!-- Content will be injected here -->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js-shared/sideBar.js"></script>
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        import { waitForUser } from '/core/perf.js';
+
+        // 1. CONFIGURATION
+        const SUPABASE_URL = "https://dzotwozhcxzkxtunmqth.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6b3R3b3poY3h6a3h0dW5tcXRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODk5NzAsImV4cCI6MjA3MDY2NTk3MH0.KJfkrRq46c_Fo7ujkmvcue4jQAzIaSDfO3bU7YqMZdE";
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Global State
+        let globalData = {
+            classes: [],
+            subjects: [],
+            configs: [],
+            entries: []
+        };
+
+        // 2. INITIALIZATION
+        document.addEventListener('DOMContentLoaded', loadAllTimetableData);
+
+        // 3. FETCH DATA
+        async function loadAllTimetableData() {
+            try {
+                // Get authenticated user and school_id
+                const user = await waitForUser();
+                if (!user?.user_metadata?.school_id) {
+                    console.error('Cannot determine school_id from user metadata');
+                    document.getElementById('timetablesGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #dc2626;">Authentication error - please log in again.</div>';
+                    return;
+                }
+                const schoolId = user.user_metadata.school_id;
+
+                const [configs, classes, subjects, entries] = await Promise.all([
+                    supabase.from('schedule_configs').select('*').eq('school_id', schoolId),
+                    supabase.from('Classes').select('*').eq('school_id', schoolId),
+                    supabase.from('Subjects').select('*').eq('school_id', schoolId),
+                    supabase.from('timetable_entries').select('*').eq('school_id', schoolId)
+                ]);
+
+                if (configs.error) throw configs.error;
+
+                globalData.configs = configs.data || [];
+                globalData.classes = classes.data || [];
+                globalData.subjects = subjects.data || [];
+                globalData.entries = entries.data || [];
+
+                // ── MISSION 2: Debug console tables ──────────────────────────────
+                console.group('[Timetable Debug] Raw Supabase Data');
+                console.log('Classes (%d rows):', globalData.classes.length);
+                console.table(globalData.classes.map(c => ({ class_id: c.class_id, class_name: c.class_name, section: c.section })));
+                console.log('schedule_configs (%d rows):', globalData.configs.length);
+                console.table(globalData.configs.map(c => ({ class_id: c.class_id, start_time: c.start_time, period_duration: c.period_duration, periods_per_day: c.periods_per_day })));
+                console.log('timetable_entries (%d rows):', globalData.entries.length);
+                console.table(globalData.entries.map(e => ({ class_id: e.class_id, day_of_week: e.day_of_week, start_time: e.start_time, subject_id: e.subject_id })));
+                console.groupEnd();
+                // ─────────────────────────────────────────────────────────────
+
+                renderTimetables();
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('timetablesGrid').innerHTML =
+                    `<div style="color:red;text-align:center;">Error loading timetables: ${error.message}</div>`;
+            }
+        }
+
+        // 4. RENDER LOGIC
+        function renderTimetables() {
+            const container = document.getElementById('timetablesGrid');
+            container.innerHTML = '';
+
+            if (globalData.classes.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">No classes found. Add a class first!</div>';
+                return;
+            }
+
+            // Only render classes that have a schedule config or existing entries.
+            // This ensures that when a timetable is deleted, its card is removed from the screen.
+            const activeClasses = globalData.classes.filter(classInfo => {
+                return globalData.configs.some(c => c.class_id === classInfo.class_id) ||
+                    globalData.entries.some(e => e.class_id === classInfo.class_id);
+            });
+
+            if (activeClasses.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">No timetables have been created yet!</div>';
+                return;
+            }
+
+            activeClasses.forEach(classInfo => {
+                const config = globalData.configs.find(c => c.class_id === classInfo.class_id) || {
+                    class_id: classInfo.class_id,
+                    start_time: '08:00',
+                    period_duration: 40,
+                    periods_per_day: 8,
+                    active_days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                    break_times: []
+                };
+
+                const classEntries = globalData.entries.filter(e => e.class_id === classInfo.class_id);
+                const cardHTML = createTimetableCard(config, classInfo, classEntries);
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        // 5. CARD GENERATOR
+        function createTimetableCard(config, classInfo, entries) {
+            const className = classInfo ? `${classInfo.class_name} ${classInfo.section || ''}` : `Class ${config.class_id}`;
+            const subtitle = classInfo ? `Grade ${classInfo.grade_level || ''} • Room ${classInfo.room_number || 'TBD'}` : 'Schedule';
+
+            // Generate time rows based on start_time and duration
+            const rowsHTML = generateTimeRows(config, entries);
+
+            return `
+                <div class="timetable-card">
+                    <div class="timetable-header">
+                        <h3 class="timetable-title">${className}</h3>
+                        <p class="timetable-subtitle">${subtitle}</p>
+                    </div>
+                    <div class="schedule-grid">
+                        <table class="timetable-table">
+                            <thead>
+                                <tr>
+                                    <th class="time-column">Time</th>
+                                    <th class="day-column">Mon</th>
+                                    <th class="day-column">Tue</th>
+                                    <th class="day-column">Wed</th>
+                                    <th class="day-column">Thu</th>
+                                    <th class="day-column">Fri</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn-view" onclick="viewFullTimetable('${config.class_id}')">View Full</button>
+                        <button class="btn-edit" onclick="openEditModal('${config.class_id}')">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="btn-delete" onclick="deleteTimetable('${config.class_id}', '${className}')" style="width: 38px; height: 38px; border: 1px solid #fca5a5; background: #fee2e2; border-radius: 8px; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 6. DYNAMIC ROW GENERATOR
+        function generateTimeRows(config, entries) {
+            let html = '';
+
+            const periodsCount = config.periods_per_day || 8;
+            const duration = config.period_duration || 40;
+
+            let [startHour, startMin] = (config.start_time || '08:00').split(':').map(Number);
+            let currentMinutes = startHour * 60 + startMin;
+
+            for (let i = 0; i < periodsCount; i++) {
+                const timeStr = minutesToTimeString(currentMinutes);
+
+                // Pass duration so generateCell uses the right window
+                const daysHTML = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day =>
+                    generateCell(day, timeStr, entries, duration)
+                ).join('');
+
+                html += `
+                    <tr class="time-row">
+                        <td class="time-cell">${timeStr}</td>
+                        ${daysHTML}
+                    </tr>
+                `;
+
+                currentMinutes += duration;
+                if (i === 3) currentMinutes += 20; // break after 4th period
+            }
+            return html;
+        }
+
+        // 7. CELL GENERATOR
+        // MISSION 3: Day-prefix matching so "Mon" matches "Monday" and vice versa.
+        // Time window uses the actual period duration instead of a hardcoded 40.
+        function generateCell(day, timeStr, entries, duration) {
+            const [h, m] = timeStr.split(':').map(Number);
+            const gridMinutes = h * 60 + m;
+            const slotDur = duration || 40;
+
+            const entry = entries.find(e => {
+                if (!e.start_time || !e.day_of_week) return false;
+                // MISSION 3: compare first‑3‑chars so 'Mon' === 'Monday'.substring(0,3)
+                const dayMatch = e.day_of_week.substring(0, 3).toLowerCase() === day.substring(0, 3).toLowerCase();
+                const [eh, em] = e.start_time.split(':').map(Number);
+                const entryMins = eh * 60 + em;
+                return dayMatch && entryMins >= gridMinutes && entryMins < (gridMinutes + slotDur);
+            });
+
+            if (entry) {
+                const subject = globalData.subjects.find(s => s.subject_id === entry.subject_id);
+                // subject_code does NOT exist in Subjects table — use subject_name only
+                const code = subject ? subject.subject_name.substring(0, 4).toUpperCase() : '???';
+                return `<td class="subject-cell" onclick="openEditEntryModal('${day}','${timeStr}','${entry.class_id}')">
+                    <span class="subject-block">${code}</span>
+                </td>`;
+            }
+            return `<td class="empty-cell" onclick="openEditEntryModal('${day}','${timeStr}','${entries[0]?.class_id || ''}')"></td>`;
+        }
+
+        // Helper: Convert minutes (480) to "08:00"
+        function minutesToTimeString(totalMinutes) {
+            const h = Math.floor(totalMinutes / 60);
+            const m = totalMinutes % 60;
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+        }
+
+        // --- EXPOSE FUNCTIONS TO WINDOW FOR BUTTONS ---
+        window.editTimetable = (classId) => {
+            window.location.href = `/admin/create_timetable_setup?classId=${classId}`;
+        };
+
+        window.viewFullTimetable = (classId) => {
+            const config = globalData.configs.find(c => c.class_id == classId);
+            const classInfo = globalData.classes.find(c => c.class_id == classId);
+            const entries = globalData.entries.filter(e => e.class_id == classId);
+
+            if (!config || !classInfo) { showToast("Error loading timetable config or class info.", "error"); return; }
+
+            document.getElementById('viewFullTimetableTitle').textContent = `Full Timetable - ${classInfo.class_name} ${classInfo.section || ''}`;
+
+            const tableHTML = generateFullTimetableTable(config, entries);
+            document.getElementById('fullTimetableTable').innerHTML = tableHTML;
+
+            document.getElementById('viewFullTimetableModal').style.display = 'flex';
+        };
+
+        window.closeViewFullModal = () => {
+            document.getElementById('viewFullTimetableModal').style.display = 'none';
+        };
+
+        function generateFullTimetableTable(config, entries) {
+            let html = `
+                <thead>
+                    <tr>
+                        <th class="time-column" style="width: 120px;">Time</th>
+                        <th class="day-column">Monday</th>
+                        <th class="day-column">Tuesday</th>
+                        <th class="day-column">Wednesday</th>
+                        <th class="day-column">Thursday</th>
+                        <th class="day-column">Friday</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            const periodsCount = config.periods_per_day || 8;
+            const duration = config.period_duration || 40;
+
+            let [startHour, startMin] = (config.start_time || '08:00').split(':').map(Number);
+            let currentMinutes = startHour * 60 + startMin;
+
+            for (let i = 0; i < periodsCount; i++) {
+                const timeStr = minutesToTimeString(currentMinutes);
+                const endTimeStr = minutesToTimeString(currentMinutes + duration);
+
+                const daysHTML = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day => {
+                    return generateFullCell(day, timeStr, entries, duration);
+                }).join('');
+
+                html += `
+                    <tr class="time-row">
+                        <td class="time-cell" style="padding: 12px; font-weight: 500;">${timeStr} - ${endTimeStr}</td>
+                        ${daysHTML}
+                    </tr>
+                `;
+
+                currentMinutes += duration;
+
+                // Add break row after 4th period
+                if (i === 3) {
+                    const breakEndStr = minutesToTimeString(currentMinutes + 20);
+                    html += `
+                        <tr class="time-row" style="background-color: #f1f5f9;">
+                            <td class="time-cell" style="padding: 8px; font-weight: 500;">${minutesToTimeString(currentMinutes)} - ${breakEndStr}</td>
+                            <td colspan="5" style="text-align: center; font-weight: 600; color: #64748b; letter-spacing: 2px;">BREAK</td>
+                        </tr>
+                    `;
+                    currentMinutes += 20;
+                }
+            }
+            html += `</tbody>`;
+            return html;
+        }
+
+        function generateFullCell(day, timeStr, entries, duration) {
+            const [h, m] = timeStr.split(':').map(Number);
+            const gridMinutes = h * 60 + m;
+            const slotDur = duration || 40;
+
+            const entry = entries.find(e => {
+                if (!e.start_time || !e.day_of_week) return false;
+                const dayMatch = e.day_of_week.substring(0, 3).toLowerCase() === day.substring(0, 3).toLowerCase();
+                const [eh, em] = e.start_time.split(':').map(Number);
+                const entryMins = eh * 60 + em;
+                return dayMatch && entryMins >= gridMinutes && entryMins < (gridMinutes + slotDur);
+            });
+
+            if (entry) {
+                const subject = globalData.subjects.find(s => s.subject_id === entry.subject_id);
+                const name = subject ? subject.subject_name : 'Unknown';
+                return `<td class="subject-cell" style="padding: 12px; text-align: center; border: 1px solid #e2e8f0; vertical-align: middle;">
+                    <span style="font-weight: 600; color: #0f172a; padding: 4px 8px; background: #e0f2fe; border-radius: 4px; display: inline-block;">${name}</span>
+                </td>`;
+            }
+            return `<td class="empty-cell" style="padding: 12px; color: #cbd5e1; text-align: center; border: 1px solid #e2e8f0; vertical-align: middle; font-style: italic;">Free</td>`;
+        }
+
+        window.deleteTimetable = async (classId, className) => {
+            const isConfirmed = await window.showConfirm(`Are you sure you want to completely delete the timetable for ${className}? This will remove all settings and subject entries.`, 'Delete Timetable');
+
+            if (!isConfirmed) return;
+
+            try {
+                // 1. Delete all subject entries for this class first
+                const { error: entriesError } = await supabase
+                    .from('timetable_entries')
+                    .delete()
+                    .eq('class_id', classId);
+
+                if (entriesError) throw entriesError;
+
+                // 2. Delete the configuration (start time, duration, etc.)
+                const { error: configError } = await supabase
+                    .from('schedule_configs')
+                    .delete()
+                    .eq('class_id', classId);
+
+                if (configError) throw configError;
+
+                showToast('Timetable and all entries cleared successfully!', 'success');
+                loadAllTimetableData(); // Refresh the grid
+            } catch (err) {
+                console.error("Critical Delete Error:", err);
+                // If it's a foreign key error, explain it to the admin
+                if (err.code === '23503') {
+                    showToast("Cannot delete: This timetable is linked to other school records (like Attendance or Results).", "warning", 8000);
+                } else {
+                    showToast("Failed to delete: " + err.message, "error");
+                }
+            }
+        };
+
+        // Sidebar Toggle
+        const sidebar = document.querySelector('[data-sideBar]');
+        const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+        const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+        if (sidebarOpenBtn && sidebar) {
+            sidebarOpenBtn.addEventListener('click', () => sidebar.classList.add('show'));
+        }
+        if (sidebarCloseBtn && sidebar) {
+            sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('show'));
+        }
+        // --- MODAL LOGIC ---
+
+        window.openEditModal = (classId) => {
+            const config = globalData.configs.find(c => c.class_id == classId);
+            const classInfo = globalData.classes.find(c => c.class_id == classId);
+
+            if (!config) {
+                showToast('No schedule config found for this class. Please set one up first.', 'warning');
+                return;
+            }
+
+            const cleanTime = t => t ? t.substring(0, 5) : '';
+
+            document.getElementById('editClassId').value = classId;
+            document.getElementById('editClassName').value = classInfo ? classInfo.class_name : 'Unknown';
+            document.getElementById('editStartTime').value = cleanTime(config.start_time);
+            document.getElementById('editPeriodDuration').value = config.period_duration;
+
+            if (config.end_time) {
+                document.getElementById('editEndTime').value = cleanTime(config.end_time);
+            } else {
+                const periods = config.periods_per_day || 8;
+                const dur = config.period_duration || 40;
+                const [sh, sm] = (config.start_time || '08:00').split(':').map(Number);
+                document.getElementById('editEndTime').value = minutesToTimeString((sh * 60) + sm + (periods * dur) + 20);
+            }
+
+            const activeDays = config.active_days || [];
+            document.querySelectorAll('input[name="editActiveDays"]').forEach(cb => {
+                cb.checked = activeDays.includes(cb.value);
+            });
+
+            // Populate break fields — use different var names to avoid redeclaration
+            const bContainer = document.getElementById('editBreaksContainer');
+            bContainer.innerHTML = '';
+            const bDur = config.period_duration || 40;
+            const [bh, bm] = (config.start_time || '08:00').split(':').map(Number);
+            addEditBreakField(minutesToTimeString((bh * 60) + bm + (4 * bDur)), 20);
+
+            document.getElementById('editTimetableModal').style.display = 'flex';
+        };
+
+        window.closeEditModal = () => {
+            document.getElementById('editTimetableModal').style.display = 'none';
+        };
+
+        window.saveTimetableChanges = async () => {
+            const classId = document.getElementById('editClassId').value;
+            const startTime = document.getElementById('editStartTime').value;
+            const duration = document.getElementById('editPeriodDuration').value;
+
+            // Collect selected days
+            const selectedDays = Array.from(document.querySelectorAll('input[name="editActiveDays"]:checked'))
+                .map(cb => cb.value);
+
+            try {
+                const { error } = await supabase
+                    .from('schedule_configs')
+                    .update({
+                        start_time: startTime,
+                        period_duration: parseInt(duration),
+                        active_days: selectedDays // Ensure this column exists in your DB
+                    })
+                    .eq('class_id', classId);
+
+                if (error) throw error;
+
+                showToast('Timetable updated successfully!', 'success');
+                closeEditModal();
+                loadAllTimetableData(); // Refresh the grid
+            } catch (err) {
+                console.error("Update error:", err);
+                showToast("Failed to update: " + err.message, "error");
+            }
+        };
+
+        // Break logic (Optional UI helper)
+        window.addEditBreakField = (time = '', duration = '') => {
+            const container = document.getElementById('editBreaksContainer');
+            const div = document.createElement('div');
+            div.className = 'break-entry-row';
+            div.innerHTML = `
+        <div class="form-group">
+            <label style="font-size: 11px; color: #64748b;">Start Time</label>
+            <input type="time" class="break-start" value="${time}">
+        </div>
+        <div class="form-group">
+            <label style="font-size: 11px; color: #64748b;">Duration (Mins)</label>
+            <input type="number" class="break-duration" value="${duration}">
+        </div>
+        <button type="button" class="btn-remove-break" onclick="this.parentElement.remove()">
+            <i class="fa fa-trash"></i>
+        </button>
+    `;
+            container.appendChild(div);
+        };
+
+        // --- ENTRY EDITING LOGIC ---
+        window.openEditEntryModal = async (day, time, classId) => {
+            if (!classId) { showToast('No class selected.', 'warning'); return; }
+
+            document.getElementById('editEntryDay').value = day;
+            document.getElementById('editEntryTime').value = time;
+
+            // Store classId so saveEntryChanges can read it
+            document.getElementById('editEntryForm').dataset.classId = classId;
+
+            // ── Fetch only subjects for THIS class (safe 2-step, correct table casing) ──
+            const subjectSelect = document.getElementById('editEntrySubject');
+            subjectSelect.innerHTML = '<option value="">Loading subjects…</option>';
+            subjectSelect.disabled = true;
+
+            // Step 1: Get subject_ids for this class
+            const { data: csData, error: csError } = await supabase
+                .from('Class_Subjects')          // correct casing
+                .select('subject_id')
+                .eq('class_id', classId);
+
+            if (csError) {
+                console.error('[Timetable] Class_Subjects error:', csError.message);
+                subjectSelect.innerHTML = '<option value="">Error loading subjects</option>';
+                subjectSelect.disabled = false;
+                return;
+            }
+
+            const subjectIds = (csData || []).map(r => r.subject_id).filter(Boolean);
+
+            if (!subjectIds.length) {
+                subjectSelect.innerHTML = '<option value="">No subjects assigned to this class</option>';
+                subjectSelect.disabled = false;
+                return;
+            }
+
+            // Step 2: Fetch subject names (subject_code does NOT exist in schema)
+            const { data: subjectsData } = await supabase
+                .from('Subjects')
+                .select('subject_id, subject_name')
+                .in('subject_id', subjectIds);
+
+            subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
+            (subjectsData || []).forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.subject_id;
+                opt.textContent = s.subject_name;
+                subjectSelect.appendChild(opt);
+            });
+            subjectSelect.disabled = false;
+
+            // Pre-select the existing entry's subject if one exists
+            const existingEntry = globalData.entries.find(e =>
+                e.class_id == classId &&
+                e.day_of_week.substring(0, 3).toLowerCase() === day.substring(0, 3).toLowerCase() &&
+                e.start_time.startsWith(time)
+            );
+            if (existingEntry) {
+                subjectSelect.value = existingEntry.subject_id;
+                document.getElementById('editEntryForm').dataset.originalDay = existingEntry.day_of_week;
+                document.getElementById('editEntryForm').dataset.originalTime = existingEntry.start_time;
+            } else {
+                delete document.getElementById('editEntryForm').dataset.originalDay;
+                delete document.getElementById('editEntryForm').dataset.originalTime;
+            }
+
+            document.getElementById('editEntryModal').style.display = 'flex';
+        };
+
+        window.closeEditEntryModal = () => {
+            document.getElementById('editEntryModal').style.display = 'none';
+        };
+
+        window.saveEntryChanges = async () => {
+            const classId = document.getElementById('editEntryForm').dataset.classId;
+            const day = document.getElementById('editEntryDay').value;
+            const time = document.getElementById('editEntryTime').value;
+            const subjectId = document.getElementById('editEntrySubject').value;
+
+            try {
+                if (subjectId) {
+                    // Upsert entry
+                    const { error } = await supabase
+                        .from('timetable_entries')
+                        .upsert({
+                            class_id: classId,
+                            day_of_week: day,
+                            start_time: time + ':00', // Add seconds
+                            subject_id: subjectId
+                        }, {
+                            onConflict: 'class_id,day_of_week,start_time'
+                        });
+
+                    if (error) throw error;
+                } else {
+                    // Delete entry if no subject selected
+                    const originalDay = document.getElementById('editEntryForm').dataset.originalDay || day;
+                    const originalTime = document.getElementById('editEntryForm').dataset.originalTime || time + ':00';
+                    const { error } = await supabase
+                        .from('timetable_entries')
+                        .delete()
+                        .eq('class_id', classId)
+                        .eq('day_of_week', originalDay)
+                        .eq('start_time', originalTime);
+
+                    if (error) throw error;
+                }
+
+                showToast('Entry updated successfully!', 'success');
+                closeEditEntryModal();
+                loadAllTimetableData(); // Refresh the grid
+            } catch (err) {
+                console.error("Save error:", err);
+                showToast("Failed to save: " + err.message, "error");
+            }
+        };
+    </script>
+</body>
+
+</html>

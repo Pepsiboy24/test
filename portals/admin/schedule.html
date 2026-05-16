@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+    
+    <title>Academic Calendar Management - EduHubAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css?v=1.1" rel='stylesheet' />
+    <!-- Using local CSS file as requested -->
+    <link rel="stylesheet" href="./schoolAdminStyles/schedule.css?v=1.1">
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+    <style>
+        /* Inline styles for layout specific to this page that rely on the shell structure */
+        :root {
+            --primary: #6200ea;
+            --primary-light: #ede7f6;
+            --primary-hover: #5000c2;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            padding: 0 12px 32px 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 32px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: var(--text-gray);
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .search-input {
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            width: 200px;
+            background: var(--white);
+            color: var(--text-dark);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+        }
+
+        .calendar-selector {
+            margin-right: 16px;
+        }
+
+        .calendar-dropdown {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--white);
+            color: var(--text-dark);
+            font-size: 14px;
+            min-width: 160px;
+            cursor: pointer;
+        }
+
+        .calendar-dropdown:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+        }
+
+        .profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 16px;
+            }
+
+            .header {
+                align-items: flex-start;
+                margin-bottom: 24px;
+            }
+
+            .page-title {
+                font-size: 22px;
+                line-height: 1.2;
+            }
+
+            .page-subtitle {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                margin-top: 4px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            /* Management panel full-width when stacked */
+            .management-section {
+                width: 100% !important;
+                flex-shrink: 1;
+            }
+            .management-card {
+                position: static;
+            }
+
+            /* Calendar header wraps */
+            .calendar-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .nav-buttons {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .month-year {
+                font-size: 1rem;
+                min-width: unset;
+            }
+
+            /* Table cells stay readable when scrolled */
+            .academic-calendar-table th,
+            .academic-calendar-table td {
+                white-space: nowrap;
+                padding: 10px 12px;
+                font-size: 0.8rem;
+            }
+
+            /* Modal form single column */
+            #addEventForm {
+                grid-template-columns: 1fr;
+            }
+            #addEventForm .form-group.full-width {
+                grid-column: 1;
+            }
+            .modal-actions {
+                flex-direction: column-reverse;
+                gap: 0.5rem;
+            }
+            .modal-actions button {
+                width: 100%;
+            }
+
+            /* Management header stacks */
+            .management-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .add-event-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .calendar-h2 {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .calendar-card,
+            .management-card {
+                padding: 1rem 0.75rem;
+            }
+            .nav-btn {
+                padding: 0.375rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            .calendar-h2 {
+                font-size: 1.1rem;
+            }
+        }
+        .calendar-section {
+            min-width: 0;
+            max-width: 100%;
+        }
+
+        .calendar-card {
+            max-width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Academic Calendar Management</h1>
+                    <p class="page-subtitle">Oversee and manage all academic schedules, event deadlines, and holiday
+                        periods.</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search sessions...">
+                </div>
+                <div class="profile"></div>
+            </div>
+        </div>
+
+        <div class="calendar-management">
+
+            <div class="calendar-section">
+                <div class="calendar-card">
+                    <div class="calendar-header">
+                        <h2 class="calendar-h2">Academic Calendar</h2>
+                        <div class="nav-buttons">
+                            <div class="calendar-selector">
+                                <select id="calendarSelector" class="calendar-dropdown">
+                                    <option value="">Select Calendar...</option>
+                                    <option value="academic">Academic Calendar</option>
+                                    <option value="events">Events Calendar</option>
+                                    <option value="holidays">Holidays Calendar</option>
+                                    <option value="exams">Exams Calendar</option>
+                                </select>
+                            </div>
+                            <button class="nav-btn" id="prevButton">
+                                <svg class="nav-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <button class="nav-btn" id="todayButton">Today</button>
+                            <button class="nav-btn" id="nextButton">
+                                <svg class="nav-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                            <span id="monthYear" class="month-year"></span>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <table class="academic-calendar-table">
+                        <thead>
+                            <tr>
+                                <th>Term/Period</th>
+                                <th>Activity/Event</th>
+                                <th>Date Range</th>
+                                <th>Duration</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="academicTableBody">
+                            <!-- Events will be populated here -->
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="management-section">
+                <div class="management-card">
+                    <div class="management-header">
+                        <h3 class="management-h3">Calendar Management</h3>
+                        <button class="btn-primary add-event-btn">
+                            <svg class="add-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Add New Event
+                        </button>
+                    </div>
+
+                    <div class="create-calendar">
+                        <h4 class="create-h4">Create New Calendar</h4>
+
+                        <div class="form-group">
+                            <div>
+                                <label class="form-label">
+                                    Calendar Name
+                                </label>
+                                <input type="text" class="input-field" placeholder="e.g., Spring 2025 Semester">
+                            </div>
+
+                            <div>
+                                <label class="form-label">
+                                    Description
+                                </label>
+                                <input type="text" class="input-field" placeholder="Optional brief description">
+                            </div>
+
+                            <button class="btn-primary create-btn" style="width: 100%; margin-top: 1rem;">Create
+                                Calendar</button>
+                        </div>
+                    </div>
+
+                    <div class="upload-section">
+                        <h4 class="upload-h4">Upload Calendar File</h4>
+                        <p style="font-size:13px;color:#64748b;margin-bottom:14px;">
+                            Import multiple academic events from an ICS, CSV, or Excel file at once.
+                            ICS files can be exported directly from Google Calendar or Outlook.
+                        </p>
+                        <!-- Hidden input kept for ICS dispatch compatibility -->
+                        <input type="file" id="fileInput" accept=".ics, .csv, .xlsx" style="display: none;">
+                        <button class="btn-primary" onclick="window.openScheduleUploadModal?.()"
+                            style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;font-size:14px;">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            Upload Calendar File
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Event Modal -->
+    <div id="addEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Academic Event</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="addEventForm">
+                <div class="form-group">
+                    <label for="academicSession">Academic Session *</label>
+                    <select id="academicSession" name="academicSession" required>
+                        <option value="">Loading Sessions...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="termPeriod">Term/Period *</label>
+                    <select id="termPeriod" name="termPeriod" required>
+                        <option value="">Select Term</option>
+                        <option value="1st Term">1st Term</option>
+                        <option value="2nd Term">2nd Term</option>
+                        <option value="3rd Term">3rd Term</option>
+                        <option value="Holiday">Holiday</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label for="activityEvent">Activity/Event *</label>
+                    <input type="text" id="activityEvent" name="activityEvent" required
+                        placeholder="e.g., Mid-Term Break">
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date *</label>
+                    <input type="date" id="startDate" name="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">End Date *</label>
+                    <input type="date" id="endDate" name="endDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <input type="text" id="duration" name="duration" placeholder="e.g., 5 Days">
+                </div>
+                <div class="form-group full-width">
+                    <label for="remarks">Remarks</label>
+                    <textarea id="remarks" name="remarks" placeholder="Additional notes"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../assets/js-shared/sideBar.js"></script>
+    <script src="../../core/config.js" type="module"></script>
+    <script src="./shedule_scripts/calendar_display.js?v=2" type="module"></script>
+    <script src="./shedule_scripts/event_manager.js?v=2" type="module"></script>
+    <script src="./shedule_scripts/upload_calendar.js?v=2" type="module"></script>
+    <script type="module" src="./schedule_upload_modal.js"></script>
+
+    <!-- <script>
+        // Sidebar Toggle
+        const sidebar = document.querySelector('[data-sideBar]');
+        const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+        const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+        if (sidebarOpenBtn && sidebar) {
+            sidebarOpenBtn.addEventListener('click', () => sidebar.classList.add('show'));
+        }
+        if (sidebarCloseBtn && sidebar) {
+            sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('show'));
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('addEventModal');
+        const addEventBtn = document.querySelector('.add-event-btn');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        if (addEventBtn) {
+            addEventBtn.addEventListener('click', () => {
+                modal.classList.add('show');
+            });
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                modal.classList.remove('show');
+            });
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                modal.classList.remove('show');
+            });
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+    </script> -->
+</body>
+
+</html>

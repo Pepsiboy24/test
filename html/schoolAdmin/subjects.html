@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <script type="module" src="../../scripts/authGuard.js"></script>
+    <meta charset="UTF-8">
+    
+    <title>Subjects Management - EduHubAdmin</title>
+    <link rel="stylesheet" href="../../styles/schoolAdminStyles/subjects.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../scripts/ui_feedback.js"></script>
+    <script src="../../scripts/schoolAdminScripts/school_admin_sidebar.js"></script>
+</head>
+
+<body>
+    <!-- Popup -->
+    <div class="popup" id="registrationPopup">
+        <div class="containment">
+            <div class="popup-header">
+                <div class="icon" id="closePopup"><i class="fa fa-times"></i></div>
+                <h1>Subject Registration</h1>
+                <p>Add a new subject to the system</p>
+            </div>
+
+
+
+            <div class="form-content">
+                <form id="subjectForm">
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name <span class="required">*</span></label>
+                        <input type="text" id="subjectName" name="subjectName" required placeholder="e.g., Mathematics, English, Science">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subject Type <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="core" name="subjectType" value="core" required>
+                                <label for="core">Core Subject</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="elective" name="subjectType" value="elective" required>
+                                <label for="elective">Elective Subject</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="classSelect">Class <span class="required">*</span></label>
+                        <select id="classSelect" name="classSelect" required>
+                            <option value="">-- Select Class --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teacherSelect">Teacher <span class="required">*</span></label>
+                        <select id="teacherSelect" name="teacherSelect" required>
+                            <option value="">-- Select Teacher --</option>
+                        </select>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Subject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Details Popup -->
+    <div class="popup" id="teacherDetailsPopup">
+        <div class="containment">
+            <div class="popup-header">
+                <div class="icon" id="closeTeacherDetailsPopup"><i class="fa fa-times"></i></div>
+                <h1>Teacher Details</h1>
+                <p>Complete teacher profile information</p>
+            </div>
+
+            <div class="teacher-details-content">
+                <div class="teacher-profile-header">
+                    <div class="teacher-avatar-large" id="teacherAvatarLarge"></div>
+                    <div class="teacher-basic-info">
+                        <h2 id="teacherFullName"></h2>
+                        <p id="teacherId"></p>
+                        <div class="teacher-status">
+                            <span class="status-badge" id="teacherJobTitle"></span>
+                            <span class="class-badge" id="teacherClass"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <!-- Personal Information -->
+                    <div class="detail-section">
+                        <h3>Personal Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>First Name:</label>
+                                <span id="detailFirstName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Middle Name:</label>
+                                <span id="detailMiddleName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Last Name:</label>
+                                <span id="detailLastName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Date of Birth:</label>
+                                <span id="detailDateOfBirth"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Age:</label>
+                                <span id="detailAge"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Gender:</label>
+                                <span id="detailGender"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="detail-section">
+                        <h3>Contact Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Address:</label>
+                                <span id="detailAddress"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Mobile Phone:</label>
+                                <span id="detailMobilePhone"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Home Phone:</label>
+                                <span id="detailHomePhone"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Personal Email:</label>
+                                <span id="detailPersonalEmail"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Emergency Contact:</label>
+                                <span id="detailEmergencyContact"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Emergency Phone:</label>
+                                <span id="detailEmergencyPhone"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Qualifications -->
+                    <div class="detail-section">
+                        <h3>Professional Qualifications</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Highest Degree:</label>
+                                <span id="detailHighestDegree"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Major:</label>
+                                <span id="detailDegreeMajor"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Institution:</label>
+                                <span id="detailInstitution"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Graduation Year:</label>
+                                <span id="detailGraduationYear"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Teaching License:</label>
+                                <span id="detailTeachingLicense"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>License Expiry:</label>
+                                <span id="detailLicenseExpiry"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Certified Subjects:</label>
+                                <div class="subjects-list" id="detailSubjects"></div>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Grade Levels:</label>
+                                <div class="grade-levels-list" id="detailGradeLevels"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Teaching Experience -->
+                    <div class="detail-section">
+                        <h3>Teaching Experience</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Total Experience:</label>
+                                <span id="detailTotalExperience"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Previous School:</label>
+                                <span id="detailPreviousSchool"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Previous Position:</label>
+                                <span id="detailPreviousPosition"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Previous Duration:</label>
+                                <span id="detailPreviousDuration"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Professional Development:</label>
+                                <span id="detailProfessionalDevelopment"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employment Details -->
+                    <div class="detail-section">
+                        <h3>Employment Details</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Start Date:</label>
+                                <span id="detailStartDate"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Job Title:</label>
+                                <span id="detailJobTitle"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Contract Type:</label>
+                                <span id="detailContractType"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Salary:</label>
+                                <span id="detailSalary"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Specialized Roles:</label>
+                                <div class="roles-list" id="detailSpecializedRoles"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Background & Medical Info -->
+                    <div class="detail-section">
+                        <h3>Background & Medical Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Work Authorization:</label>
+                                <span id="detailWorkAuthorization"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Background Check:</label>
+                                <span id="detailBackgroundCheck"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>References:</label>
+                                <span id="detailReferences"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Allergies:</label>
+                                <span id="detailAllergies"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Medical Conditions:</label>
+                                <span id="detailMedicalConditions"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Medications:</label>
+                                <span id="detailMedications"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">Subject Registration</h1>
+                    <p class="page-subtitle">Add a new subject to the system</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-cards">
+            <div class="action-card" id="openPopupBtn">
+                <div class="action-icon add-single">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Add New Subject</h3>
+                    <p>Add a single subject to the system</p>
+                </div>
+            </div>
+
+            <div class="action-card">
+                <div class="action-icon add-multiple">
+                    <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Upload Excel Sheet</h3>
+                    <p>Bulk import subjects from Excel file</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teachers Table Section -->
+        <div class="students-section">
+            <div class="section-header">
+                <h2 class="section-title">Subject List</h2>
+                <!-- <div class="filter-tabs">
+                    <div class="filter-tab active">All</div>
+                    <div class="filter-tab">Primary</div>
+                    <div class="filter-tab">Secondary</div>
+                </div> -->
+            </div>
+
+            <div class="table-container">
+                <table class="students-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Subject Name</th>
+                            <th>Type</th>
+                            <th>Assigned Teacher</th>
+                            <th>Class</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../scripts/font-awesome.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../scripts/sideBar.js"></script>
+    <script src="../../scripts/config.js" type="module"></script>
+    <script src="../../scripts/schoolAdminScripts/subjects_scripts/single_subject_upload.js"></script>
+    <script src="../../scripts/schoolAdminScripts/subjects_scripts/excel_subject_upload.js"></script>
+    <script src="../../scripts/schoolAdminScripts/subjects_scripts/display_subects.js"></script>
+
+
+    <!-- <script src="../../scripts/schoolAdminScripts/teachersForm.js" type="module"></script>
+    <script src="../../scripts/schoolAdminScripts/teachersFormDB.js" type="module"></script> -->
+    <!-- <script src="../../scripts/schoolAdminScripts/viewAllTeachers.js" type="module"></script> -->
+
+    <script>
+        // // Sidebar Toggle
+        // const sidebar = document.querySelector('[data-sideBar]');
+        // const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+        // const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+        // if (sidebarOpenBtn && sidebar) {
+        //     sidebarOpenBtn.addEventListener('click', () => sidebar.classList.add('show'));
+        // }
+        // if (sidebarCloseBtn && sidebar) {
+        //     sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('show'));
+        // }
+
+        // Popup Logic
+        const popup = document.getElementById('registrationPopup');
+        const openPopupBtn = document.getElementById('openPopupBtn');
+        const closePopupBtn = document.getElementById('closePopup');
+
+        if (openPopupBtn && popup) {
+            openPopupBtn.addEventListener('click', () => {
+                popup.style.display = 'flex';
+            });
+        }
+
+        if (closePopupBtn && popup) {
+            closePopupBtn.addEventListener('click', () => {
+                popup.style.display = 'none';
+            });
+        }
+
+        // Simple Subject Form Logic
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // Handle Cancel Button
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                document.getElementById('registrationPopup').style.display = 'none';
+            });
+        }
+
+
+
+        // Search and Filter Functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            const studentRows = document.querySelectorAll('.student-row');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    const searchTerm = this.value.toLowerCase();
+
+                    studentRows.forEach(row => {
+                        const name = row.querySelector('.student-details h4').textContent.toLowerCase();
+                        const id = row.querySelector('.student-details p').textContent.toLowerCase();
+
+                        if (name.includes(searchTerm) || id.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Filter tabs functionality
+            const filterTabs = document.querySelectorAll('.filter-tab');
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    // Remove active class from all tabs
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    const filterType = this.textContent.toLowerCase();
+
+                    studentRows.forEach(row => {
+                        const classText = row.querySelector('.class-badge').textContent.toLowerCase();
+
+                        if (filterType === 'all') {
+                            row.style.display = '';
+                        } else if (filterType === 'primary' && classText.includes('pry')) {
+                            row.style.display = '';
+                        } else if (filterType === 'secondary' && classText.includes('sec')) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>

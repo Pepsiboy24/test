@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta charset="UTF-8">
+
+    <title>Academic Manager — EduHubAdmin</title>
+    <!-- <script src="./schoolAdminStyles/academic_manager.css"></script> -->
+    <link rel="stylesheet" href="./schoolAdminStyles/academic_manager.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- <script src="../../../assets/js-shared/navigation_manager.js"></script> -->
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main">
+
+        <!-- Top header -->
+        <div class="page-header">
+            <div class="page-header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen>
+                    <i class="fa fa-bars"></i>
+                </div>
+                <div>
+                    <h1 class="page-title">Academic Manager</h1>
+                    <p class="page-subtitle">Manage subjects and their scheme of work in one place</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="profile-circle"></div>
+            </div>
+        </div>
+
+        <!-- Master-Detail body -->
+        <div class="am-body">
+
+            <!-- ═══ LEFT: Subject List (Master) ═══ -->
+            <div class="subjects-panel">
+                <div class="sp-header">
+                    <div class="sp-title-row">
+                        <span class="sp-title">Subjects</span>
+                        <span class="sp-count" id="subjectCount">0</span>
+                    </div>
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="subjectSearch" placeholder="Search subjects…">
+                    </div>
+                </div>
+
+                <div class="subjects-list" id="subjectsList">
+                    <!-- Rendered by JS -->
+                    <div class="spinner-wrap">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <div class="sp-footer">
+                    <button class="btn-add-subject" onclick="openAddSubjectModal()" style="margin-bottom: 20px;">
+                        <i class="fa-solid fa-plus"></i>
+                        Add New Subject
+                    </button>
+                    <button class="btn-add-subject"
+                        style="width: 100%; background: #0f172a; border: 1px solid #334155;">
+                        <div class="action-icon add-multiple"
+                            style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i class="fa-solid fa-file-excel" style="color: #22c55e;"></i>
+                            <span>Upload Excel Sheet</span>
+                        </div>
+                    </button>
+                </div>
+            </div><!-- /subjects-panel -->
+
+            <!-- ═══ RIGHT: Curriculum Detail ═══ -->
+            <div class="curriculum-panel">
+
+                <!-- Empty state (shown when no subject selected) -->
+                <div class="cp-empty" id="cpEmpty">
+                    <i class="fa-solid fa-book-open"></i>
+                    <h3>No Subject Selected</h3>
+                    <p>Select a subject from the left panel to view and manage its curriculum.</p>
+                </div>
+
+                <!-- Detail view (shown when a subject is selected) -->
+                <div id="cpDetail" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+                    <div class="cp-header">
+                        <div class="cp-header-left">
+                            <span class="cp-subject-name" id="cpSubjectName"></span>
+                            <div class="cp-meta">
+                                <span class="cp-type-badge" id="cpTypeBadge"></span>
+                                <span class="cp-topic-count" id="cpTopicCount"></span>
+                            </div>
+                        </div>
+                        <button class="btn-add-topic" onclick="openAddTopicModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Topic
+                        </button>
+                    </div>
+
+                    <!-- Tab Navigation -->
+                    <div class="cp-tabs">
+                        <button class="tab-btn active" data-tab="curriculum" onclick="switchTab('curriculum')">
+                            <i class="fa-solid fa-book"></i>
+                            Curriculum
+                        </button>
+                        <button class="tab-btn" data-tab="assignments" onclick="switchTab('assignments')">
+                            <i class="fa-solid fa-chalkboard-teacher"></i>
+                            Class Assignments
+                        </button>
+                    </div>
+
+                    <div class="cp-content" id="cpContent">
+                        <!-- Spinner / topics rendered by JS -->
+                    </div>
+                </div>
+
+            </div><!-- /curriculum-panel -->
+
+        </div><!-- /am-body -->
+    </div><!-- /main -->
+
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL: Add Subject
+    ═══════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="addSubjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Add New Subject</span>
+                <button class="modal-close" onclick="closeModal('addSubjectModal')"><i class="fa fa-times"></i></button>
+            </div>
+            <form id="addSubjectForm">
+                <div class="form-group">
+                    <label for="asName">Subject Name <span style="color:var(--danger)">*</span></label>
+                    <input type="text" id="asName" placeholder="e.g. Mathematics, English…" required>
+                </div>
+                <div class="form-group">
+                    <label>Subject Type <span style="color:var(--danger)">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="asCore" name="asType" value="core" required>
+                            <label for="asCore">Core Subject</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="asElective" name="asType" value="elective">
+                            <label for="asElective">Elective Subject</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('addSubjectModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" id="addSubjectBtn">Add Subject</button>
+                    <div class="action-icon add-multiple">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </div>
+                    <div class="action-info">
+                        <h3>Upload Excel</h3>
+                        <p>Bulk register subjects</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL: Edit Subject
+    ═══════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="editSubjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Edit Subject</span>
+                <button class="modal-close" onclick="closeModal('editSubjectModal')"><i
+                        class="fa fa-times"></i></button>
+            </div>
+            <form id="editSubjectForm">
+                <input type="hidden" id="esId">
+                <div class="form-group">
+                    <label for="esName">Subject Name <span style="color:var(--danger)">*</span></label>
+                    <input type="text" id="esName" required>
+                </div>
+                <div class="form-group">
+                    <label>Subject Type</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="esCore" name="esType" value="core">
+                            <label for="esCore">Core Subject</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="esElective" name="esType" value="elective">
+                            <label for="esElective">Elective Subject</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('editSubjectModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" id="editSubjectBtn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL: Delete Subject (Confirmation)
+    ═══════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="deleteSubjectModal">
+        <div class="modal" style="max-width:420px">
+            <div class="danger-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 style="font-size:18px;font-weight:700;margin-bottom:10px">Delete Subject?</h3>
+            <p style="color:var(--text-gray);font-size:14px;line-height:1.6;margin-bottom:6px">
+                You are about to delete <strong id="dsSubjectName"></strong>.
+            </p>
+            <p style="color:var(--danger);font-size:13px;font-weight:600;margin-bottom:24px">
+                ⚠️ This will also permanently delete ALL curriculum topics linked to this subject.
+            </p>
+            <div class="modal-footer" style="margin-top:0">
+                <button class="btn-cancel" onclick="closeModal('deleteSubjectModal')">Cancel</button>
+                <button class="btn-danger" id="confirmDeleteSubjectBtn">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL: Add / Edit Topic
+    ═══════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="topicModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="topicModalTitle">Add Topic</span>
+                <button class="modal-close" onclick="closeModal('topicModal')"><i class="fa fa-times"></i></button>
+            </div>
+            <form id="topicForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tName">Topic Name <span style="color:var(--danger)">*</span></label>
+                        <input type="text" id="tName" placeholder="e.g. Introduction to Algebra" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tWeek">Week <span style="color:var(--danger)">*</span></label>
+                        <input type="number" id="tWeek" min="1" max="52" placeholder="e.g. 1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tDescription">Description</label>
+                    <textarea id="tDescription" placeholder="Brief description of what will be covered…"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tStatus">Status</label>
+                    <select id="tStatus">
+                        <option value="Pending">Pending</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('topicModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" id="topicSaveBtn">Add Topic</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL: Delete Topic (Confirmation)
+    ═══════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="deleteTopicModal">
+        <div class="modal" style="max-width:420px">
+            <div class="danger-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 style="font-size:18px;font-weight:700;margin-bottom:10px">Delete Topic?</h3>
+            <p style="color:var(--text-gray);font-size:14px;line-height:1.6;margin-bottom:24px">
+                Are you sure you want to permanently delete
+                <strong id="dtTopicName"></strong>?
+                This cannot be undone.
+            </p>
+            <div class="modal-footer" style="margin-top:0">
+                <button class="btn-cancel" onclick="closeModal('deleteTopicModal')">Cancel</button>
+                <button class="btn-danger" id="confirmDeleteTopicBtn">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL: Delete Assignment (Confirmation)
+    ═══════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="deleteAssignmentModal">
+        <div class="modal" style="max-width:420px">
+            <div class="danger-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 style="font-size:18px;font-weight:700;margin-bottom:10px">Delete Assignment?</h3>
+            <p style="color:var(--text-gray);font-size:14px;line-height:1.6;margin-bottom:24px">
+                Are you sure you want to permanently delete this assignment?
+                This cannot be undone.
+            </p>
+            <div class="modal-footer" style="margin-top:0">
+                <button class="btn-cancel" onclick="closeModal('deleteAssignmentModal')">Cancel</button>
+                <button class="btn-danger" id="confirmDeleteAssignmentBtn">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL: Assign Subject to Class
+    ═══════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="allocationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Assign Subject to Class</span>
+                <button class="modal-close" onclick="closeModal('allocationModal')"><i class="fa fa-times"></i></button>
+            </div>
+            <form id="allocationForm">
+                <div class="form-group">
+                    <label for="allocationClass">Class <span style="color:var(--danger)">*</span></label>
+                    <select id="allocationClass" required>
+                        <option value="">Select a class...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="allocationTeacher">Teacher <span style="color:var(--danger)">*</span></label>
+                    <select id="allocationTeacher" required>
+                        <option value="">Select a teacher...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="allocationAcademicYear">Academic Year</label>
+                    <input type="text" id="allocationAcademicYear" placeholder="e.g. 2024/2025">
+                </div>
+                <div class="form-group">
+                    <label for="allocationTerm">Term</label>
+                    <select id="allocationTerm">
+                        <option value="">Select term...</option>
+                        <option value="First Term">First Term</option>
+                        <option value="Second Term">Second Term</option>
+                        <option value="Third Term">Third Term</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('allocationModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveAllocationBtn">Save Assignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+     <script type="module" src="../../core/authGuard.js" defer></script>
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script src="../../assets/js-shared/sideBar.js"></script>
+    <script type="module" src="./academic_manager.js" defer></script>
+
+    <script type="module" src="./subjects_scripts/excel_subject_upload.js" defer></script>
+
+</body>
+
+</html>

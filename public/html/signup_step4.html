@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 4: Final Confirmation - EduHub</title>
+    <link rel="stylesheet" href="../styles/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .confirmation-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .confirmation-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confirmation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #16a34a 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+
+        .success-icon i {
+            font-size: 36px;
+            color: white;
+        }
+
+        .confirmation-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .confirmation-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .summary-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .summary-item {
+            margin-bottom: 16px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .summary-value {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .login-info {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .login-info h4 {
+            color: #92400e;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .credentials {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .credential-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .credential-value {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; font-weight: 600; color: #667eea;">Finalizing account...</p>
+    </div>
+
+    <div class="confirmation-container">
+        <div class="confirmation-card">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h1 class="confirmation-title">Setup Complete!</h1>
+            <p class="confirmation-subtitle">
+                Your school has been successfully configured and is ready to use.
+            </p>
+
+            <div class="summary-section">
+                <h3 class="summary-title">School Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">School Name</div>
+                        <div class="summary-value" id="summarySchoolName">Not Set</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Admin Email</div>
+                        <div class="summary-value" id="summaryEmail">Not Set</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Plan Tier</div>
+                        <div class="summary-value" id="summaryTier">Tier 1</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Academic Session</div>
+                        <div class="summary-value" id="summarySession">Not Set</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login-info">
+                <h4>🔐 Your Login Credentials</h4>
+                <div class="credentials">
+                    <div class="credential-item">
+                        <span class="credential-label">Email:</span>
+                        <span class="credential-value" id="loginEmail">Not Set</span>
+                    </div>
+                    <div class="credential-item">
+                        <span class="credential-label">Password:</span>
+                        <span class="credential-value">123456</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="signupConfirmation.proceedToLogin()">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Go to Login
+                </button>
+                <button class="btn-secondary" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    Print Summary
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        // Define same credentials as other steps
+        const SUPABASE_URL = 'https://dzotwozhcxzkxtunmqth.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6b3R3b3poY3h6a3h0dW5tcXRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODk5NzAsImV4cCI6MjA3MDY2NTk3MH0.KJfkrRq46c_Fo7ujkmvcue4jQAzIaSDfO3bU7YqMZdE';
+
+        const authClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { storageKey: 'sb-onboarding-temp', persistSession: true }
+        });
+
+        class SignupConfirmation {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.loadSummaryData();
+            }
+
+            loadSummaryData() {
+                const schoolName = sessionStorage.getItem('schoolName');
+                const workEmail = sessionStorage.getItem('workEmail');
+                const selectedTier = sessionStorage.getItem('selectedTier') || '1';
+                const academicSession = sessionStorage.getItem('academicSession');
+
+                if (schoolName) document.getElementById('summarySchoolName').textContent = schoolName;
+                if (workEmail) {
+                    document.getElementById('summaryEmail').textContent = workEmail;
+                    document.getElementById('loginEmail').textContent = workEmail;
+                }
+
+                const tierNames = {
+                    '1': 'Tier 1 - Admin Core',
+                    '2': 'Tier 2 - Student Engagement',
+                    '3': 'Tier 3 - Full Connect'
+                };
+                document.getElementById('summaryTier').textContent = tierNames[selectedTier];
+                if (academicSession) document.getElementById('summarySession').textContent = academicSession;
+            }
+
+            async proceedToLogin() {
+                document.getElementById('loadingOverlay').style.display = 'flex';
+
+                try {
+                    // 1. Force kill the temporary session so Login page starts fresh
+                    await authClient.auth.signOut();
+
+                    // 2. Clear all local traces
+                    sessionStorage.clear();
+                    localStorage.clear();
+
+                    console.log("Cleanup complete. Redirecting...");
+
+                    // 3. Move to login
+                    window.location.href = "/login";
+                } catch (err) {
+                    console.error("Logout error:", err);
+                    window.location.href = "/login";
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.signupConfirmation = new SignupConfirmation();
+        });
+    </script>
+</body>
+
+</html>

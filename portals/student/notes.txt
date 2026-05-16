@@ -1,0 +1,42 @@
+Improvement: 
+1. in studentPortal.html upcoming class should feature the student timetable and 
+2. The AI Study body should be fuctional soon
+3. need a class leadershiph hieracy algorithm to constantly rank the students
+4. need to make a fully functional social feed that shows recent chatroom messages and tags.
+
+Todo: 
+create a studentClasses.html and css that shows the student timetable and classes, projects and assignments 
+Create a studentSudymaterals.html and css that will show uploaded books and study materials from students and teachers
+create a Social.html and css and create a functional 2group chats 
+-(Consting of an Admin and students)
+-(only students alone to make them free)
+-(Groups can be created by admins for such like Jetsclub, literary club etc)
+-create a messaging platform to send messages to teachers
+
+Optimal
+- write an algorithm that gives students point eg, attendance, sports, presesnstation etc
+
+teachers
+Improvement:
+1. AI assistant should work : 
+- Generate Lesson Notes 
+- create test Questions
+-Analyze student performance add for help
+2. it should list all the upcoming classes for the teachers
+3. it should list all students in classses.
+4. receive all incoming messages from students and Admin
+
+Todo 
+in listofStudents.html it should list all students in the teachers class
+create an AI assistant page for teachers add a chatpage for group chat
+-(Consting of only teachers)
+-(teachers as admin in the class they control)
+-(Groups can be created by admin for such like Jetsclub, literary club etc)
+Create a system for grading students and awarding points for them for various tasks
+create a social feed to reply and message students and admin too 
+
+
+Admin
+list all the students in class and average link to each of them. 
+show all teachers and performance 
+sow revenue in NARIA

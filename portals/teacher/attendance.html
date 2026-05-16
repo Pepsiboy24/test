@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta charset="UTF-8">
+    
+    <title>Class Attendance — TeachSmart</title>
+    <link rel="stylesheet" href="./teachersPortalStyles/sidebar.css?v=1.1">
+    <link rel="stylesheet" href="./teachersPortalStyles/tp-shared.css?v=1.1">
+    <link rel="stylesheet" href="./teachersPortalStyles/attendance.css?v=1.1">
+    <script src="../../core/authGuard.js" type="module" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar" id="mobileTopBar">
+        <span class="brand">TeachSmart</span>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" data-sideBar></nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Class Attendance</h1>
+            <p>Mark and manage daily student attendance</p>
+        </div>
+
+        <!-- Attendance Section -->
+        <div class="tp-card">
+            <div class="tp-section-header">
+                <div class="tp-filters-row">
+                    <input type="date" class="tp-input date-input">
+                    <select class="tp-select class-select">
+                        <option value="">Select a class</option>
+                    </select>
+                    <select class="tp-select subject-select" disabled>
+                        <option value="">Select a subject</option>
+                    </select>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="tp-btn tp-btn-primary save-btn">Save</button>
+                    <button class="tp-btn tp-btn-outline" onclick="markAllPresent()">✔ Mark All Present</button>
+                    <button class="tp-btn tp-btn-outline" onclick="markAllAbsent()">✘ Mark All Absent</button>
+                    <button class="tp-btn tp-btn-outline" onclick="clearAll()">↺ Clear All</button>
+                </div>
+            </div>
+
+            <!-- Attendance Summary -->
+            <div class="attendance-summary">
+                <div class="summary-item present">
+                    <div class="summary-number" id="presentCount">0</div>
+                    <div class="summary-label">Present</div>
+                </div>
+                <div class="summary-item absent">
+                    <div class="summary-number" id="absentCount">0</div>
+                    <div class="summary-label">Absent</div>
+                </div>
+                <div class="summary-item late">
+                    <div class="summary-number" id="lateCount">0</div>
+                    <div class="summary-label">Late</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number" id="totalCount">0</div>
+                    <div class="summary-label">Total</div>
+                </div>
+            </div>
+
+            <table class="tp-table attendance-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Attendance</th>
+                        <th>Remarks (Optional)</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceTableBody">
+                    <!-- Students loaded dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./attendace.js"></script>
+    <script src="./teachers_portal_sidebar.js" type="module"></script>
+    <script>
+        (function () {
+            const btn = document.getElementById('hamburgerBtn');
+            const sidebar = document.querySelector('[data-sideBar]');
+            const overlay = document.getElementById('sidebarOverlay');
+            const open = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+            const close = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+            if (btn) btn.addEventListener('click', () => sidebar.classList.contains('active') ? close() : open());
+            overlay.addEventListener('click', close);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+            window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../scripts/authGuard.js"></script>
+    <meta charset="UTF-8">
+
+    <title>School Payments - EduPay Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    <link rel="stylesheet" href="../../styles/parentsPortalStyles/payments.css?v=1.1">
+    <script src="../../scripts/config.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" data-sideBar>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <div class="header-content">
+                    <h1>School Payments</h1>
+                    <p>Select the items you'd like to pay for</p>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="icon-btn" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Loading payment items...</span>
+                </div>
+            </div>
+
+            <!-- Payment Content -->
+            <div id="paymentContent" class="payment-content" style="display: none;">
+                <div class="payment-card">
+                    <!-- School Info Header -->
+                    <div class="school-info-header" id="schoolInfoHeader">
+                        <div class="school-logo">
+                            <img id="schoolLogo" src="https://placehold.co/60x60/e8e8e8/363636?text=Logo" alt="School Logo">
+                        </div>
+                        <div class="school-details">
+                            <h2 id="schoolName">Loading School...</h2>
+                            <p id="academicSession">2023/2024 Academic Session</p>
+                        </div>
+                    </div>
+
+                    <!-- Compulsory Items Section -->
+                    <div class="compulsory-section" id="compulsorySection">
+                        <h3 class="section-title">Compulsory Payments</h3>
+                        <div id="compulsoryItems" class="payment-items">
+                            <!-- Compulsory items will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Optional Items Section -->
+                    <div class="services-section" id="optionalSection">
+                        <h3 class="section-title">Optional Services</h3>
+                        <div id="optionalItems" class="payment-items">
+                            <!-- Optional items will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <div class="empty-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <h3>No Payment Items Available</h3>
+                        <p>There are currently no payment items configured for your school. Please contact the school administration.</p>
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div class="summary-section" id="summarySection" style="display: none;">
+                        <h3 class="section-title">Payment Summary</h3>
+
+                        <div class="summary-items" id="summaryItems">
+                            <!-- Summary items will be loaded here -->
+                        </div>
+
+                        <div class="summary-total">
+                            <span class="total-label">Total Amount</span>
+                            <span class="total-amount" id="totalAmount">₦0</span>
+                        </div>
+
+                        <button class="pay-button" onclick="proceedToPayment()">
+                            <i class="fas fa-lock"></i> Proceed to Payment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../scripts/parentsPortalScripts/payments.js"></script>
+    <script type="module" src="../../scripts/parnetsPortalScripts/parents_portal_sidebar.js"></script>
+</body>
+
+</html>

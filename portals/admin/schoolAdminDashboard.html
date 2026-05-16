@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../core/authGuard.js"></script>
+    <meta charset="UTF-8">
+
+    <title>School Admin Dashboard</title>
+    <link rel="stylesheet" href="./schoolAdminStyles/schoolAdminDashboard.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../assets/js-shared/ui_feedback.js"></script>
+    <script type="module" src="./school_admin_sidebar.js"></script>
+    <style>
+        /* Setup Checklist Styles */
+        .setup-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .checklist-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .checklist-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .checklist-card.completed {
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .card-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .card-content h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .card-content p {
+            margin: 0 0 16px 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .card-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .card-status i.incomplete {
+            color: #dc2626;
+        }
+
+        .card-status i.completed {
+            color: #16a34a;
+        }
+
+        .card-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .card-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .setup-actions {
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .skip-setup-btn {
+            padding: 12px 24px;
+            background: transparent;
+            color: #64748b;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .skip-setup-btn:hover {
+            background: #f8fafc;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Roadmap Layout Styles */
+        .roadmap-layout-wrapper {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        .roadmap-sidebar {
+            flex: 0 0 300px;
+            background: white;
+            border-radius: 16px;
+            padding: 32px 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .roadmap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .roadmap-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .progress-percentage {
+            font-size: 16px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .roadmap-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .roadmap-step {
+            display: flex;
+            gap: 15px;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .roadmap-step:hover {
+            background: #f8fafc;
+        }
+        
+        .node-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .roadmap-step.completed .step-circle {
+            background: #10b981;
+            border-color: #10b981;
+        }
+        
+        .roadmap-step.active .step-circle {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+        
+        .roadmap-step.pending .step-circle {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+        
+        .step-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            transition: color 0.3s ease;
+        }
+        
+        .roadmap-step.completed .step-number {
+            color: white;
+        }
+        
+        .roadmap-step.active .step-number {
+            color: #667eea;
+        }
+        
+        .step-checkmark {
+            font-size: 14px;
+            color: white;
+            position: absolute;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+        
+        .roadmap-step.completed .step-checkmark {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .roadmap-step.completed .step-number {
+            opacity: 0;
+            transform: scale(0);
+        }
+        
+        .step-line {
+            width: 2px;
+            background: #e2e8f0;
+            flex-grow: 1;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 24px;
+        }
+        
+        .roadmap-step.completed .step-line {
+            background: #10b981;
+        }
+        
+        .roadmap-step.active .step-line {
+            background: linear-gradient(to bottom, #667eea 0%, rgba(102, 126, 234, 0.1) 100%);
+        }
+        
+        .roadmap-step:last-child .step-line {
+            display: none;
+        }
+        
+        .step-text {
+            flex: 1;
+            padding-top: 4px;
+        }
+        
+        .step-title {
+            margin: 0 0 4px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            transition: color 0.3s ease;
+        }
+        
+        .roadmap-step.active .step-title {
+            color: #667eea;
+        }
+        
+        .roadmap-step.pending .step-title {
+            color: #9ca3af;
+        }
+        
+        .step-desc {
+            margin: 0;
+            font-size: 12px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        
+        .roadmap-step.pending .step-desc {
+            color: #d1d5db;
+        }
+        
+        .roadmap-content-area {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" data-sideBar></div>
+    <div class="container">
+        <!-- Sidebar -->
+
+        <!-- Main Content -->
+        <div class="main">
+            <div class="header">
+                <div>
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    <p class="page-subtitle">Welcome back, Admin</p>
+                </div>
+                <!-- <div class="search-container">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div> -->
+                <div class="stuff">
+                    <div class="profile"></div>
+                    <div class="icon" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                </div>
+            </div>
+
+            <!-- Setup Checklist (shown when school has no data) -->
+            <div id="setupChecklist" style="display: none;">
+                <div class="roadmap-layout-wrapper" style="display: flex; gap: 40px; align-items: flex-start;">
+                    <!-- Left Sidebar: Vertical Roadmap -->
+                    <aside class="roadmap-sidebar" style="flex: 0 0 300px;">
+                        <div class="roadmap-header">
+                            <h3 class="roadmap-title">Setup Progress</h3>
+                            <div class="progress-percentage" id="progressPercentage">0%</div>
+                        </div>
+                        
+                        <div class="roadmap-steps">
+                            <div class="roadmap-step" data-step="profile" onclick="showStepCard('profile')">
+                                <div class="node-container">
+                                    <div class="step-circle">
+                                        <span class="step-number">1</span>
+                                        <i class="fas fa-check step-checkmark" style="display: none;"></i>
+                                    </div>
+                                    <div class="step-line"></div>
+                                </div>
+                                <div class="step-text">
+                                    <h4 class="step-title">School Identity</h4>
+                                    <p class="step-desc">Customize your school profile</p>
+                                </div>
+                            </div>
+                            
+                            <div class="roadmap-step" data-step="classes" onclick="showStepCard('classes')">
+                                <div class="node-container">
+                                    <div class="step-circle">
+                                        <span class="step-number">2</span>
+                                        <i class="fas fa-check step-checkmark" style="display: none;"></i>
+                                    </div>
+                                    <div class="step-line"></div>
+                                </div>
+                                <div class="step-text">
+                                    <h4 class="step-title">Academic Structure</h4>
+                                    <p class="step-desc">Create classes and subjects</p>
+                                </div>
+                            </div>
+                            
+                            <div class="roadmap-step" data-step="teachers" onclick="showStepCard('teachers')">
+                                <div class="node-container">
+                                    <div class="step-circle">
+                                        <span class="step-number">3</span>
+                                        <i class="fas fa-check step-checkmark" style="display: none;"></i>
+                                    </div>
+                                    <div class="step-line"></div>
+                                </div>
+                                <div class="step-text">
+                                    <h4 class="step-title">Teaching Staff</h4>
+                                    <p class="step-desc">Register your teachers</p>
+                                </div>
+                            </div>
+                            
+                            <div class="roadmap-step" data-step="students" onclick="showStepCard('students')">
+                                <div class="node-container">
+                                    <div class="step-circle">
+                                        <span class="step-number">4</span>
+                                        <i class="fas fa-check step-checkmark" style="display: none;"></i>
+                                    </div>
+                                    <div class="step-line"></div>
+                                </div>
+                                <div class="step-text">
+                                    <h4 class="step-title">Student Enrollment</h4>
+                                    <p class="step-desc">Add students to classes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    
+                    <!-- Right Content: Task Cards -->
+                    <main class="roadmap-content-area" style="flex: 1;">
+                        <div class="setup-header">
+                            <h2 class="page-title">Welcome to EduHub!</h2>
+                            <p class="page-subtitle">Let's get your school set up in just a few steps</p>
+                        </div>
+
+                        <div class="checklist-grid">
+                            <div class="checklist-card" data-step="profile" id="profile-card" style="display: block;">
+                                <div class="card-icon">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Customize Profile</h3>
+                                    <p>Add your school logo and complete address information</p>
+                                    <div class="card-status" id="profile-status">
+                                        <i class="fas fa-circle incomplete"></i>
+                                        <span>Incomplete</span>
+                                    </div>
+                                    <button class="card-btn" onclick="window.location.href='/admin/settings'">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Go to Settings
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="checklist-card" data-step="classes" id="classes-card" style="display: none;">
+                                <div class="card-icon">
+                                    <i class="fas fa-chalkboard"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Add Classes</h3>
+                                    <p>Define your school levels and create class structures</p>
+                                    <div class="card-status" id="classes-status">
+                                        <i class="fas fa-circle incomplete"></i>
+                                        <span>Incomplete</span>
+                                    </div>
+                                    <button class="card-btn" onclick="window.location.href='/admin/classes'">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Manage Classes
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="checklist-card" data-step="teachers" id="teachers-card" style="display: none;">
+                                <div class="card-icon">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Register Teachers</h3>
+                                    <p>Add your first staff members and assign their roles</p>
+                                    <div class="card-status" id="teachers-status">
+                                        <i class="fas fa-circle incomplete"></i>
+                                        <span>Incomplete</span>
+                                    </div>
+                                    <button class="card-btn" onclick="window.location.href='/admin/teachers'">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Add Teachers
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="checklist-card" data-step="students" id="students-card" style="display: none;">
+                                <div class="card-icon">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3>Enroll Students</h3>
+                                    <p>Add students to their respective classes and start managing</p>
+                                    <div class="card-status" id="students-status">
+                                        <i class="fas fa-circle incomplete"></i>
+                                        <span>Incomplete</span>
+                                    </div>
+                                    <button class="card-btn" onclick="window.location.href='/admin/students'">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Add Students
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setup-actions">
+                            <button class="skip-setup-btn" onclick="skipSetup()">
+                                Skip Setup <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </main>
+                </div>
+            </div>
+
+            <!-- Standard Dashboard (shown when school has data) -->
+            <div id="standardDashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper students">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" id="total-students-count">0</div>
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-change positive">+2.5%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper teachers">
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" id="total-teachers-count">0</div>
+                        <div class="stat-label">Teachers</div>
+                        <div class="stat-change positive">+1.2%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper attendance">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Attendance Rate</div>
+                        <div class="stat-change negative">-0.8%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper revenue">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">$45,678</div>
+                        <div class="stat-label">Revenue</div>
+                        <div class="stat-change negative">-2.1%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Termly Billing Section -->
+            <div class="billing-section">
+                <h2 class="section-title">Termly Billing</h2>
+                <div class="billing-grid">
+                    <div class="billing-card">
+                        <div class="billing-header">
+                            <h3>Current Term</h3>
+                            <div class="billing-status active">Active</div>
+                        </div>
+                        <div class="billing-content">
+                            <div class="billing-item">
+                                <span class="billing-label">Term:</span>
+                                <span class="billing-value" id="current-term">First Term 2026</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="billing-label">Active Students:</span>
+                                <span class="billing-value" id="active-students-count">0</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="billing-label">Rate per Student:</span>
+                                <span class="billing-value">₦2,500</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="billing-label">Total Owed:</span>
+                                <span class="billing-value total-amount" id="total-owed">₦0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="billing-card">
+                        <div class="billing-header">
+                            <h3>Payment Status</h3>
+                            <div class="billing-status pending">Pending</div>
+                        </div>
+                        <div class="billing-content">
+                            <div class="billing-item">
+                                <span class="billing-label">Paid Students:</span>
+                                <span class="billing-value" id="paid-students-count">0</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="billing-label">Unpaid Students:</span>
+                                <span class="billing-value" id="unpaid-students-count">0</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="billing-label">Collection Rate:</span>
+                                <span class="billing-value" id="collection-rate">0%</span>
+                            </div>
+                            <div class="billing-item">
+                                <span class="billing-label">Next Due Date:</span>
+                                <span class="billing-value" id="next-due-date">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-section">
+                <h2 class="section-title">Recent Activity</h2>
+
+                <div class="activity-item">
+                    <div class="activity-avatar" style="background: #3b82f6;">JS</div>
+                    <div class="activity-content">
+                        <div class="activity-text">John Smith submitted the monthly attendance report</div>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-avatar" style="background: #10b981;">SJ</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Sarah Johnson updated the class schedule</div>
+                        <div class="activity-time">4 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-avatar" style="background: #f59e0b;">MB</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Mike Brown processed fee payments</div>
+                        <div class="activity-time">6 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Setup Checklist JavaScript
+        let setupData = {
+            profile: false,
+            classes: false,
+            teachers: false,
+            students: false
+        };
+
+        function updateSetupProgress() {
+            const completedSteps = Object.values(setupData).filter(Boolean).length;
+            const totalSteps = Object.keys(setupData).length;
+            const progressPercentage = Math.round((completedSteps / totalSteps) * 100);
+            
+            // Update progress percentage in sidebar
+            const sidebarProgressText = document.querySelector('.progress-percentage');
+            if (sidebarProgressText) {
+                sidebarProgressText.textContent = `${progressPercentage}%`;
+            }
+            
+            // Update roadmap step states
+            Object.keys(setupData).forEach(step => {
+                const roadmapStep = document.querySelector(`.roadmap-steps [data-step="${step}"]`);
+                
+                if (roadmapStep) {
+                    // Clear all states first
+                    roadmapStep.classList.remove('active', 'completed', 'pending');
+                    
+                    if (setupData[step]) {
+                        roadmapStep.classList.add('completed');
+                        // Show checkmark, hide number
+                        const stepNumber = roadmapStep.querySelector('.step-number');
+                        const stepCheckmark = roadmapStep.querySelector('.step-checkmark');
+                        if (stepNumber) stepNumber.style.display = 'none';
+                        if (stepCheckmark) stepCheckmark.style.display = 'block';
+                    } else {
+                        roadmapStep.classList.add('pending');
+                        // Show number, hide checkmark
+                        const stepNumber = roadmapStep.querySelector('.step-number');
+                        const stepCheckmark = roadmapStep.querySelector('.step-checkmark');
+                        if (stepNumber) stepNumber.style.display = 'block';
+                        if (stepCheckmark) stepCheckmark.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Set active step (first incomplete step)
+            const nextIncompleteStep = Object.keys(setupData).find(step => !setupData[step]);
+            if (nextIncompleteStep) {
+                const activeRoadmapStep = document.querySelector(`.roadmap-steps [data-step="${nextIncompleteStep}"]`);
+                if (activeRoadmapStep) {
+                    activeRoadmapStep.classList.remove('pending');
+                    activeRoadmapStep.classList.add('active');
+                }
+            }
+            
+            // Update card statuses
+            Object.keys(setupData).forEach(step => {
+                const status = document.getElementById(`${step}-status`);
+                
+                if (status) {
+                    if (setupData[step]) {
+                        status.innerHTML = '<i class="fas fa-check-circle completed"></i><span>Completed</span>';
+                    } else {
+                        status.innerHTML = '<i class="fas fa-circle incomplete"></i><span>Incomplete</span>';
+                    }
+                }
+            });
+            
+            // Wizard Visibility Logic: Only show the active step's card
+            const activeStep = Object.keys(setupData).find(step => !setupData[step]) || 'profile';
+            showStepCard(activeStep);
+            
+            // Check if setup is complete
+            if (progressPercentage === 100) {
+                setTimeout(() => {
+                    completeSetup();
+                }, 1000);
+            }
+        }
+
+        // Function to show specific step card and hide others
+        function showStepCard(stepName) {
+            // Hide all cards first
+            const allCards = document.querySelectorAll('.checklist-card');
+            allCards.forEach(card => {
+                card.style.display = 'none';
+            });
+            
+            // Show selected card
+            const selectedCard = document.getElementById(`${stepName}-card`);
+            if (selectedCard) {
+                selectedCard.style.display = 'block';
+            }
+        }
+
+        function completeSetup() {
+            // Mark setup as completed in database
+            // This would be implemented with actual database call
+            console.log('Setup completed!');
+            
+            // Show standard dashboard
+            document.getElementById('setupChecklist').style.display = 'none';
+            document.getElementById('standardDashboard').style.display = 'block';
+        }
+
+        function skipSetup() {
+            if (confirm('Are you sure you want to skip setup? You can always complete these steps later.')) {
+                document.getElementById('setupChecklist').style.display = 'none';
+                document.getElementById('standardDashboard').style.display = 'block';
+            }
+        }
+
+        // Check setup status on page load
+        async function checkSetupStatus() {
+            try {
+                // Get current user's school data
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                
+                if (userError || !user) {
+                    console.error('User not authenticated');
+                    return;
+                }
+
+                const schoolId = user.user_metadata?.school_id;
+                if (!schoolId) {
+                    console.error('School ID not found in user metadata');
+                    return;
+                }
+
+                // Check school setup status
+                const { data: school, error: schoolError } = await supabase
+                    .from('Schools')
+                    .select('is_active, created_at')
+                    .eq('school_id', schoolId)
+                    .maybeSingle();
+
+                if (schoolError) {
+                    console.error('Error fetching school data:', schoolError);
+                    return;
+                }
+
+                // Check if school has actual data (classes, teachers, students)
+                const { data: classes } = await supabase
+                    .from('Classes')
+                    .select('class_id')
+                    .eq('school_id', schoolId)
+                    .limit(1);
+
+                const { data: teachers } = await supabase
+                    .from('Teachers')
+                    .select('teacher_id')
+                    .eq('school_id', schoolId)
+                    .limit(1);
+
+                const { data: students } = await supabase
+                    .from('Students')
+                    .select('student_id')
+                    .eq('school_id', schoolId)
+                    .limit(1);
+
+                const hasClasses = classes && classes.length > 0;
+                const hasTeachers = teachers && teachers.length > 0;
+                const hasStudents = students && students.length > 0;
+                const schoolActive = school?.is_active || false;
+                
+                // Determine which view to show
+                const setupChecklist = document.getElementById('setupChecklist');
+                const standardDashboard = document.getElementById('standardDashboard');
+                
+                if (setupChecklist && standardDashboard) {
+                    if (!schoolActive || (!hasClasses || !hasTeachers)) {
+                        // Show setup checklist
+                        setupChecklist.style.display = 'block';
+                        standardDashboard.style.display = 'none';
+                        
+                        // Update setup progress based on actual data
+                        setupData = {
+                            profile: true, // Assume profile is complete if user is here
+                            classes: hasClasses,
+                            teachers: hasTeachers,
+                            students: hasStudents
+                        };
+                        
+                        updateSetupProgress();
+                        updateStepLocking();
+                    } else {
+                        // Show standard dashboard
+                        setupChecklist.style.display = 'none';
+                        standardDashboard.style.display = 'block';
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error checking setup status:', error);
+                // Show standard dashboard as fallback
+                const setupChecklist = document.getElementById('setupChecklist');
+                const standardDashboard = document.getElementById('standardDashboard');
+                
+                if (setupChecklist && standardDashboard) {
+                    setupChecklist.style.display = 'none';
+                    standardDashboard.style.display = 'block';
+                }
+            }
+        }
+
+        function updateStepLocking() {
+            // Lock steps that shouldn't be accessible yet
+            const canRegisterTeachers = setupData.classes; // Can only register teachers if at least one class exists
+            const canEnrollStudents = setupData.classes && setupData.teachers; // Can only enroll students if both classes and teachers exist
+
+            // Update teachers step
+            const teachersCard = document.querySelector('[data-step="teachers"]');
+            const teachersBtn = teachersCard?.querySelector('.card-btn');
+            const teachersStatus = document.getElementById('teachers-status');
+            
+            if (teachersCard && teachersBtn && teachersStatus) {
+                if (canRegisterTeachers) {
+                    teachersBtn.disabled = false;
+                    teachersBtn.style.opacity = '1';
+                    teachersBtn.style.cursor = 'pointer';
+                    teachersCard.classList.remove('locked');
+                    teachersStatus.innerHTML = '<i class="fas fa-circle incomplete"></i><span>Incomplete</span>';
+                } else {
+                    teachersBtn.disabled = true;
+                    teachersBtn.style.opacity = '0.5';
+                    teachersBtn.style.cursor = 'not-allowed';
+                    teachersCard.classList.add('locked');
+                    teachersStatus.innerHTML = '<i class="fas fa-lock"></i><span>Locked - Add classes first</span>';
+                }
+            }
+
+            // Update students step
+            const studentsCard = document.querySelector('[data-step="students"]');
+            const studentsBtn = studentsCard?.querySelector('.card-btn');
+            const studentsStatus = document.getElementById('students-status');
+            
+            if (studentsCard && studentsBtn && studentsStatus) {
+                if (canEnrollStudents) {
+                    studentsBtn.disabled = false;
+                    studentsBtn.style.opacity = '1';
+                    studentsBtn.style.cursor = 'pointer';
+                    studentsCard.classList.remove('locked');
+                    studentsStatus.innerHTML = '<i class="fas fa-circle incomplete"></i><span>Incomplete</span>';
+                } else {
+                    studentsBtn.disabled = true;
+                    studentsBtn.style.opacity = '0.5';
+                    studentsBtn.style.cursor = 'not-allowed';
+                    studentsCard.classList.add('locked');
+                    studentsStatus.innerHTML = '<i class="fas fa-lock"></i><span>Locked - Add classes and teachers first</span>';
+                }
+            }
+        }
+
+        // Main initialization
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize setup check
+            checkSetupStatus();
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('focus', function () {
+                    this.style.borderColor = '#7c3aed';
+                });
+
+                searchInput.addEventListener('blur', function () {
+                    this.style.borderColor = '#e2e8f0';
+                });
+            }
+
+            // Sidebar Toggle
+            const sidebar = document.querySelector('[data-sideBar]');
+            const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+            const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+            if (sidebarOpenBtn && sidebar) {
+                sidebarOpenBtn.addEventListener('click', () => {
+                    sidebar.classList.add('show');
+                });
+            }
+
+            if (sidebarCloseBtn && sidebar) {
+                sidebarCloseBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('show');
+                });
+            }
+
+            // Animate stats on load
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach((stat, index) => {
+                const finalValue = stat.textContent;
+                stat.textContent = '0';
+
+                setTimeout(() => {
+                    animateNumber(stat, finalValue);
+                }, index * 200);
+            });
+        });
+
+        function animateNumber(element, finalValue) {
+            const isPercentage = finalValue.includes('%');
+            const isDollar = finalValue.includes('$');
+            const numericValue = parseInt(finalValue.replace(/[^0-9]/g, ''));
+
+            let current = 0;
+            const increment = numericValue / 50;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= numericValue) {
+                    current = numericValue;
+                    clearInterval(timer);
+                }
+
+                let displayValue = Math.floor(current).toLocaleString();
+                if (isDollar) displayValue = '$' + displayValue;
+                if (isPercentage) displayValue = Math.floor(current) + '%';
+
+                element.textContent = displayValue;
+            }, 20);
+        }
+        
+        function updateSetupProgress() {
+            const completedSteps = Object.values(setupData).filter(Boolean).length;
+            const totalSteps = Object.keys(setupData).length;
+            const progressPercentage = Math.round((completedSteps / totalSteps) * 100);
+            
+            // Update progress bar
+            const progressBar = document.getElementById('setupProgress');
+            const progressText = document.getElementById('progressPercentage');
+            
+            if (progressBar) {
+                progressBar.style.width = `${progressPercentage}%`;
+            }
+            
+            if (progressText) {
+                progressText.textContent = `Setup Progress: ${progressPercentage}%`;
+            }
+            
+            // Update card statuses
+            Object.keys(setupData).forEach(step => {
+                const card = document.querySelector(`[data-step="${step}"]`);
+                const status = document.getElementById(`${step}-status`);
+                
+                if (card && status) {
+                    if (setupData[step]) {
+                        card.classList.add('completed');
+                        status.innerHTML = '<i class="fas fa-check-circle completed"></i><span>Completed</span>';
+                    } else {
+                        card.classList.remove('completed');
+                        status.innerHTML = '<i class="fas fa-circle incomplete"></i><span>Incomplete</span>';
+                    }
+                }
+            });
+            
+            // Check if setup is complete
+            if (progressPercentage === 100) {
+                setTimeout(() => {
+                    completeSetup();
+                }, 1000);
+            }
+        }
+
+        function completeSetup() {
+            // Mark setup as completed in database
+            // This would be implemented with actual database call
+            console.log('Setup completed!');
+            
+            // Show standard dashboard
+            document.getElementById('setupChecklist').style.display = 'none';
+            document.getElementById('standardDashboard').style.display = 'block';
+        }
+        
+        // Add CSS for locked cards
+        const style = document.createElement('style');
+        style.textContent = `
+            .checklist-card.locked {
+                opacity: 0.6;
+                border-color: #d1d5db;
+            }
+            
+            .checklist-card.locked .card-btn {
+                background: #9ca3af;
+                cursor: not-allowed;
+            }
+            
+            .checklist-card.locked .card-btn:hover {
+                background: #9ca3af;
+                transform: none;
+                box-shadow: none;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+<script type="module" src="./adminStats.js"></script>
+<script type="module" src="./billingSummary.js"></script>
+
+</html>

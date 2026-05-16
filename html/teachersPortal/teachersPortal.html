@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta charset="UTF-8">
+    
+    <title>TeachSmart — Dashboard</title>
+    <link rel="stylesheet" href="../../styles/teachersPortalStyles/sidebar.css?v=1.1">
+    <link rel="stylesheet" href="../../styles/teachersPortalStyles/tp-shared.css?v=1.1">
+</head>
+
+<body>
+    <!-- Mobile Top Bar -->
+    <div class="mobile-top-bar" id="mobileTopBar">
+        <span class="brand">TeachSmart</span>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar (populated by teachers_portal_sidebar.js) -->
+    <nav class="sidebar" data-sideBar></nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="tp-header">
+            <div class="tp-header-left">
+                <h1>Welcome back, <span id="teacherGreetingName">Teacher</span> 👋</h1>
+                <p id="teacherGreetingDate">Loading date…</p>
+            </div>
+            <div class="tp-header-right">
+                <button class="notification-btn" title="Notifications"><i class="fa fa-bell"></i></button>
+                <div class="user-avatar" id="userAvatarInitials">T</div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-book"></i></div>
+                <div class="stat-content">
+                    <h3 id="active_courses">0</h3>
+                    <p>Active Courses</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fa fa-people-group"></i></div>
+                <div class="stat-content">
+                    <h3 id="total_students">0</h3>
+                    <p>Total Students</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple"><i class="fa fa-person-chalkboard"></i></div>
+                <div class="stat-content">
+                    <h3>3</h3>
+                    <p>Upcoming Classes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange"><i class="fa fa-envelope"></i></div>
+                <div class="stat-content">
+                    <h3>12</h3>
+                    <p>New Messages</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:24px;">
+
+            <!-- AI Assistant card -->
+            <div class="card">
+                <h2 class="card-title">AI Assistant</h2>
+                <div class="ai-feature">
+                    <div class="ai-feature-icon">📝</div>
+                    <div class="ai-feature-text">
+                        Generate Lesson Notes
+                        <span
+                            style="margin-left:8px;font-size:10px;font-weight:700;background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:12px;letter-spacing:.4px;">COMING
+                            SOON</span>
+                    </div>
+                </div>
+                <div class="ai-feature">
+                    <div class="ai-feature-icon"><i class="fa fa-question"></i></div>
+                    <div class="ai-feature-text">Create Test Questions</div>
+                </div>
+                <div class="ai-feature">
+                    <div class="ai-feature-icon"><i class="fa fa-chart-column"></i></div>
+                    <div class="ai-feature-text">
+                        Analyse Student Performance
+                        <span
+                            style="margin-left:8px;font-size:10px;font-weight:700;background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:12px;letter-spacing:.4px;">COMING
+                            SOON</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Classes card -->
+            <div class="card">
+                <h2 class="card-title">Upcoming Classes</h2>
+                <div class="class-item">
+                    <div class="class-info">
+                        <h4>Mathematics</h4>
+                        <p>Grade 10-A</p>
+                    </div>
+                    <div class="class-time">9:00 AM</div>
+                </div>
+                <div class="class-item">
+                    <div class="class-info">
+                        <h4>Physics</h4>
+                        <p>Grade 11-B</p>
+                    </div>
+                    <div class="class-time">11:00 AM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Section -->
+        <div class="card">
+            <div class="tp-section-header">
+                <h2 class="card-title" style="margin-bottom:0;">Students</h2>
+            </div>
+            <table class="tp-table students-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Class</th>
+                        <th>Performance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <script src="../../scripts/fontawesome.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../scripts/teachersPortalScripts/teachersDashboard.js" type="module"></script>
+    <script src="../../scripts/teachersPortalScripts/teachers_portal_sidebar.js" type="module"></script>
+    <script>
+        (function () {
+            const btn = document.getElementById('hamburgerBtn');
+            const sidebar = document.querySelector('[data-sideBar]');
+            const overlay = document.getElementById('sidebarOverlay');
+            const open = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+            const close = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+            if (btn) btn.addEventListener('click', () => sidebar.classList.contains('active') ? close() : open());
+            overlay.addEventListener('click', close);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+            window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
+        })();
+    </script>
+
+    <style>
+        /* Dashboard-specific styles */
+        .ai-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ai-feature:last-child {
+            border-bottom: none;
+        }
+
+        .ai-feature:hover {
+            background: #f8fafc;
+            margin: 0 -16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+        }
+
+        .ai-feature-icon {
+            width: 38px;
+            height: 38px;
+            background: #ebf8ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3182ce;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .ai-feature-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .class-item:last-child {
+            border-bottom: none;
+        }
+
+        .class-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 3px;
+        }
+
+        .class-info p {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .class-time {
+            font-size: 14px;
+            font-weight: 600;
+            color: #3182ce;
+        }
+
+        @media (max-width: 768px) {
+            [style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</body>
+
+</html>

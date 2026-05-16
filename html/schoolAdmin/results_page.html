@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta charset="UTF-8">
+
+    <title>EdTech - Upload Results</title>
+    <link rel="stylesheet" href="../../styles/schoolAdminStyles/sidebar.css?v=1.1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            height: 100vh;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .mobile-header {
+            display: none;
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .hamburger {
+            width: 30px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: white;
+            padding: 30px 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f0f7ff;
+            color: #4a90e2;
+        }
+
+        .nav-item.active {
+            background: #e8f4ff;
+            color: #4a90e2;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+        }
+
+        .user-section {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .header .date {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .filters-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .form-select,
+        .form-input {
+            padding: 10px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 140px;
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead {
+            background: #fafafa;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: #357abd;
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: #4a90e2;
+            border: 1px solid #4a90e2;
+        }
+
+        .action-btn.secondary:hover {
+            background: #f0f7ff;
+        }
+
+        .score-input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                transform: translateX(-100%);
+                z-index: 1001;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-top: 60px;
+                padding: 20px;
+                width: 100%;
+                height: calc(100vh - 60px);
+                overflow-y: auto;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-select,
+            .form-input,
+            .action-btn {
+                width: 100%;
+            }
+
+            /* Responsive Table */
+            thead {
+                display: none;
+            }
+
+            table,
+            tbody,
+            tr,
+            td {
+                display: block;
+                width: 100%;
+            }
+
+            tr {
+                margin-bottom: 20px;
+                border: 1px solid #e5e5e5;
+                border-radius: 8px;
+                padding: 16px;
+                background: white;
+            }
+
+            td {
+                text-align: right;
+                padding: 10px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #f9f9f9;
+            }
+
+            td:last-child {
+                border-bottom: none;
+            }
+
+            td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #666;
+                font-size: 12px;
+                text-transform: uppercase;
+                text-align: left;
+            }
+
+            .score-input {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-header">
+        <div class="hamburger" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="logo">EdTech</div>
+        <div style="width: 30px;"></div>
+    </div>
+
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar>
+        <!-- Dynamic Content -->
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Upload Results</h1>
+            <div class="date">Term Results Entry</div>
+        </div>
+
+        <div class="section">
+            <form id="resultsForm">
+                <div class="section-header">
+                    <div>
+                        <span class="section-title">Result Entry Details</span>
+                        <div class="filters-container" style="margin-top: 10px;">
+                            <select id="academicSessionSelect" class="form-select" required>
+                                <option value="">Select Session</option>
+                                <option value="2025/2026">2025/2026</option>
+                                <option value="2026/2027">2026/2027</option>
+                            </select>
+
+                            <select id="termSelect" class="form-select" required>
+                                <option value="">Select Term</option>
+                                <option value="1">1st Term</option>
+                                <option value="2">2nd Term</option>
+                                <option value="3">3rd Term</option>
+                            </select>
+
+                            <select id="assessmentTypeSelect" class="form-select" required>
+                                <option value="">Assessment Type</option>
+                                <option value="CA1">1st CA</option>
+                                <option value="CA2">2nd CA</option>
+                                <option value="Exam">Exam</option>
+                            </select>
+
+                            <input type="number" id="maxScoreInput" class="form-input"
+                                placeholder="Max Score (e.g. 100)" min="1" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <div class="filters-container" style="width: 100%;">
+                        <select id="classSelect" class="form-select" required>
+                            <option value="">Select Class</option>
+                        </select>
+                        <select id="subjectSelect" class="form-select" required>
+                            <option value="">Select Subject</option>
+                        </select>
+
+                        <div style="flex-grow: 1;"></div>
+
+                        <input type="file" id="excelUpload" accept=".xlsx, .xls, .csv" style="display: none;">
+                        <button type="button" id="importExcelBtn" class="action-btn secondary">
+                            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Import Excel
+                        </button>
+                    </div>
+                </div>
+
+                <table id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Student ID</th>
+                            <th>Score</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 30px; color: #666;">
+                                Please select a Class and Subject to load the student list.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 30px; text-align: right;">
+                    <button type="submit" class="action-btn">
+                        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save Results
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../scripts/ui_feedback.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script type="module" src="../../scripts/schoolAdminScripts/results_page.js"></script>
+    <script src="../../scripts/schoolAdminScripts/sideBar.js"></script>
+    <script src="../../scripts/font-awesome.js"></script>
+    <script>
+        // Sidebar Toggle for Mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Settings Modal Toggle
+        window.toggleSettingsModal = function () {
+            const modal = document.getElementById('gradingSettingsModal');
+            modal.classList.toggle('active');
+        }
+
+        // Trigger file input
+        document.getElementById('importExcelBtn').addEventListener('click', () => {
+            document.getElementById('excelUpload').click();
+        });
+    </script>
+</body>
+
+</html>

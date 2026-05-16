@@ -1,0 +1,564 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles Removed - Moved to sidebar.css */
+
+/* Main Content */
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 24px 32px;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.full-width {
+    margin-left: 0;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.welcome-msg h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.welcome-msg p {
+    font-size: 14px;
+    color: #718096;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.notification-btn,
+.menu-btn {
+    width: 40px;
+    height: 40px;
+    background: #f7fafc;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #4a5568;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.notification-btn:hover,
+.menu-btn:hover {
+    background: #edf2f7;
+}
+
+.menu-btn {
+    display: none;
+}
+
+/* Attendance Section */
+.attendance-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.date-class-selector {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.date-input,
+.class-select {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #2d3748;
+    background: white;
+}
+
+.date-input:focus,
+.class-select:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.quick-action-btn {
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quick-action-btn:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+.quick-action-btn.present {
+    background: #f0fff4;
+    border-color: #9ae6b4;
+    color: #38a169;
+}
+
+.quick-action-btn.absent {
+    background: #fef5e7;
+    border-color: #f6ad55;
+    color: #d69e2e;
+}
+
+/* Attendance Table */
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 12px;
+    border-bottom: 2px solid #e2e8f0;
+    background: #f8f9fa;
+}
+
+.attendance-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s;
+}
+
+.attendance-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.attendance-table tbody td {
+    padding: 16px 12px;
+    font-size: 14px;
+    color: #2d3748;
+    vertical-align: middle;
+}
+
+.student-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.student-info p {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+/* Radio Button Groups */
+.attendance-options {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #3182ce;
+    cursor: pointer;
+}
+
+.radio-group label {
+    font-size: 14px;
+    color: #4a5568;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.radio-group.present label {
+    color: #38a169;
+}
+
+.radio-group.absent label {
+    color: #e53e3e;
+}
+
+.radio-group.late label {
+    color: #d69e2e;
+}
+
+/* Remarks Input */
+.remarks-input {
+    width: 100%;
+    max-width: 200px;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #2d3748;
+    background: white;
+    transition: all 0.2s;
+}
+
+.remarks-input:focus {
+    outline: none;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.remarks-input::placeholder {
+    color: #a0aec0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.save-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.save-btn:hover {
+    background: #2f855a;
+}
+
+.cancel-btn {
+    background: #f7fafc;
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+}
+
+/* Summary Stats */
+.attendance-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.summary-item {
+    text-align: center;
+}
+
+.summary-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.summary-label {
+    font-size: 12px;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.summary-item.present .summary-number {
+    color: #38a169;
+}
+
+.summary-item.absent .summary-number {
+    color: #e53e3e;
+}
+
+.summary-item.late .summary-number {
+    color: #d69e2e;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.mobile-visible {
+        transform: translateX(0);
+    }
+
+    .close-btn {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 80px 16px 24px; /* match listOfStudents padding to clear top bar */
+    }
+
+    .menu-btn {
+        display: flex;
+    }
+
+    .tp-filters-row {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .tp-filters-row .date-input,
+    .tp-filters-row .class-select,
+    .tp-filters-row .subject-select {
+        width: 100%;
+        margin-bottom: 8px; /* space them out when stacked */
+    }
+
+    .attendance-options {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* HCI Improvement: Make radio buttons large tappable blocks on mobile */
+    .radio-group {
+        flex: 1;
+        min-width: calc(33.333% - 8px);
+        padding: 10px 4px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        justify-content: center;
+        text-align: center;
+        transition: all 0.2s;
+    }
+
+    .radio-group input[type="radio"] {
+        display: none; /* Hide actual radio circle */
+    }
+
+    .radio-group label {
+        font-size: 13px;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Selected states for the blocks */
+    .radio-group.present:has(input:checked) {
+        background: #f0fff4;
+        border-color: #38a169;
+    }
+    
+    .radio-group.present:has(input:checked) label {
+        font-weight: 700;
+    }
+
+    .radio-group.absent:has(input:checked) {
+        background: #fff5f5;
+        border-color: #e53e3e;
+    }
+
+    .radio-group.absent:has(input:checked) label {
+        font-weight: 700;
+    }
+
+    .radio-group.late:has(input:checked) {
+        background: #fffaf0;
+        border-color: #d69e2e;
+    }
+
+    .radio-group.late:has(input:checked) label {
+        font-weight: 700;
+    }
+
+    .remarks-input {
+        max-width: 100%;
+        margin-top: 12px;
+        padding: 12px; /* Larger tap target for input */
+    }
+
+    /* Responsive Attendance Table - Card Layout */
+    .attendance-table thead {
+        display: none;
+    }
+
+    .attendance-table,
+    .attendance-table tbody,
+    .attendance-table tr,
+    .attendance-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .attendance-table tr {
+        margin-bottom: 16px;
+        border: 1px solid var(--tp-border, #e2e8f0);
+        border-radius: 12px;
+        padding: 16px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .attendance-table td {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid #f5f5f5;
+        padding: 12px 0;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .attendance-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .attendance-table td:first-child {
+        padding-top: 0;
+    }
+
+    /* Add labels before content */
+    .attendance-table td:nth-child(2)::before {
+        content: "Attendance Status";
+        font-weight: 600;
+        color: #718096;
+        font-size: 11px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .attendance-table td:nth-child(3)::before {
+        content: "Remarks";
+        font-weight: 600;
+        color: #718096;
+        font-size: 11px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .quick-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .quick-action-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .save-btn {
+        width: 100%;
+    }
+}
+
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+

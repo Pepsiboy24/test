@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta charset="UTF-8">
+    
+    <title>Study Materials - EduHub Student Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css?v=1.1">
+    <link rel="stylesheet" href="./studentsPortalStyles/studyMaterials.css?v=1.1">
+    <script type="module" src="./student_sidebar.js"></script>
+    <script type="module" src="../../assets/js-shared/ui-engine.js"></script>
+    <!-- Auth Guard: must load before page content renders -->
+    <script type="module" src="../../core/authGuard.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Dynamic Sidebar Anchor -->
+        <div id="sidebarAnchor"></div>
+        <script type="module" src="./student_sidebar.js"></script>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="welcome-section">
+                    <h1>Study Materials</h1>
+                    <p>Access notes and past papers</p>
+                </div>
+                <div class="header-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="profile-btn">
+                        A
+                    </button>
+                    <button class="nav-btn" data-nav-display>
+                        <i class="fa fa-bars" data-ie></i>
+                    </button>
+                </div>
+            </header>
+
+            <section class="section">
+                <div class="search-section">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="search" placeholder="Search study materials...">
+                    </div>
+                    <!-- <button class="upload-btn" id="uploadBtn">
+                        <i class="fas fa-upload"></i>
+                        Upload Material
+                    </button> -->
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="stats-grid" id="statsGrid">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+                <div class="stats-grid" id="statsContent" style="display:none;">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-sticky-note"></i>
+                        </div>
+                        <div class="stat-number" id="notes-count">0</div>
+                        <div class="stat-label">Notes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-number" id="papers-count">0</div>
+                        <div class="stat-label">Past Papers</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="material-category notes">
+                    <!-- Skeleton will be injected here -->
+                    <div class="category-header skeleton">
+                        <div class="category-title skeleton"></div>
+                        <div class="category-count skeleton"></div>
+                    </div>
+                    <div class="materials-list skeleton">
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                        <div class="material-card skeleton"></div>
+                    </div>
+                </div>
+                
+                <div class="material-category notes" id="notesContent" style="display:none;">
+                    <div class="category-header">
+                        <h3 class="category-title">Notes</h3>
+                        <p class="category-count"><span class="number" id="notes-number">0</span> books</p>
+                    </div>
+                    <div class="materials-list" id="notes-list">
+                    </div>
+                </div>
+
+                    <div class="material-category past-papers coming-soon-card">
+                        <div class="category-header">
+                            <h3 class="category-title">Past Q & A</h3>
+                            <div class="premium-badge">Premium</div>
+                        </div>
+                        <div class="materials-list" style="padding: 40px 24px; text-align: center;">
+                            <i class="fas fa-lock" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 16px;"></i>
+                            <h4 style="color: #475569; margin-bottom: 8px; font-size: 1.1rem;">Coming Soon!</h4>
+                            <p
+                                style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; max-width: 300px; margin: 0 auto;">
+                                We are compiling an extensive database of past examination papers to help you prep. Stay
+                                tuned.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upload Study Material</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="materialTitle">Title</label>
+                        <input type="text" id="materialTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="materialSubject">Subject</label>
+                        <select id="materialSubject" name="subject" required>
+                            <option value="">Select Subject</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="english">English</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="biology">Biology</option>
+                            <option value="history">History</option>
+                            <option value="geography">Geography</option>
+                            <option value="ict">ICT</option>
+                            <option value="phe">P.H.E</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="materialType">Type</label>
+                        <select id="materialType" name="type" required>
+                            <option value="">Select Type</option>
+                            <option value="textbook">Textbook</option>
+                            <option value="notes">Notes</option>
+                            <option value="past-paper">Past Paper</option>
+                            <option value="worksheet">Worksheet</option>
+                            <option value="presentation">Presentation</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="materialFile">File</label>
+                        <input type="file" id="materialFile" name="file"
+                            accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.png,.jpeg" required>
+                        <small>Supported formats: PDF, DOC, DOCX, PPT, PPTX, TXT, JPG, PNG</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="materialDescription">Description (Optional)</label>
+                        <textarea id="materialDescription" name="description" rows="3"
+                            placeholder="Brief description of the material..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Upload Material</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div id="viewerModal" class="modal">
+        <div class="modal-content"
+            style="width: 95%; max-width: 1000px; height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h3 id="viewerTitle">Document Viewer</h3>
+                <span class="close-viewer"
+                    style="font-size: 24px; cursor: pointer; color: var(--text-secondary);">&times;</span>
+            </div>
+            <div class="modal-body" style="flex: 1; padding: 0; position: relative;">
+                <iframe id="viewerFrame" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+                <!-- Loading State -->
+                <div id="viewerLoading"
+                    style="position: absolute; top:0; left:0; width:100%; height:100%; background:var(--card-background); display:flex; align-items:center; justify-content:center; z-index:5;">
+                    <div style="text-align:center; color: var(--text-secondary);">
+                        <i class="fas fa-circle-notch fa-spin fa-2x"
+                            style="margin-bottom:12px; color: var(--primary-color);"></i>
+                        <p>Loading document...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Supabase configuration
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const SUPABASE_URL = 'https://dzotwozhcxzkxtunmqth.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6b3R3b3poY3h6a3h0dW5tcXRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODk5NzAsImV4cCI6MjA3MDY2NTk3MH0.KJfkrRq46c_Fo7ujkmvcue4jQAzIaSDfO3bU7YqMZdE';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Modal functionality
+        const uploadModal = document.getElementById('uploadModal');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const closeModal = document.querySelector('.close-modal');
+        const cancelBtn = document.querySelector('.cancel-btn');
+        const uploadForm = document.getElementById('uploadForm');
+
+        // uploadBtn.addEventListener('click', () => {
+        // uploadModal.style.display = 'block';
+        // });
+
+        closeModal.addEventListener('click', () => {
+            uploadModal.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            uploadModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === uploadModal) {
+                uploadModal.style.display = 'none';
+            }
+            if (e.target === viewerModal) {
+                viewerModal.style.display = 'none';
+                viewerFrame.src = '';
+            }
+        });
+
+        // Viewer logic
+        const viewerModal = document.getElementById('viewerModal');
+        const closeViewerBtn = document.querySelector('.close-viewer');
+        const viewerFrame = document.getElementById('viewerFrame');
+        const viewerTitle = document.getElementById('viewerTitle');
+        const viewerLoading = document.getElementById('viewerLoading');
+
+        window.openViewer = function (url, title) {
+            viewerTitle.textContent = title;
+            viewerModal.style.display = 'block';
+            viewerLoading.style.display = 'flex';
+
+            viewerFrame.src = url;
+            viewerFrame.onload = () => {
+                viewerLoading.style.display = 'none';
+            };
+
+            setTimeout(() => { viewerLoading.style.display = 'none'; }, 3000);
+        };
+
+        closeViewerBtn.addEventListener('click', () => {
+            viewerModal.style.display = 'none';
+            viewerFrame.src = '';
+        });
+
+        // Form submission with Supabase integration
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(uploadForm);
+            const file = formData.get('file');
+            const title = formData.get('title');
+            const subject = formData.get('subject');
+            const type = formData.get('type');
+            const description = formData.get('description');
+
+            // Basic validation
+            if (!file || file.size === 0) {
+                alert('Please select a file to upload.');
+                return;
+            }
+
+            // Check file size (max 50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                alert('File size must be less than 50MB.');
+                return;
+            }
+
+            const submitBtn = uploadForm.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Uploading...';
+            submitBtn.disabled = true;
+
+            try {
+                // Generate unique filename
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+                const filePath = `study-materials/${fileName}`;
+
+                // Upload file to Supabase Storage
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('study-materials')
+                    .upload(filePath, file);
+
+                if (uploadError) {
+                    throw uploadError;
+                }
+
+                // Get public URL
+                const { data: urlData } = supabase.storage
+                    .from('study-materials')
+                    .getPublicUrl(filePath);
+
+                // Save metadata to database
+                const { data: dbData, error: dbError } = await supabase
+                    .from('study_materials')
+                    .insert([
+                        {
+                            title: title,
+                            subject: subject,
+                            type: type,
+                            description: description,
+                            file_url: urlData.publicUrl,
+                            file_path: filePath,
+                            file_size: file.size,
+                            file_type: file.type,
+                            uploaded_by: 'student', // In a real app, get from user session
+                            uploaded_at: new Date().toISOString()
+                        }
+                    ]);
+
+                if (dbError) {
+                    throw dbError;
+                }
+
+                alert('Material uploaded successfully!');
+                uploadModal.style.display = 'none';
+                uploadForm.reset();
+
+                // Refresh the materials list
+                loadStudyMaterials();
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Upload failed: ' + error.message);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Load study materials from database
+        async function loadStudyMaterials() {
+            try {
+                // Fetch student study materials
+                const { data: materials, error } = await supabase
+                    .from('study_materials')
+                    .select('*')
+                    .order('uploaded_at', { ascending: false });
+
+                // The Fetch Guard: Implement try-catch block logging error.hint and error.details
+                if (error) {
+                    console.error('Error loading materials:', error);
+                    if (error.hint) console.error('Hint:', error.hint);
+                    if (error.details) console.error('Details:', error.details);
+                }
+
+                // Fetch teacher uploaded lesson notes
+                const { data: lessonNotes, error: lessonError } = await supabase
+                    .from('Lesson_Notes')
+                    .select('*, Subjects(subject_name)')
+                    .order('created_at', { ascending: false });
+
+                if (lessonError) {
+                    console.error('Error loading lesson notes:', lessonError);
+                    if (lessonError.hint) console.error('Hint:', lessonError.hint);
+                }
+
+                let allMaterials = materials || [];
+
+                // Map teacher lesson notes into the same format
+                if (lessonNotes && lessonNotes.length > 0) {
+                    const mappedNotes = lessonNotes.map(ln => ({
+                        id: ln.id,
+                        title: ln.title,
+                        subject: ln.Subjects && ln.Subjects.subject_name ? ln.Subjects.subject_name : 'Unknown Subject',
+                        type: 'notes',
+                        description: 'Teacher Lesson Note',
+                        file_url: ln.file_url,
+                        file_path: '',
+                        file_size: null,
+                        file_type: 'application/pdf',
+                        uploaded_by: 'teacher',
+                        uploaded_at: ln.created_at
+                    }));
+                    allMaterials = [...allMaterials, ...mappedNotes];
+                    allMaterials.sort((a, b) => new Date(b.uploaded_at) - new Date(a.uploaded_at));
+                }
+
+                // 1. The "Catch-All" Filter: Treat anything that isn't a Past Paper as a Note/Textbook.
+                const papers = allMaterials.filter(m => m.type && m.type.toLowerCase().includes('paper'));
+                const notes = allMaterials.filter(m => !papers.includes(m));
+
+                // Update each category
+                updateMaterialsList('notes-list', notes, 'notes');
+                // Past Papers is mapped but acts as a placeholder (Coming Soon)
+
+                // Update stats
+                updateStats(notes.length, papers.length);
+
+                // Hide skeletons and show content
+                document.getElementById('statsGrid').style.display = 'none';
+                document.getElementById('statsContent').style.display = 'grid';
+                
+                // Find and hide the skeleton material-category, show the real content
+                const skeletonCategory = document.querySelector('.material-category.notes:not(#notesContent)');
+                const notesContent = document.getElementById('notesContent');
+                
+                if (skeletonCategory) skeletonCategory.style.display = 'none';
+                if (notesContent) notesContent.style.display = 'block';
+
+            } catch (error) {
+                console.error('Error loading study materials:', error);
+                // Hide skeletons on error
+                document.getElementById('statsGrid').style.display = 'none';
+                document.getElementById('statsContent').style.display = 'grid';
+                
+                // Find and hide the skeleton material-category, show the real content
+                const skeletonCategory = document.querySelector('.material-category.notes:not(#notesContent)');
+                const notesContent = document.getElementById('notesContent');
+                
+                if (skeletonCategory) skeletonCategory.style.display = 'none';
+                if (notesContent) notesContent.style.display = 'block';
+            }
+        }
+
+        // Update materials list for a category
+        function updateMaterialsList(listId, materials, type) {
+            const container = document.getElementById(listId);
+            if (!container) return;
+
+            const iconClass = type === 'textbook' ? 'fa-book' :
+                type === 'notes' ? 'fa-sticky-note' : 'fa-file-alt';
+
+            if (materials.length === 0) {
+                container.innerHTML = '<p class="no-materials">No materials available yet.</p>';
+            } else {
+                container.innerHTML = materials.map(material => {
+                    /*
+                     * BUCKET POLICY CHECK:
+                     * Ensure that the "study-materials" bucket in your Supabase Storage has "Public" access enabled.
+                     * Also, verify that a SELECT policy is active for 'anon' or 'authenticated' users so they can read objects.
+                     */
+                    const isValidUrl = material.file_url && typeof material.file_url === 'string' && material.file_url.startsWith('http');
+
+                    let titleHtml = '';
+                    let actionHtml = '';
+
+                    if (isValidUrl) {
+                        titleHtml = `<h4 style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="window.openViewer('${material.file_url}', '${material.title.replace(/'/g, "\\'")}')">${material.title}</h4>`;
+                        actionHtml = `
+                            <button class="download-btn" onclick="downloadMaterial('${material.file_url}', '${material.title.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                        `;
+                    } else {
+                        // The "Ghost File" Fallback
+                        titleHtml = `<h4 style="color: var(--text-secondary);">${material.title}</h4>`;
+                        actionHtml = `
+                            <span style="background: #f1f5f9; color: #64748b; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center;">
+                                <i class="fas fa-cog fa-spin" style="margin-right:6px;"></i> Processing
+                            </span>
+                        `;
+                    }
+
+                    const formatStr = material.file_type && material.file_type.includes('/') ? material.file_type.split('/')[1].toUpperCase() : 'DOC';
+                    const sizeStr = material.file_size ? (material.file_size / 1024 / 1024).toFixed(1) : '0.0';
+
+                    return `
+                    <div class="material-item" data-id="${material.id}">
+                        <div class="material-info">
+                            <div class="material-icon">
+                                <i class="fas ${iconClass}"></i>
+                            </div>
+                            <div class="material-details">
+                                ${titleHtml}
+                                <div class="material-meta">
+                                    <span class="format-tag">${formatStr}</span>
+                                    <span>${sizeStr}MB</span>
+                                </div>
+                            </div>
+                        </div>
+                        ${actionHtml}
+                    </div>
+                `}).join('');
+            }
+
+            // Update count in header
+            const countElement = document.getElementById(`${type === 'past-paper' ? 'papers' : type}-number`);
+            if (countElement) {
+                countElement.textContent = materials.length;
+            }
+        }
+
+        // Update stats
+        function updateStats(notesCount, papersCount) {
+            // ID Harmonization: Update central stats and ensure matching IDs
+            const notesEl = document.getElementById('notes-count');
+            if (notesEl) notesEl.textContent = notesCount;
+
+            const papersEl = document.getElementById('papers-count');
+            if (papersEl) papersEl.textContent = papersCount;
+        }
+
+        // Download material function
+        function downloadMaterial(url, title) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = title;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-section input');
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const materialItems = document.querySelectorAll('.material-item');
+
+            materialItems.forEach(item => {
+                const materialName = item.querySelector('h4').textContent.toLowerCase();
+                if (materialName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Load materials on page load
+        document.addEventListener('DOMContentLoaded', loadStudyMaterials);
+
+        // Navigation toggle - wait for sidebar to be injected
+        function initSidebarToggle() {
+            const navOpen = document.querySelector("[data-nav-display]");
+            const nav = document.querySelector("[data-nav]");
+            const i = document.querySelector("[data-ie]")
+            
+            if (!navOpen || !nav || !i) {
+                // Sidebar not yet injected, try again in 100ms
+                setTimeout(initSidebarToggle, 100);
+                return;
+            }
+            
+            navOpen.addEventListener("click", () => {
+                i.classList.toggle("fa-bars");
+                i.classList.toggle("fa-times");
+                nav.classList.toggle("show")
+            });
+        }
+        
+        // Initialize sidebar toggle
+        initSidebarToggle();
+    </script>
+</body>
+
+</html>

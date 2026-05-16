@@ -1,0 +1,1189 @@
+
+:root {
+    --primary: #6200ea;
+    --primary-light: #ede7f6;
+    --primary-hover: #5000c2;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    --border: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.logo {
+    padding: 0 12px 32px 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-icon {
+    color: var(--primary);
+    font-size: 24px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--text-gray);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.nav-item:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.nav-icon {
+    width: 20px;
+    margin-right: 12px;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Main Content */
+.main {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    padding: 32px 40px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.mobile-menu-btn {
+    display: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-gray);
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.page-subtitle {
+    color: var(--text-gray);
+    font-size: 14px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text-gray);
+}
+
+.btn:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    color: var(--white);
+}
+
+/* Timetables Grid */
+.timetables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.timetable-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.2s;
+}
+
+.timetable-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.timetable-header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.timetable-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+
+.timetable-subtitle {
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+/* Timetable Actions */
+.timetable-actions {
+    display: flex;
+    gap: 8px;
+}
+
+
+/* Timetable Schedule Grid */
+.schedule-grid {
+    margin: 1.5rem 0;
+}
+
+.day-headers {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.day-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-gray);
+    text-align: center;
+    padding: 0.25rem;
+}
+
+.time-slot {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+    min-height: 35px;
+    align-items: center;
+}
+
+.time-label {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    padding: 0.25rem;
+}
+
+.class-block {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.25rem;
+    text-align: center;
+    color: white;
+    line-height: 1.2;
+    background: var(--primary);
+}
+
+.class-blue { background: #0d6efd; }
+.class-green { background: #198754; }
+.class-yellow { background: #ffc107; color: #000; }
+.class-red { background: #dc3545; }
+.class-purple { background: #6f42c1; }
+.class-cyan { background: #0dcaf0; color: #000; }
+.class-gray { background: #6c757d; }
+.class-teal { background: #20c997; }
+.class-orange { background: #fd7e14; }
+
+
+
+/* Loading and Message States */
+.loading-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: var(--text-gray);
+    font-size: 16px;
+    grid-column: 1 / -1;
+}
+
+.loading-message i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.no-timetables-message {
+    text-align: center;
+    padding: 60px 40px;
+    background: var(--white);
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    margin: 40px 0;
+    grid-column: 1 / -1;
+}
+
+.no-timetables-message i {
+    font-size: 48px;
+    color: var(--text-gray);
+    margin-bottom: 16px;
+}
+
+.no-timetables-message h3 {
+    font-size: 24px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.no-timetables-message p {
+    font-size: 16px;
+    color: var(--text-gray);
+    margin-bottom: 24px;
+}
+
+.error-message {
+    text-align: center;
+    padding: 60px 40px;
+    background: #fef2f2;
+    border: 2px solid #fecaca;
+    border-radius: 12px;
+    margin: 40px 0;
+    grid-column: 1 / -1;
+}
+
+.error-message i {
+    font-size: 48px;
+    color: #ef4444;
+    margin-bottom: 16px;
+}
+
+.error-message h3 {
+    font-size: 24px;
+    color: #dc2626;
+    margin-bottom: 8px;
+}
+
+
+.error-message p {
+    font-size: 16px;
+    color: #7f1d1d;
+    margin-bottom: 24px;
+}
+
+
+/* Button States */
+.toolbar .btn.active {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+
+/* Responsive Updates */
+@media (max-width: 767px) {
+    .timetables-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .day-headers,
+    .time-slot {
+        grid-template-columns: 50px repeat(5, 1fr);
+        gap: 0.125rem;
+    }
+    
+    .day-header,
+    .time-label {
+        font-size: 0.6875rem;
+    }
+    
+    .class-block {
+        font-size: 0.6875rem;
+        padding: 0.25rem 0.375rem;
+    }
+    
+    .no-timetables-message,
+    .error-message {
+        padding: 40px 24px;
+    }
+}
+
+
+/* Card Footer */
+.card-footer {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.btn-view {
+    flex: 1;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-view:hover {
+    background: var(--primary-hover);
+}
+
+.btn-edit {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-gray);
+}
+
+
+.btn-edit:hover {
+    background: var(--bg-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+
+/* Timetable Table Styles */
+.timetable-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 1rem 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.timetable-table th {
+    background: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 11px;
+    padding: 10px 8px;
+    text-align: center;
+}
+
+.timetable-table th.time-column {
+    background: var(--primary-hover);
+    width: 60px;
+}
+
+.timetable-table th.day-column {
+    font-size: 10px;
+}
+
+.timetable-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+    height: 40px;
+}
+
+.timetable-table td.time-cell {
+    background: var(--bg-light);
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 11px;
+}
+
+.timetable-table td.subject-cell {
+    background: var(--white);
+}
+
+
+.timetable-table td.subject-cell .subject-block {
+    display: inline-block;
+    padding: 4px 8px;
+    background: var(--primary);
+    color: var(--white);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    min-width: 40px;
+}
+
+/* --- Edit Timetable Modal (Matching Site Design) --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: none; /* Controlled by JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: 16px;
+    width: 95%;
+    max-width: 550px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: modalFadeIn 0.3s ease-out;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--danger);
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: var(--bg-light);
+}
+
+/* Form Styling within Modal */
+.form-section {
+    margin-bottom: 24px;
+}
+
+.form-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-gray);
+    margin-bottom: 6px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="time"],
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-dark);
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.form-group input[readonly] {
+    background-color: var(--bg-light);
+    cursor: not-allowed;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Days Selection Styling */
+.days-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.day-checkbox {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.day-checkbox:has(input:checked) {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.day-checkbox input {
+    accent-color: var(--primary);
+}
+
+/* Break field styling */
+.break-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+/* Fix for the Break Times input alignment */
+.break-entry-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end; /* Aligns inputs with the delete button */
+    margin-bottom: 12px;
+}
+
+.break-entry-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.btn-remove-break {
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 40px; /* Matches input height */
+    transition: all 0.2s;
+}
+
+.btn-remove-break:hover {
+    background: #fecaca;
+}
+
+/* Ensure the time icons and inputs look consistent */
+input[type="time"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+}
+.btn-remove-break {
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    padding: 5px;
+}
+/* Subject color variations */
+.timetable-table td.subject-cell:nth-child(2) .subject-block { background: #2563eb; } /* Math - Blue */
+.timetable-table td.subject-cell:nth-child(3) .subject-block { background: #16a34a; } /* Science - Green */
+.timetable-table td.subject-cell:nth-child(4) .subject-block { background: #dc2626; } /* English - Red */
+.timetable-table td.subject-cell:nth-child(5) .subject-block { background: #9333ea; } /* History - Purple */
+.timetable-table td.subject-cell:nth-child(6) .subject-block { background: #ea580c; } /* Art - Orange */
+
+/* Fallback colors for subjects */
+.timetable-table td.subject-cell .subject-block[data-subject*="MATH"],
+.timetable-table td.subject-cell .subject-block[data-subject*="ALG"],
+.timetable-table td.subject-cell .subject-block[data-subject*="GEO"],
+.timetable-table td.subject-cell .subject-block[data-subject*="STAT"],
+.timetable-table td.subject-cell .subject-block[data-subject*="CALC"] {
+    background: #2563eb;
+}
+
+.timetable-table td.subject-cell .subject-block[data-subject*="SCI"],
+.timetable-table td.subject-cell .subject-block[data-subject*="BIO"],
+.timetable-table td.subject-cell .subject-block[data-subject*="CHEM"],
+.timetable-table td.subject-cell .subject-block[data-subject*="PHY"] {
+    background: #16a34a;
+}
+
+.timetable-table td.subject-cell .subject-block[data-subject*="ENG"],
+.timetable-table td.subject-cell .subject-block[data-subject*="PENG"] {
+    background: #dc2626;
+}
+
+.timetable-table td.subject-cell .subject-block[data-subject*="HIS"] {
+    background: #9333ea;
+}
+
+.timetable-table td.subject-cell .subject-block[data-subject*="ICT"],
+.timetable-table td.subject-cell .subject-block[data-subject*="TECH"] {
+    background: #0891b2;
+}
+
+.timetable-table td.subject-cell .subject-block[data-subject*="ART"] {
+    background: #ea580c;
+}
+
+.timetable-table td.subject-cell .subject-block[data-subject*="PE"],
+.timetable-table td.subject-cell .subject-block[data-subject*="SPORT"] {
+    background: #059669;
+}
+
+.timetable-table td.empty-cell {
+    background: var(--bg-light);
+}
+
+/* Schedule Table Styles */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 1rem 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.schedule-table th {
+    background: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.schedule-table td.break {
+    background: #f8f9fa;
+    color: var(--text-gray);
+    font-style: italic;
+    font-size: 10px;
+}
+
+.schedule-table td.has-entry {
+    background: rgba(98, 0, 234, 0.03);
+}
+
+.schedule-table td.has-entry .subject-cell {
+    font-weight: 600;
+    color: var(--primary);
+    display: block;
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+
+.schedule-table td.has-entry .room-cell {
+    font-size: 9px;
+    color: var(--text-gray);
+    display: block;
+}
+
+.schedule-table td.empty-slot {
+    color: var(--text-gray);
+    font-style: italic;
+    font-size: 11px;
+}
+
+/* Timetable Summary */
+.timetable-summary {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 0.75rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.summary-label {
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+.summary-value {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Button Icon Styles */
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-gray);
+}
+
+.btn-icon:hover {
+    background: var(--bg-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.full-view-modal {
+    max-width: 95%;
+    width: 1200px;
+    margin: 2% auto;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.full-view-modal .modal-header {
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.full-view-modal .modal-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.full-view-modal .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.full-view-modal .modal-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 24px 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--text-gray);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    border-color: var(--text-gray);
+}
+
+/* Info Sections */
+.info-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.info-section:last-child {
+    border-bottom: none;
+}
+
+.info-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+}
+
+.info-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 12px;
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Assignments and Rooms Content */
+.assignments-content,
+.rooms-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+}
+
+.assignment-item,
+.room-item {
+    padding: 12px;
+    background: var(--bg-light);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.assignment-subject,
+.room-number {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.room-usage {
+    font-size: 12px;
+    color: var(--text-gray);
+}
+
+/* Timetable Section */
+.timetable-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.timetable-section:last-child {
+    border-bottom: none;
+}
+
+.timetable-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+}
+
+.minimalist-view {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.grid-timetable-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.grid-timetable-table th,
+.grid-timetable-table td {
+    border: 1px solid var(--border);
+    padding: 12px 8px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.grid-timetable-table th {
+    background: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.grid-timetable-table th:first-child {
+    width: 10%;
+    background: var(--primary-hover);
+}
+
+.grid-timetable-table td {
+    height: 50px;
+    color: var(--text-dark);
+    background: var(--white);
+}
+
+.grid-timetable-table td.break {
+    background: #f1f5f9;
+    color: var(--text-gray);
+    font-style: italic;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.grid-timetable-table td.has-entry {
+    background: rgba(98, 0, 234, 0.03);
+    position: relative;
+}
+
+.grid-timetable-table td.has-entry:hover {
+    background: rgba(98, 0, 234, 0.08);
+}
+
+.grid-timetable-table .subject-cell {
+    font-weight: 600;
+    color: var(--primary);
+    display: block;
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+.grid-timetable-table .room-cell {
+    font-size: 9px;
+    color: var(--text-gray);
+    display: block;
+    margin-bottom: 1px;
+}
+
+.grid-timetable-table .teacher-cell {
+    font-size: 9px;
+    color: var(--text-gray);
+    font-style: italic;
+    font-weight: 500;
+}
+
+
+
+
+
+/* Responsive */
+@media (max-width: 991px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 24px;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+}
+
+@media (max-width: 767px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .timetables-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .schedule-table {
+        font-size: 11px;
+    }
+
+    .schedule-table th,
+    .schedule-table td {
+        padding: 4px;
+    }
+
+    .modal-content {
+        margin: 20% auto;
+        width: 95%;
+    }
+}
+
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
+

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials Layout Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="./studentsPortalStyles/studyMaterials.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .status-indicator.warning { background: #fff3cd; color: #856404; }
+        .layout-info {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .viewport-info {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 14px;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>📐 Study Materials Layout Test</h1>
+        <p>Testing the layout fixes for the study materials page to ensure proper centering and no sidebar overlap.</p>
+        
+        <div class="status-indicator success">✅ Fixed materials-grid layout</div>
+        <div class="status-indicator success">✅ Added responsive breakpoints</div>
+        <div class="status-indicator info">📱 Mobile: 1 column, Tablet: 2 columns, Desktop: 3+ columns</div>
+        
+        <div class="viewport-info">
+            <strong>Current Viewport:</strong> <span id="viewportSize"></span><br>
+            <strong>Grid Layout:</strong> <span id="gridLayout"></span>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Layout Fixes Applied</h2>
+            <div class="layout-info">
+                <strong>1. Added grid-template-columns:</strong><br>
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));<br><br>
+                
+                <strong>2. Added responsive breakpoints:</strong><br>
+                - Desktop (1025px+): minmax(300px, 1fr)<br>
+                - Tablet (769px-1024px): minmax(280px, 1fr)<br>
+                - Mobile (≤768px): 1fr (single column)<br><br>
+                
+                <strong>3. Adjusted gaps:</strong><br>
+                - Desktop: 24px gap<br>
+                - Tablet: 20px gap<br>
+                - Mobile: 16px gap
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Live Layout Test</h2>
+            <div class="stats-grid" style="margin-bottom: 24px;">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-sticky-note"></i>
+                    </div>
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Notes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Past Papers</div>
+                </div>
+            </div>
+            
+            <div class="materials-grid">
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-sticky-note"></i>
+                    </div>
+                    <div class="material-info">
+                        <h4>Mathematics Notes</h4>
+                        <p class="material-subject">Mathematics</p>
+                        <p class="material-description">Complete study notes for calculus and algebra</p>
+                        <div class="material-meta">
+                            <span class="material-type">notes</span>
+                            <span class="material-date">2024-01-15</span>
+                        </div>
+                        <button class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="material-info">
+                        <h4>Physics Past Paper</h4>
+                        <p class="material-subject">Physics</p>
+                        <p class="material-description">2023 examination paper with solutions</p>
+                        <div class="material-meta">
+                            <span class="material-type">past-paper</span>
+                            <span class="material-date">2024-01-10</span>
+                        </div>
+                        <button class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="material-info">
+                        <h4>Chemistry Textbook</h4>
+                        <p class="material-subject">Chemistry</p>
+                        <p class="material-description">Organic chemistry reference material</p>
+                        <div class="material-meta">
+                            <span class="material-type">textbook</span>
+                            <span class="material-date">2024-01-08</span>
+                        </div>
+                        <button class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-sticky-note"></i>
+                    </div>
+                    <div class="material-info">
+                        <h4>Biology Notes</h4>
+                        <p class="material-subject">Biology</p>
+                        <p class="material-description">Cell biology and genetics notes</p>
+                        <div class="material-meta">
+                            <span class="material-type">notes</span>
+                            <span class="material-date">2024-01-05</span>
+                        </div>
+                        <button class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="material-info">
+                        <h4>English Literature Paper</h4>
+                        <p class="material-subject">English</p>
+                        <p class="material-description">Poetry and prose analysis paper</p>
+                        <div class="material-meta">
+                            <span class="material-type">past-paper</span>
+                            <span class="material-date">2024-01-03</span>
+                        </div>
+                        <button class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <div class="material-card">
+                    <div class="material-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="material-info">
+                        <h4>History Textbook</h4>
+                        <p class="material-subject">History</p>
+                        <p class="material-description">World history reference material</p>
+                        <div class="material-meta">
+                            <span class="material-type">textbook</span>
+                            <span class="material-date">2024-01-01</span>
+                        </div>
+                        <button class="download-btn">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./studyMaterials.html" class="test-btn success">📚 Study Materials (Fixed)</a>
+            <a href="./studentPortal.html" class="test-btn">🏠 Dashboard</a>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Expected Behavior</h2>
+            <ol>
+                <li>✅ <strong>Proper Grid Layout</strong> - Materials should be arranged in a responsive grid</li>
+                <li>✅ <strong>No Sidebar Overlap</strong> - Content should be properly centered and not hidden behind sidebar</li>
+                <li>✅ <strong>Responsive Design</strong> - Layout should adapt to different screen sizes</li>
+                <li>✅ <strong>Proper Spacing</strong> - Cards should have appropriate gaps and margins</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            const viewportSize = document.getElementById('viewportSize');
+            const gridLayout = document.getElementById('gridLayout');
+            
+            viewportSize.textContent = `${width}px`;
+            
+            if (width <= 768) {
+                gridLayout.textContent = 'Mobile: 1 column (16px gap)';
+            } else if (width <= 1024) {
+                gridLayout.textContent = 'Tablet: 2+ columns (20px gap)';
+            } else {
+                gridLayout.textContent = 'Desktop: 3+ columns (24px gap)';
+            }
+        }
+        
+        // Update on load and resize
+        document.addEventListener('DOMContentLoaded', updateViewportInfo);
+        window.addEventListener('resize', updateViewportInfo);
+    </script>
+</body>
+</html>

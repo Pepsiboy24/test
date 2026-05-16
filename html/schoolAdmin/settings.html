@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../scripts/authGuard.js"></script>
+    <meta charset="UTF-8">
+    <title>School Settings - Admin Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/schoolAdminStyles/adminPortal.css">
+    <script src="../../scripts/config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" data-sideBar></aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="welcome-section">
+                    <h1>School Settings</h1>
+                    <p>Manage your school information and branding</p>
+                </div>
+                <div class="header-actions">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- School Settings Form -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>School Information</h2>
+                </div>
+                <div class="section-content">
+                    <form id="schoolSettingsForm" class="settings-form">
+                        <!-- Logo Upload Section -->
+                        <div class="form-section">
+                            <h3>School Logo</h3>
+                            <div class="logo-upload-container">
+                                <div class="current-logo">
+                                    <img id="currentLogo" src="https://placehold.co/150x150/e8e8e8/363636?text=Logo" alt="Current School Logo">
+                                    <div class="logo-overlay">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Change Logo</span>
+                                    </div>
+                                </div>
+                                <input type="file" id="logoInput" accept="image/*" style="display: none;">
+                                <div class="logo-info">
+                                    <p><strong>Recommended:</strong> Square image, at least 150x150px</p>
+                                    <p><strong>Formats:</strong> JPG, PNG, GIF</p>
+                                    <p><strong>Max size:</strong> 2MB</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h3>Basic Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="schoolName">School Name *</label>
+                                    <input type="text" id="schoolName" name="schoolName" required maxlength="100">
+                                    <span class="form-hint">Enter your school's official name</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="schoolEmail">School Email</label>
+                                    <input type="email" id="schoolEmail" name="schoolEmail" maxlength="100">
+                                    <span class="form-hint">Official school email address</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="schoolPhone">Phone Number</label>
+                                    <input type="tel" id="schoolPhone" name="schoolPhone" maxlength="20">
+                                    <span class="form-hint">School contact number</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="schoolAddress">Address</label>
+                                    <textarea id="schoolAddress" name="schoolAddress" rows="3" maxlength="200"></textarea>
+                                    <span class="form-hint">School physical address</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bank Details -->
+                        <div class="form-section">
+                            <h3>Bank Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="bankName">Bank Name</label>
+                                    <input type="text" id="bankName" name="bankName" maxlength="100">
+                                    <span class="form-hint">Name of your bank</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="accountName">Account Name</label>
+                                    <input type="text" id="accountName" name="accountName" maxlength="100">
+                                    <span class="form-hint">School account name</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="accountNumber">Account Number</label>
+                                    <input type="text" id="accountNumber" name="accountNumber" maxlength="50">
+                                    <span class="form-hint">School account number</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sortCode">Sort Code</label>
+                                    <input type="text" id="sortCode" name="sortCode" maxlength="20">
+                                    <span class="form-hint">Bank sort code (if applicable)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Balance Display -->
+                        <div class="form-section">
+                            <h3>Wallet Information</h3>
+                            <div class="wallet-info">
+                                <div class="balance-card">
+                                    <div class="balance-icon">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <div class="balance-details">
+                                        <h4>Current Balance</h4>
+                                        <div class="balance-amount" id="currentBalance">₦0.00</div>
+                                        <p class="balance-note">Aggregator wallet balance</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Saving changes...</p>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message" style="display: none;">
+        <div class="message-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="successText">Settings saved successfully!</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../scripts/schoolAdminScripts/school_admin_sidebar.js"></script>
+    <script src="../../scripts/schoolAdminScripts/settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const subjectForm = document.getElementById('subjectForm');
+    const popup = document.getElementById('registrationPopup');
+    
+    // Initialize subject allocation manager
+    const allocationManager = new SubjectAllocationManager();
+    
+    // Initialize when page loads
+    initializeSubjectForm();
+
+    async function initializeSubjectForm() {
+        try {
+            await allocationManager.initialize();
+            
+            // Setup form submission
+            subjectForm.addEventListener('submit', handleSubjectSubmit);
+            
+            console.log('Subject form initialized');
+        } catch (error) {
+            console.error('Failed to initialize subject form:', error);
+            showToast('Failed to initialize subject form', 'error');
+        }
+    }
+
+    async function handleSubjectSubmit(e) {
+        e.preventDefault();
+        
+        const formData = {
+            subjectName: document.getElementById('subjectName').value.trim(),
+            subjectCode: document.getElementById('subjectCode')?.value?.trim() || '',
+            subjectType: document.querySelector('input[name="subjectType"]:checked')?.value
+        };
+
+        // Validate form
+        if (!formData.subjectName) {
+            showToast('Please enter subject name', 'error');
+            return;
+        }
+
+        if (!formData.subjectType) {
+            showToast('Please select subject type', 'error');
+            return;
+        }
+
+        // Show loading state
+        const submitBtn = subjectForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Adding...';
+
+        try {
+            // Add subject using allocation manager
+            const result = await allocationManager.addSubject(formData);
+            
+            if (result.success) {
+                showToast(result.message, 'success');
+                subjectForm.reset();
+                closePopup();
+                
+                // Refresh subjects display if function exists
+                if (typeof window.refreshSubjectsDisplay === 'function') {
+                    window.refreshSubjectsDisplay();
+                }
+            } else {
+                showToast(result.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error submitting subject:', error);
+            showToast('Failed to add subject. Please try again.', 'error');
+        } finally {
+            // Restore button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    }
+
+    // Close popup function
+    function closePopup() {
+        const popup = document.getElementById('registrationPopup');
+        if (popup) {
+            popup.style.display = 'none';
+        }
+    }
+});
+
+                // 3. INSERT NEW SUBJECT (using transaction-like approach)
+                const { data: newSubject, error: subjectError } = await window.supabase
+                    .from('Subjects')
+                    .insert([
+                        {
+                            subject_name: subjectName,
+                            is_core: isCore
+                        }
+                    ])
+                    .select()
+                    .single();
+
+                if (subjectError) {
+                    console.error('Error inserting subject:', subjectError);
+                    showToast('Failed to add subject. Please try again.', 'error');
+                    return;
+                }
+
+                // 4. CREATE CLASS-SUBJECT LINK
+                const { error: linkError } = await window.supabase
+                    .from('Class_Subjects')
+                    .insert([
+                        {
+                            class_id: classId,
+                            subject_id: newSubject.subject_id,
+                            teacher_id: teacherId
+                        }
+                    ]);
+
+                if (linkError) {
+                    console.error('Error creating class-subject link:', linkError);
+                    // Note: Subject was created but link failed - might need cleanup
+                    showToast('Subject was created but failed to assign to class. Please contact administrator.', 'error');
+                    return;
+                }
+
+                console.log('Subject and assignment created successfully:', newSubject);
+                showToast(`Subject "${subjectName}" (${subjectTypeInput.value}) assigned to class successfully!`, "success");
+
+                // Close popup and reset form
+                popup.style.display = 'none';
+                subjectForm.reset();
+
+                // Refresh the subjects table
+                if (window.refreshSubjectsTable) {
+                    window.refreshSubjectsTable();
+                } else {
+                    // Force page reload if refresh function not available
+                    window.location.reload();
+                }
+
+            } catch (err) {
+                console.error('Unexpected error:', err);
+                showToast('An unexpected error occurred. Please try again.', 'error');
+            }
+        });
+    }
+});

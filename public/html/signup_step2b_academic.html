@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Setup - EduHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 28px 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, .14);
+            width: 100%;
+            max-width: 680px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: 200% 0;
+            }
+        }
+
+        /* ── Step indicator ── */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .step {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            margin: 0 6px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 12px;
+            height: 2px;
+            background: #e5e7eb;
+            transform: translateY(-50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: #fff;
+        }
+
+        .step.active::after {
+            background: #667eea;
+        }
+
+        .step.completed {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .step.completed::after {
+            background: #16a34a;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* ── Alerts ── */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* ── Section title ── */
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: #6b7280;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .section-title i {
+            color: #667eea;
+            font-size: 13px;
+        }
+
+        /* ── Form elements ── */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #111827;
+            background: #f9fafb;
+            transition: border-color .2s, background .2s, box-shadow .2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, .12);
+        }
+
+        .field-hint {
+            display: block;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+
+        /* ── Level Checkboxes ── */
+        .level-section {
+            margin-bottom: 12px;
+        }
+
+        .level-section-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 8px;
+        }
+
+        .select-all-btn {
+            background: transparent;
+            border: none;
+            color: #667eea;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            transition: color .15s;
+        }
+
+        .select-all-btn:hover {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
+
+        .level-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            padding: 15px;
+        }
+
+        .level-chip {
+            position: relative;
+        }
+
+        .level-chip input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .level-chip label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .18s ease;
+            background: #f9fafb;
+            user-select: none;
+        }
+
+        .level-chip label:hover {
+            border-color: #667eea;
+            background: #eef2ff;
+            color: #667eea;
+        }
+
+        .level-chip input:checked+label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 3px 8px rgba(102, 126, 234, .25);
+        }
+
+        /* already-assigned chip: greyed out */
+        .level-chip.assigned label {
+            border-color: #d1d5db;
+            background: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        /* ── Level Pool ── */
+        .pool-section {
+            background: #f8faff;
+            border: 1.5px dashed #c7d2fe;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            min-height: 52px;
+        }
+
+        @media (max-width: 600px) {
+            .group-card {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+        .pool-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #818cf8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pool-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            min-height: 28px;
+        }
+
+        .pool-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            animation: chipIn .18s ease;
+            cursor: pointer;
+            user-select: none;
+            transition: transform .15s, box-shadow .15s;
+        }
+
+        .pool-chip:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, .3);
+        }
+
+        .pool-chip .pool-chip-icon {
+            font-size: 10px;
+            opacity: .8;
+        }
+
+        .pool-empty {
+            font-size: 13px;
+            color: #a5b4fc;
+            font-style: italic;
+        }
+
+        @keyframes chipIn {
+            from {
+                transform: scale(.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ── Group Cards ── */
+        .groups-section {
+            margin-bottom: 20px;
+        }
+
+        .group-card {
+            background: #fff;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            position: relative;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .group-card:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, .08);
+        }
+
+        .group-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .group-color-bar {
+            width: 4px;
+            height: 36px;
+            border-radius: 99px;
+            flex-shrink: 0;
+        }
+
+        .group-name-input {
+            flex: 1;
+            border: none;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 15px;
+            font-weight: 700;
+            color: #111827;
+            padding: 4px 0;
+            background: transparent;
+            outline: none;
+            transition: border-color .2s;
+            min-width: 0;
+            /* allows flex shrinking */
+        }
+
+        .group-name-input:focus {
+            border-color: #667eea;
+        }
+
+        .group-name-input::placeholder {
+            color: #d1d5db;
+            font-weight: 400;
+        }
+
+        .remove-group-btn {
+            background: #fef2f2;
+            border: none;
+            border-radius: 8px;
+            color: #dc2626;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background .15s;
+            flex-shrink: 0;
+        }
+
+        .remove-group-btn:hover {
+            background: #fee2e2;
+        }
+
+        .toggle-group-btn {
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            color: #4b5563;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background .15s;
+            flex-shrink: 0;
+        }
+
+        .toggle-group-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .group-card.is-collapsed .group-body {
+            display: none;
+        }
+
+        .group-card:not(.is-collapsed) .group-summary {
+            display: none;
+        }
+
+        .group-summary {
+            font-size: 13px;
+            color: #4b5563;
+            background: #f9fafb;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+
+        .group-summary strong {
+            color: #111827;
+        }
+
+        /* Assigned levels in a group card */
+        .group-levels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+            min-height: 30px;
+        }
+
+        .group-level-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            animation: chipIn .15s ease;
+        }
+
+        .group-level-tag button {
+            background: rgba(255, 255, 255, .28);
+            border: none;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            font-size: 10px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .group-levels-empty {
+            font-size: 12px;
+            color: #d1d5db;
+            font-style: italic;
+            line-height: 30px;
+        }
+
+        /* Arms tag input inside card */
+        .tag-input-wrapper {
+            min-height: 44px;
+            padding: 5px 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f9fafb;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            cursor: text;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .tag-input-wrapper:focus-within {
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, .1);
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            animation: chipIn .15s ease;
+        }
+
+        .tag button {
+            background: rgba(255, 255, 255, .25);
+            border: none;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            font-size: 9px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .tag-input-real {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 13px;
+            color: #111827;
+            min-width: 90px;
+            flex: 1;
+            padding: 2px 4px;
+        }
+
+        .tag-input-real::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Arms area label */
+        .arms-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* ── Add Group Button ── */
+        .add-group-btn {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #c7d2fe;
+            border-radius: 12px;
+            background: transparent;
+            color: #818cf8;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background .2s, border-color .2s, color .2s;
+            margin-bottom: 24px;
+        }
+
+        .add-group-btn:hover {
+            background: #eef2ff;
+            border-color: #818cf8;
+            color: #667eea;
+        }
+
+        /* ── Preview ── */
+        .preview-box {
+            display: none;
+            background: linear-gradient(135deg, #f0f9ff, #f0fdf4);
+            border: 1px solid #bae6fd;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            position: sticky;
+            bottom: 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .preview-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: #0369a1;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .preview-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .preview-chip {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .preview-count {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 10px;
+        }
+
+        .preview-empty {
+            color: #94a3b8;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            height: 1px;
+            background: #f3f4f6;
+            margin: 22px 0;
+        }
+
+        /* ── Submit ── */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform .2s, box-shadow .2s, opacity .2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(102, 126, 234, .3);
+        }
+
+        .submit-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, .4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 520px) {
+            .card {
+                padding: 28px 18px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-box {
+                position: sticky;
+                bottom: 10px;
+                z-index: 50;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+
+        <div class="step-indicator">
+            <div class="step completed">1</div>
+            <div class="step completed">2</div>
+            <div class="step active">3</div>
+            <div class="step">4</div>
+            <div class="step">5</div>
+        </div>
+
+        <div class="page-header">
+            <h1>Academic Setup</h1>
+            <p>Define your session, select levels, then group them with their arms</p>
+        </div>
+
+        <div class="alert alert-error" id="errorMsg"></div>
+        <div class="alert alert-success" id="successMsg"></div>
+
+        <form id="academicForm">
+
+            <!-- ── Session & Term ── -->
+            <p class="section-title"><i class="fa-solid fa-calendar-days"></i> Current Session</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="academicSession">Academic Session *</label>
+                    <input type="text" id="academicSession" placeholder="e.g. 2024/2025" required>
+                    <span class="field-hint">Auto-filled — edit if needed</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="currentTerm">Current Term *</label>
+                    <select id="currentTerm" required>
+                        <option value="" disabled selected>Select term</option>
+                        <option value="1st Term">1st Term</option>
+                        <option value="2nd Term">2nd Term</option>
+                        <option value="3rd Term">3rd Term</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- ── Level Checkboxes ── -->
+            <p class="section-title"><i class="fa-solid fa-layer-group"></i> Academic Class Levels</p>
+            <p style="font-size:13px;color:#6b7280;margin-bottom:16px;">
+                Check every level your school offers. Then assign them into groups below.
+            </p>
+
+            <div class="level-section">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <p class="level-section-label" style="margin-bottom:0;">Nursery / Early Years</p>
+                    <button type="button" class="select-all-btn" data-target="grid-early">Select All</button>
+                </div>
+                <div class="level-selection-grid" id="grid-early">
+                    <div class="level-chip"><input type="checkbox" id="lv_creche" value="Creche"><label
+                            for="lv_creche">Creche</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_pg" value="Playgroup"><label
+                            for="lv_pg">Playgroup</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_prenur" value="Pre-Nursery"><label
+                            for="lv_prenur">Pre-Nursery</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_nur1" value="Nursery 1"><label
+                            for="lv_nur1">Nursery 1</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_nur2" value="Nursery 2"><label
+                            for="lv_nur2">Nursery 2</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_nur3" value="Nursery 3"><label
+                            for="lv_nur3">Nursery 3</label></div>
+                </div>
+            </div>
+
+            <div class="level-section">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <p class="level-section-label" style="margin-bottom:0;">Primary</p>
+                    <button type="button" class="select-all-btn" data-target="grid-primary">Select All</button>
+                </div>
+                <div class="level-selection-grid" id="grid-primary">
+                    <div class="level-chip"><input type="checkbox" id="lv_p1" value="Primary 1"><label
+                            for="lv_p1">Primary 1</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_p2" value="Primary 2"><label
+                            for="lv_p2">Primary 2</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_p3" value="Primary 3"><label
+                            for="lv_p3">Primary 3</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_p4" value="Primary 4"><label
+                            for="lv_p4">Primary 4</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_p5" value="Primary 5"><label
+                            for="lv_p5">Primary 5</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_p6" value="Primary 6"><label
+                            for="lv_p6">Primary 6</label></div>
+                </div>
+            </div>
+
+            <div class="level-section">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <p class="level-section-label" style="margin-bottom:0;">Junior Secondary (JSS)</p>
+                    <button type="button" class="select-all-btn" data-target="grid-jss">Select All Junior</button>
+                </div>
+                <div class="level-selection-grid" id="grid-jss">
+                    <div class="level-chip"><input type="checkbox" id="lv_jss1" value="JSS 1"><label for="lv_jss1">JSS
+                            1</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_jss2" value="JSS 2"><label for="lv_jss2">JSS
+                            2</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_jss3" value="JSS 3"><label for="lv_jss3">JSS
+                            3</label></div>
+                </div>
+            </div>
+
+            <div class="level-section" style="margin-bottom:18px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <p class="level-section-label" style="margin-bottom:0;">Senior Secondary (SS)</p>
+                    <button type="button" class="select-all-btn" data-target="grid-ss">Select All Senior</button>
+                </div>
+                <div class="level-selection-grid" id="grid-ss">
+                    <div class="level-chip"><input type="checkbox" id="lv_ss1" value="SS 1"><label for="lv_ss1">SS
+                            1</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_ss2" value="SS 2"><label for="lv_ss2">SS
+                            2</label></div>
+                    <div class="level-chip"><input type="checkbox" id="lv_ss3" value="SS 3"><label for="lv_ss3">SS
+                            3</label></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- ── Level Pool ── -->
+            <p class="section-title"><i class="fa-solid fa-cubes-stacked"></i> Available Levels Pool</p>
+            <div class="pool-section">
+                <div class="pool-label">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                    Click a group card's "+ Add Level" button to assign from here
+                </div>
+                <div class="pool-chips" id="levelPool">
+                    <span class="pool-empty">Check levels above — they'll appear here</span>
+                </div>
+            </div>
+
+            <!-- ── Group Cards ── -->
+            <p class="section-title"><i class="fa-solid fa-object-group"></i> Class Groups</p>
+            <p style="font-size:13px;color:#6b7280;margin-bottom:14px;">
+                Each group = a set of levels that share the same arms.
+                <br><em>Example: JSS 1–3 all use A, B, C → one group. SS 1–3 use Science, Art → another.</em>
+            </p>
+
+            <div id="groupsContainer" class="groups-section"></div>
+
+            <button type="button" class="add-group-btn" id="addGroupBtn">
+                <i class="fa-solid fa-plus"></i> Add Class Group
+            </button>
+
+            <!-- ── Preview ── -->
+            <div class="preview-box" id="previewBox">
+                <p class="preview-title"><i class="fa-solid fa-eye"></i> Classes that will be created</p>
+                <div class="preview-chips" id="previewChips"></div>
+                <p class="preview-count" id="previewCount"></p>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <div class="spinner" id="spinner"></div>
+                <span id="btnText">Save &amp; Continue</span>
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="/signup/step2"><i class="fa-solid fa-arrow-left"></i> Back to Step 2</a>
+        </div>
+    </div>
+
+    <script>
+        // ── Colour palette for group cards ───────────────────────────────────────────
+        const GROUP_COLORS = [
+            { bar: 'linear-gradient(#667eea,#764ba2)', tag: 'linear-gradient(135deg,#667eea,#764ba2)', preview: '#e0e7ff', previewText: '#4338ca' },
+            { bar: 'linear-gradient(#0ea5e9,#0d9488)', tag: 'linear-gradient(135deg,#0ea5e9,#0d9488)', preview: '#e0f2fe', previewText: '#0369a1' },
+            { bar: 'linear-gradient(#f59e0b,#d97706)', tag: 'linear-gradient(135deg,#f59e0b,#d97706)', preview: '#fef3c7', previewText: '#92400e' },
+            { bar: 'linear-gradient(#10b981,#059669)', tag: 'linear-gradient(135deg,#10b981,#059669)', preview: '#d1fae5', previewText: '#065f46' },
+            { bar: 'linear-gradient(#ec4899,#db2777)', tag: 'linear-gradient(135deg,#ec4899,#db2777)', preview: '#fce7f3', previewText: '#9d174d' },
+        ];
+
+        // ── State ────────────────────────────────────────────────────────────────────
+        // groups: [ { id, name, levels:[], arms:[] }, ... ]
+        const state = {
+            groups: [],
+            nextGroupId: 1,
+        };
+
+        // ── Smart defaults ───────────────────────────────────────────────────────────
+        function getSmartSession() {
+            const now = new Date(); const m = now.getMonth() + 1; const y = now.getFullYear();
+            return m >= 9 ? `${y}/${y + 1}` : `${y - 1}/${y}`;
+        }
+
+        function getSmartTerm() {
+            const m = new Date().getMonth() + 1;
+            if (m >= 9 && m <= 12) return '1st Term';
+            if (m >= 1 && m <= 4) return '2nd Term';
+            return '3rd Term';
+        }
+
+        // ── Level pool helpers ───────────────────────────────────────────────────────
+        function getCheckedLevels() {
+            return Array.from(document.querySelectorAll('.level-chip input:checked')).map(c => c.value);
+        }
+
+        function getAssignedLevels() {
+            return state.groups.flatMap(g => g.levels);
+        }
+
+        function getPoolLevels() {
+            const assigned = new Set(getAssignedLevels());
+            return getCheckedLevels().filter(l => !assigned.has(l));
+        }
+
+        function renderPool() {
+            const pool = getPoolLevels();
+            const container = document.getElementById('levelPool');
+            container.innerHTML = '';
+
+            if (!pool.length) {
+                const msg = document.createElement('span');
+                msg.className = 'pool-empty';
+                msg.textContent = getCheckedLevels().length
+                    ? 'All levels are assigned to groups ✓'
+                    : 'Check levels above — they\'ll appear here';
+                container.appendChild(msg);
+                return;
+            }
+
+            // Only show levels in the pool that are checked AND NOT assigned to ANY group
+            const assigned = new Set(getAssignedLevels());
+            const available = pool.filter(lvl => !assigned.has(lvl));
+
+            if (!available.length) {
+                container.innerHTML = `<span class="pool-empty">Check levels above — they'll appear here</span>`;
+                return;
+            }
+
+            available.forEach(level => {
+                const chip = document.createElement('span');
+                chip.className = 'pool-chip';
+                chip.dataset.level = level;
+                chip.innerHTML = `<i class="fa-solid fa-grip-dots-vertical pool-chip-icon"></i> ${level}`;
+                chip.title = 'Click a group card\'s "+ Add Level" to assign this';
+                container.appendChild(chip);
+            });
+        }
+
+        // ── Dim/undim checkbox chips by assignment ───────────────────────────────────
+        function syncCheckboxStates() {
+            const assigned = new Set(getAssignedLevels());
+            document.querySelectorAll('.level-chip').forEach(chip => {
+                const input = chip.querySelector('input');
+                const isAssigned = assigned.has(input.value);
+                chip.classList.toggle('assigned', isAssigned && input.checked);
+            });
+        }
+
+        // ── Tag input factory ────────────────────────────────────────────────────────
+        function makeTagInput(wrapper, onChange, color) {
+            const tags = [];
+            const input = wrapper.querySelector('.tag-input-real');
+
+            function renderChip(val) {
+                const chip = document.createElement('span');
+                chip.className = 'tag';
+                chip.style.background = color;
+                chip.dataset.val = val;
+                chip.innerHTML = `${val}<button type="button">&times;</button>`;
+                chip.querySelector('button').addEventListener('click', () => {
+                    chip.remove();
+                    tags.splice(tags.indexOf(val), 1);
+                    onChange();
+                });
+                wrapper.insertBefore(chip, input);
+            }
+
+            function addTag(text) {
+                String(text).split(',').map(s => s.trim()).filter(Boolean).forEach(val => {
+                    if (!tags.includes(val)) { tags.push(val); renderChip(val); }
+                });
+                onChange();
+            }
+
+            function setTags(arr) {
+                wrapper.querySelectorAll('.tag').forEach(c => c.remove());
+                tags.length = 0;
+                arr.forEach(v => { tags.push(v); renderChip(v); });
+                onChange();
+            }
+
+            function getTags() { return [...tags]; }
+
+            // Live value the user is currently typing (before Enter/comma)
+            function getLiveInput() { return input.value.trim(); }
+
+            wrapper.addEventListener('click', () => input.focus());
+
+            // ── Keystroke-level preview: fire onChange on EVERY character typed ──────
+            input.addEventListener('input', () => onChange());
+
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    if (input.value.trim()) { addTag(input.value); input.value = ''; }
+                } else if (e.key === 'Backspace' && !input.value && tags.length) {
+                    const chips = wrapper.querySelectorAll('.tag');
+                    if (chips.length) {
+                        tags.pop(); chips[chips.length - 1].remove(); onChange();
+                    }
+                }
+            });
+
+            input.addEventListener('blur', () => {
+                if (input.value.trim()) { addTag(input.value); input.value = ''; }
+            });
+
+            return { getTags, addTag, setTags, getLiveInput };
+        }
+
+        // ── Render a single group card ───────────────────────────────────────────────
+        function renderGroupCard(group) {
+            const colorIdx = (state.groups.indexOf(group)) % GROUP_COLORS.length;
+            const color = GROUP_COLORS[colorIdx];
+
+            const card = document.createElement('div');
+            card.className = 'group-card';
+            card.dataset.groupId = group.id;
+
+            card.innerHTML = `
+        <div class="group-card-header">
+            <div class="group-color-bar" style="background:${color.bar}"></div>
+            <input class="group-name-input" type="text"
+                   value="${group.name}"
+                   placeholder="e.g. Junior Classes…">
+            <button type="button" class="toggle-group-btn">
+                <i class="fa-solid fa-chevron-up"></i> Collapse
+            </button>
+            <button type="button" class="remove-group-btn" title="Remove group">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
+
+        <div class="group-summary"></div>
+
+        <div class="group-body">
+            <div class="group-levels" id="groupLevels_${group.id}">
+                <span class="group-levels-empty" id="groupLevelsEmpty_${group.id}">
+                    No levels assigned yet
+                </span>
+            </div>
+
+            <button type="button" class="add-level-to-group-btn"
+                    style="font-size:12px;font-weight:600;color:#818cf8;background:#f0f0ff;
+                           border:1.5px dashed #c7d2fe;border-radius:8px;padding:5px 12px;
+                           cursor:pointer;margin-bottom:12px;transition:background .15s;"
+                    data-group-id="${group.id}">
+                <i class="fa-solid fa-plus"></i> Add Level from Pool
+            </button>
+
+            <span class="arms-label">Arms / Streams for this group</span>
+            <div class="tag-input-wrapper" id="tagWrapper_${group.id}">
+                <input class="tag-input-real" type="text" placeholder="Type arm + Enter (e.g. A, B)…">
+            </div>
+            <span class="field-hint" style="margin-top:6px;display:block;">
+                Comma-separated or press Enter after each one
+            </span>
+        </div>
+    `;
+
+            // ── Wire up: group name ──────────────────────────────────────────────────
+            card.querySelector('.group-name-input').addEventListener('input', e => {
+                group.name = e.target.value;
+            });
+
+            // ── Wire up: remove group ────────────────────────────────────────────────
+            card.querySelector('.remove-group-btn').addEventListener('click', () => {
+                // Return all levels to pool
+                group.levels.forEach(lvl => {
+                    // uncheck is NOT done — admin may want to re-assign; pool re-appears
+                });
+                const idx = state.groups.indexOf(group);
+                if (idx > -1) state.groups.splice(idx, 1);
+                card.remove();
+                syncCheckboxStates();
+                renderPool();
+                updatePreview();
+            });
+
+            // ── Wire up: tag input ───────────────────────────────────────────────────
+            const tagWrapper = card.querySelector(`#tagWrapper_${group.id}`);
+            const tagInput = makeTagInput(tagWrapper, updatePreview, color.tag);
+            group._tagInput = tagInput;
+            if (group.arms.length) tagInput.setTags(group.arms);
+
+            // Sync arms back to group state on every change
+            const origOnChange = updatePreview;
+            tagWrapper.addEventListener('click', () => {
+                group.arms = tagInput.getTags();
+                origOnChange();
+            });
+
+            // ── Wire up: Add Level from Pool ─────────────────────────────────────────
+            card.querySelector('.add-level-to-group-btn').addEventListener('click', () => {
+                const pool = getPoolLevels();
+                if (!pool.length) {
+                    showError('No unassigned levels in the pool. Check more levels or unassign from another group.');
+                    return;
+                }
+
+                // Show a small inline picker
+                showLevelPicker(card, group, pool, color);
+            });
+
+            // ── Wire up: collapse toggle ─────────────────────────────────────────────
+            const toggleBtn = card.querySelector('.toggle-group-btn');
+            const summary = card.querySelector('.group-summary');
+
+            function updateSummaryText() {
+                const armsCount = group.arms.length;
+                const armsDesc = armsCount ? `<strong>${armsCount}</strong> arm${armsCount !== 1 ? 's' : ''} (${group.arms.join(', ')})` : `No arms yet`;
+                const lvlCount = group.levels.length;
+                const lvlDesc = lvlCount ? `<strong>${lvlCount}</strong> level${lvlCount !== 1 ? 's' : ''}` : `No levels yet`;
+                summary.innerHTML = `<i class="fa-solid fa-layer-group" style="color:#9ca3af;margin-right:6px;"></i> ${lvlDesc} &nbsp;&middot;&nbsp; <i class="fa-solid fa-tags" style="color:#9ca3af;margin-right:6px;"></i> ${armsDesc}`;
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                const isCollapsed = card.classList.toggle('is-collapsed');
+                if (isCollapsed) {
+                    updateSummaryText();
+                    toggleBtn.innerHTML = `<i class="fa-solid fa-pen"></i> Edit`;
+                } else {
+                    toggleBtn.innerHTML = `<i class="fa-solid fa-chevron-up"></i> Collapse`;
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+
+            // ── Render existing levels ───────────────────────────────────────────────
+            group.levels.forEach(lvl => addLevelTagToCard(card, group, lvl, color));
+
+            return card;
+        }
+
+        // ── Show a tiny level-picker dropdown anchored to the button ─────────────────
+        function showLevelPicker(card, group, pool, color) {
+            // Close any existing picker
+            document.querySelectorAll('.level-picker').forEach(p => p.remove());
+
+            const btn = card.querySelector('.add-level-to-group-btn');
+            const picker = document.createElement('div');
+            picker.className = 'level-picker';
+            Object.assign(picker.style, {
+                position: 'absolute',
+                background: '#fff',
+                border: '2px solid #c7d2fe',
+                borderRadius: '10px',
+                boxShadow: '0 8px 20px rgba(0,0,0,.12)',
+                padding: '6px',
+                zIndex: '100',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '6px',
+                maxWidth: '320px',
+            });
+
+            const assigned = new Set(getAssignedLevels());
+            const available = pool.filter(lvl => !assigned.has(lvl));
+
+            if (!available.length) {
+                showError('No unassigned levels in the pool.');
+                picker.remove();
+                return;
+            }
+
+            available.forEach(lvl => {
+                const opt = document.createElement('button');
+                opt.type = 'button';
+                opt.textContent = lvl;
+                Object.assign(opt.style, {
+                    padding: '5px 12px',
+                    borderRadius: '99px',
+                    border: '2px solid #c7d2fe',
+                    background: '#f5f3ff',
+                    color: '#5b21b6',
+                    font: '600 12px/1 inherit',
+                    cursor: 'pointer',
+                });
+
+                opt.addEventListener('click', () => {
+                    assignLevelToGroup(group, lvl, card, color);
+                    // picker.remove();
+                });
+
+                picker.appendChild(opt);
+            });
+
+            // Position beneath the button
+            card.style.position = 'relative';
+            card.appendChild(picker);
+
+            // Close on outside click
+            const closeHandler = (e) => {
+                if (!picker.contains(e.target) && e.target !== btn) {
+                    picker.remove();
+                    document.removeEventListener('click', closeHandler);
+                }
+            };
+            setTimeout(() => document.addEventListener('click', closeHandler), 0);
+        }
+
+        // ── Assign a level to a group ─────────────────────────────────────────────────
+        function assignLevelToGroup(group, level, card, color) {
+            if (group.levels.includes(level)) return;
+            group.levels.push(level);
+            addLevelTagToCard(card, group, level, color);
+            syncCheckboxStates();
+            renderPool();
+            updatePreview();
+        }
+
+        // ── Render one level tag inside a group card ──────────────────────────────────
+        function addLevelTagToCard(card, group, level, color) {
+            const container = card.querySelector(`#groupLevels_${group.id}`);
+            const empty = card.querySelector(`#groupLevelsEmpty_${group.id}`);
+            if (empty) empty.remove();
+
+            const tag = document.createElement('span');
+            tag.className = 'group-level-tag';
+            tag.style.background = color.tag;
+            tag.dataset.level = level;
+            tag.innerHTML = `${level}<button type="button" title="Remove from group">&times;</button>`;
+
+            tag.querySelector('button').addEventListener('click', () => {
+                tag.remove();
+                const idx = group.levels.indexOf(level);
+                if (idx > -1) group.levels.splice(idx, 1);
+                // restore empty placeholder if needed
+                if (!container.querySelectorAll('.group-level-tag').length) {
+                    const ph = document.createElement('span');
+                    ph.className = 'group-levels-empty';
+                    ph.id = `groupLevelsEmpty_${group.id}`;
+                    ph.textContent = 'No levels assigned yet';
+                    container.appendChild(ph);
+                }
+                syncCheckboxStates();
+                renderPool();
+                updatePreview();
+            });
+
+            container.appendChild(tag);
+        }
+
+        // ── Add a new empty group card ────────────────────────────────────────────────
+        function addGroup() {
+            const group = {
+                id: state.nextGroupId++,
+                name: `Group ${state.groups.length + 1}`,
+                levels: [],
+                arms: [],
+                _tagInput: null,
+            };
+            state.groups.push(group);
+
+            const card = renderGroupCard(group);
+            document.getElementById('groupsContainer').appendChild(card);
+            updatePreview();
+        }
+
+        // ── Generate classes from current groups ─────────────────────────────────────
+        // includePartial: if true, also use the live (uncommitted) text in the
+        // arms input as candidate arms — gives a real-time preview while typing.
+        function generateClasses(includePartial = false) {
+            const classes = [];
+            for (const group of state.groups) {
+                // Committed arms (tag chips)
+                const committedArms = group._tagInput ? group._tagInput.getTags() : group.arms;
+
+                // Partial arms: what the user is currently typing, split by comma
+                let partialArms = [];
+                if (includePartial && group._tagInput) {
+                    const live = group._tagInput.getLiveInput();
+                    if (live) {
+                        partialArms = live.split(',').map(s => s.trim()).filter(s => s && !committedArms.includes(s));
+                    }
+                }
+
+                const arms = [...committedArms, ...partialArms];
+                if (!arms.length || !group.levels.length) continue;
+
+                // Cartesian product: levels × arms → classes
+                for (const level of group.levels) {
+                    for (const arm of arms) {
+                        classes.push({
+                            name: `${level} ${arm}`,
+                            level,
+                            group_id: group.id,
+                            group_name: group.name,
+                            arm,
+                            isPartial: partialArms.includes(arm), // dim these in preview
+                        });
+                    }
+                }
+            }
+            return classes;
+        }
+
+        // ── Live preview ─────────────────────────────────────────────────────────────
+        // Runs generateClasses with includePartial=true so typing "A" in the arms
+        // field immediately shows the cartesian product with "A" — before Enter.
+        function updatePreview() {
+            // Sync committed arms back into group state
+            state.groups.forEach(g => { if (g._tagInput) g.arms = g._tagInput.getTags(); });
+
+            const box = document.getElementById('previewBox');
+            const chips = document.getElementById('previewChips');
+            const count = document.getElementById('previewCount');
+
+            const allClasses = generateClasses(true /* includePartial */);
+
+            if (!allClasses.length) {
+                box.style.display = 'none';
+                return;
+            }
+
+            box.style.display = 'block';
+            chips.innerHTML = '';
+
+            // ── Per-group breakdown: formula header + chips ─────────────────────────
+            const byGroup = {};
+            allClasses.forEach(cls => {
+                if (!byGroup[cls.group_id]) byGroup[cls.group_id] = { group: null, classes: [] };
+                if (!byGroup[cls.group_id].group)
+                    byGroup[cls.group_id].group = state.groups.find(g => g.id === cls.group_id);
+                byGroup[cls.group_id].classes.push(cls);
+            });
+
+            let totalCommitted = 0;
+
+            Object.values(byGroup).forEach(({ group, classes: grpClasses }) => {
+                if (!group) return;
+                const colorIdx = state.groups.indexOf(group) % GROUP_COLORS.length;
+                const color = GROUP_COLORS[colorIdx];
+
+                const committedCount = grpClasses.filter(c => !c.isPartial).length;
+                totalCommitted += committedCount;
+
+                // ── Formula header ──────────────────────────────────────────────────
+                const header = document.createElement('div');
+                header.style.cssText = `
+            width: 100%; font-size: 11px; font-weight: 700;
+            color: ${color.previewText}; text-transform: uppercase;
+            letter-spacing: .07em; margin-bottom: 5px; margin-top: 8px;
+            display: flex; align-items: center; gap: 6px;
+        `;
+
+                const committedArms = group._tagInput ? group._tagInput.getTags() : group.arms;
+                const liveArm = group._tagInput ? group._tagInput.getLiveInput() : '';
+                const allArmsDisplay = [...committedArms, ...(liveArm ? [liveArm + '…'] : [])].join(', ');
+                const levelsDisplay = group.levels.join(', ');
+
+                header.innerHTML = `
+            <span style="background:${color.preview};padding:2px 8px;border-radius:99px;">${group.name || 'Unnamed Group'}</span>
+            <span style="color:#94a3b8">·</span>
+            <span style="font-weight:400;color:#6b7280;text-transform:none;">
+                [${levelsDisplay}] &times; [${allArmsDisplay || '…'}]
+                <strong style="color:${color.previewText};"> = ${grpClasses.length} class${grpClasses.length !== 1 ? 'es' : ''}</strong>
+            </span>`;
+                chips.appendChild(header);
+
+                // ── Class chips ─────────────────────────────────────────────────────
+                const chipRow = document.createElement('div');
+                chipRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;';
+
+                grpClasses.forEach(({ name, isPartial }) => {
+                    const chip = document.createElement('span');
+                    chip.className = 'preview-chip';
+                    chip.style.cssText = [
+                        `background:${isPartial ? '#f1f5f9' : color.preview};`,
+                        `color:${isPartial ? '#94a3b8' : color.previewText};`,
+                        isPartial ? 'border:1.5px dashed #cbd5e1;font-style:italic;' : '',
+                    ].join('');
+                    chip.textContent = name;
+                    chipRow.appendChild(chip);
+                });
+
+                chips.appendChild(chipRow);
+            });
+
+            const partial = allClasses.filter(c => c.isPartial).length;
+            count.textContent = partial
+                ? `${totalCommitted} committed + ${partial} in progress…`
+                : `${totalCommitted} class${totalCommitted !== 1 ? 'es' : ''} will be created`;
+        }
+
+        // ── Alerts ────────────────────────────────────────────────────────────────────
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg; el.style.display = 'block';
+            document.getElementById('successMsg').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.textContent = msg; el.style.display = 'block';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        // ── Restore from sessionStorage ───────────────────────────────────────────────
+        function restoreSaved() {
+            document.getElementById('academicSession').value =
+                sessionStorage.getItem('academicSession') || getSmartSession();
+
+            const term = sessionStorage.getItem('currentTerm') || getSmartTerm();
+            for (const opt of document.getElementById('currentTerm').options) {
+                if (opt.value === term) { opt.selected = true; break; }
+            }
+
+            // Restore checked levels
+            const savedLevels = JSON.parse(sessionStorage.getItem('classLevels') || '[]');
+            savedLevels.forEach(val => {
+                const cb = document.querySelector(`.level-chip input[value="${val}"]`);
+                if (cb) cb.checked = true;
+            });
+
+            // Dynamic Level Filtering based on School Type
+            const schoolType = sessionStorage.getItem('schoolType');
+            if (schoolType) {
+                const sections = document.querySelectorAll('.level-section');
+                if (schoolType === 'Secondary') {
+                    if (sections[0]) sections[0].style.display = 'none'; // Hide Early Years
+                    if (sections[1]) sections[1].style.display = 'none'; // Hide Primary
+                } else if (schoolType === 'Primary') {
+                    if (sections[2]) sections[2].style.display = 'none'; // Hide JSS
+                    if (sections[3]) sections[3].style.display = 'none'; // Hide SS
+                } else if (schoolType === 'Creche') {
+                    if (sections[1]) sections[1].style.display = 'none'; // Hide Primary
+                    if (sections[2]) sections[2].style.display = 'none'; // Hide JSS
+                    if (sections[3]) sections[3].style.display = 'none'; // Hide SS
+                }
+            }
+
+            renderPool();
+
+            // Restore groups if saved
+            const savedGroups = JSON.parse(sessionStorage.getItem('classGroups') || '[]');
+            if (savedGroups.length) {
+                savedGroups.forEach(sg => {
+                    const group = { id: state.nextGroupId++, name: sg.name, levels: [], arms: sg.arms, _tagInput: null };
+                    state.groups.push(group);
+                    const card = renderGroupCard(group);
+                    document.getElementById('groupsContainer').appendChild(card);
+                    // Re-assign levels after card is in DOM
+                    sg.levels.forEach(lvl => assignLevelToGroup(group, lvl, card, GROUP_COLORS[(state.groups.indexOf(group)) % GROUP_COLORS.length]));
+                    if (group._tagInput && sg.arms.length) group._tagInput.setTags(sg.arms);
+                });
+            } else {
+                // First visit: add two default groups
+                addGroup(); // "Junior Classes"
+                addGroup(); // "Senior Classes"
+                document.querySelectorAll('.group-name-input')[0].value = 'Junior Classes';
+                document.querySelectorAll('.group-name-input')[1].value = 'Senior Classes';
+                state.groups[0].name = 'Junior Classes';
+                state.groups[1].name = 'Senior Classes';
+
+                if (schoolType === 'Secondary') {
+                    // Pre-select JSS1-SS3
+                    ['JSS 1', 'JSS 2', 'JSS 3', 'SS 1', 'SS 2', 'SS 3'].forEach(lvl => {
+                        const cb = document.querySelector(`.level-chip input[value="${lvl}"]`);
+                        if (cb) cb.checked = true;
+                    });
+                    
+                    // Pre-fill arms based on school type
+                    if (state.groups[0]._tagInput) state.groups[0]._tagInput.setTags(['A', 'B', 'C']);
+                    if (state.groups[1]._tagInput) state.groups[1]._tagInput.setTags(['Science', 'Arts']);
+                }
+            }
+
+            updatePreview();
+        }
+
+        // ── Wire up: level checkboxes ─────────────────────────────────────────────────
+        document.querySelectorAll('.level-chip input').forEach(cb => {
+            cb.addEventListener('change', () => {
+                if (!cb.checked) {
+                    // Unchecking: remove from any group that has it
+                    state.groups.forEach(g => {
+                        const idx = g.levels.indexOf(cb.value);
+                        if (idx > -1) {
+                            g.levels.splice(idx, 1);
+                            const card = document.querySelector(`.group-card[data-group-id="${g.id}"]`);
+                            if (card) {
+                                const tag = card.querySelector(`.group-level-tag[data-level="${cb.value}"]`);
+                                if (tag) {
+                                    tag.remove();
+                                    const container = card.querySelector(`#groupLevels_${g.id}`);
+                                    if (!container.querySelectorAll('.group-level-tag').length) {
+                                        const ph = document.createElement('span');
+                                        ph.className = 'group-levels-empty';
+                                        ph.id = `groupLevelsEmpty_${g.id}`;
+                                        ph.textContent = 'No levels assigned yet';
+                                        container.appendChild(ph);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                syncCheckboxStates();
+                renderPool();
+                updatePreview();
+
+                // Re-evaluate select-all button text for its specific grid
+                const grid = cb.closest('.level-grid');
+                if (grid) {
+                    const btn = grid.parentElement.querySelector('.select-all-btn');
+                    if (btn) {
+                        const cbs = Array.from(grid.querySelectorAll('input[type="checkbox"]'));
+                        const allChecked = cbs.every(c => c.checked);
+                        btn.textContent = allChecked ? 'Deselect All' : 'Select All';
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.select-all-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const grid = document.getElementById(btn.dataset.target);
+                if (!grid) return;
+
+                const cbs = Array.from(grid.querySelectorAll('input[type="checkbox"]:not(:disabled)'));
+                const allChecked = cbs.every(cb => cb.checked);
+
+                cbs.forEach(cb => cb.checked = !allChecked);
+                btn.textContent = allChecked ? 'Select All' : 'Deselect All';
+
+                syncCheckboxStates();
+                renderPool();
+                updatePreview();
+            });
+        });
+
+        // ── Wire up: Add Group button ────────────────────────────────────────────────
+        document.getElementById('addGroupBtn').addEventListener('click', addGroup);
+
+        // ── Form submit ───────────────────────────────────────────────────────────────
+        document.getElementById('academicForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const session = document.getElementById('academicSession').value.trim();
+            const term = document.getElementById('currentTerm').value;
+
+            if (!session) return showError('Please enter the academic session.');
+            if (!term) return showError('Please select the current term.');
+            if (!state.groups.length) return showError('Please add at least one class group.');
+
+            const checkedLevels = getCheckedLevels();
+            if (!checkedLevels.length) return showError('Please check at least one class level.');
+
+            const emptyGroup = state.groups.find(g => !g.levels.length);
+            if (emptyGroup)
+                return showError(`The group "${emptyGroup.name || 'unnamed'}" has no levels. Add levels or remove it.`);
+
+            const emptyArms = state.groups.find(g => {
+                const arms = g._tagInput ? g._tagInput.getTags() : g.arms;
+                return !arms.length;
+            });
+            if (emptyArms)
+                return showError(`The group "${emptyArms.name || 'unnamed'}" has no arms. Add at least one arm (e.g. A, B, C).`);
+
+            // Sync arms from tag inputs
+            state.groups.forEach(g => { if (g._tagInput) g.arms = g._tagInput.getTags(); });
+
+            const generatedClasses = generateClasses();
+
+            // ── Save to sessionStorage (raw inputs for back-nav) ─────────────────────
+            sessionStorage.setItem('academicSession', session);
+            sessionStorage.setItem('currentTerm', term);
+            sessionStorage.setItem('classLevels', JSON.stringify(checkedLevels));
+            sessionStorage.setItem('classGroups', JSON.stringify(
+                state.groups.map(g => ({ name: g.name, levels: g.levels, arms: g.arms }))
+            ));
+
+            const finalClassesToSave = generatedClasses.map(c => ({
+                name: c.name,
+                level: c.level,
+                group_name: c.group_name,
+                arm: c.arm
+            }));
+
+            // ── Save to localStorage (ready for DB push in step 3) ───────────────────
+            localStorage.setItem('generatedClasses', JSON.stringify(finalClassesToSave));
+
+            console.log(
+                `✅ Generator produced ${finalClassesToSave.length} classes:`,
+                finalClassesToSave.map(c => `${c.name} [${c.group_name}]`).join(', ')
+            );
+
+            showSuccess(`Saved! ${finalClassesToSave.length} classes ready. Continuing…`);
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('btnText').textContent = 'Saving…';
+
+            setTimeout(() => { window.location.href = '/signup/step3'; }, 1400);
+        });
+
+        // ── Init ──────────────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', restoreSaved);
+    </script>
+</body>
+
+</html>

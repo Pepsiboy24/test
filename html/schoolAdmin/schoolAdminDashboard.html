@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <script type="module" src="../../scripts/authGuard.js"></script>
+    <meta charset="UTF-8">
+
+    <title>School Admin Dashboard</title>
+    <link rel="stylesheet" href="../../styles/schoolAdminStyles/schoolAdminDashboard.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../scripts/ui_feedback.js"></script>
+    <script src="../../scripts/schoolAdminScripts/school_admin_sidebar.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" data-sideBar></div>
+    <div class="container">
+        <!-- Sidebar -->
+
+        <!-- Main Content -->
+        <div class="main">
+            <div class="header">
+                <div>
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    <p class="page-subtitle">Welcome back, Admin</p>
+                </div>
+                <!-- <div class="search-container">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div> -->
+                <div class="stuff">
+                    <div class="profile"></div>
+                    <div class="icon" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper students">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" id="total-students-count">0</div>
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-change positive">+2.5%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper teachers">
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" id="total-teachers-count">0</div>
+                        <div class="stat-label">Teachers</div>
+                        <div class="stat-change positive">+1.2%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper attendance">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Attendance Rate</div>
+                        <div class="stat-change negative">-0.8%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper revenue">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">$45,678</div>
+                        <div class="stat-label">Revenue</div>
+                        <div class="stat-change negative">-2.1%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-section">
+                <h2 class="section-title">Recent Activity</h2>
+
+                <div class="activity-item">
+                    <div class="activity-avatar" style="background: #3b82f6;">JS</div>
+                    <div class="activity-content">
+                        <div class="activity-text">John Smith submitted the monthly attendance report</div>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-avatar" style="background: #10b981;">SJ</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Sarah Johnson updated the class schedule</div>
+                        <div class="activity-time">4 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-avatar" style="background: #f59e0b;">MB</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Mike Brown processed fee payments</div>
+                        <div class="activity-time">6 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('focus', function () {
+                    this.style.borderColor = '#7c3aed';
+                });
+
+                searchInput.addEventListener('blur', function () {
+                    this.style.borderColor = '#e2e8f0';
+                });
+            }
+
+            // Sidebar Toggle
+            const sidebar = document.querySelector('[data-sideBar]');
+            const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+            const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+            if (sidebarOpenBtn && sidebar) {
+                sidebarOpenBtn.addEventListener('click', () => {
+                    sidebar.classList.add('show');
+                });
+            }
+
+            if (sidebarCloseBtn && sidebar) {
+                sidebarCloseBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('show');
+                });
+            }
+
+            // Animate stats on load
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach((stat, index) => {
+                const finalValue = stat.textContent;
+                stat.textContent = '0';
+
+                setTimeout(() => {
+                    animateNumber(stat, finalValue);
+                }, index * 200);
+            });
+        });
+
+        function animateNumber(element, finalValue) {
+            const isPercentage = finalValue.includes('%');
+            const isDollar = finalValue.includes('$');
+            const numericValue = parseInt(finalValue.replace(/[^0-9]/g, ''));
+
+            let current = 0;
+            const increment = numericValue / 50;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= numericValue) {
+                    current = numericValue;
+                    clearInterval(timer);
+                }
+
+                let displayValue = Math.floor(current).toLocaleString();
+                if (isDollar) displayValue = '$' + displayValue;
+                if (isPercentage) displayValue = Math.floor(current) + '%';
+
+                element.textContent = displayValue;
+            }, 20);
+        }
+    </script>
+</body>
+
+<script type="module" src="../../scripts/schoolAdminScripts/adminStats.js"></script>
+
+</html>

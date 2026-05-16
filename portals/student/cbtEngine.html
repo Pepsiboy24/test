@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta charset="UTF-8">
+    
+    <title>CBT Engine - EduHub Student Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    <link rel="stylesheet" href="./studentsPortalStyles/cbtEngine.css?v=1.1">
+    <script type="module" src="../../core/authGuard.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar Anchor -->
+        <div id="sidebarAnchor"></div>
+        <script type="module" src="./student_sidebar.js"></script>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="welcome-section">
+                    <h1>CBT Practice</h1>
+                    <p>Prepare for exams with timed simulated tests</p>
+                </div>
+                <div class="header-actions">
+                    <button class="nav-btn" data-nav-display>
+                        <i class="fa fa-bars" data-ie></i>
+                    </button>
+                    <button class="notification-btn"><i class="fas fa-bell"></i></button>
+                    <button class="profile-btn">S</button>
+                </div>
+            </header>
+
+            <!-- Phase A: Lobby View -->
+            <section id="lobbyView" class="view-section active">
+                <div class="lobby-header" style="text-align: center; margin-bottom: 24px;">
+                    <h2 style="margin-bottom: 20px;">Select Examination Type</h2>
+                    <div class="exam-tabs" id="examTabs"
+                        style="display: inline-flex; background: var(--card-background); padding: 4px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-color);">
+                        <button class="exam-tab active" data-type="utme"
+                            style="padding: 10px 24px; border: none; background: var(--primary-color); color: white; font-weight: 600; border-radius: 8px; cursor: pointer;">JAMB</button>
+                        <button class="exam-tab" data-type="wassce"
+                            style="padding: 10px 24px; border: none; background: transparent; color: var(--text-secondary); font-weight: 600; border-radius: 8px; cursor: pointer;">WAEC</button>
+                        <button class="exam-tab" data-type="neco"
+                            style="padding: 10px 24px; border: none; background: transparent; color: var(--text-secondary); font-weight: 600; border-radius: 8px; cursor: pointer;">NECO</button>
+                    </div>
+                </div>
+
+                <div class="subject-grid-container"
+                    style="background: var(--card-background); padding: 32px; border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--border-color);">
+                    <h3 class="subject-grid-title"
+                        style="font-size: 18px; font-weight: 600; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                        Choose a Subject</h3>
+                    <div class="subject-grid" id="subjectGrid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                        <div class="skeleton skeleton-card"></div>
+                    </div>
+                    <div class="subject-grid" id="subjectContent" style="display:none;">
+                        <!-- Real content will be injected here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phase B: Exam View -->
+            <section id="examView" class="view-section" style="display: none;">
+                <div class="exam-container">
+                    <!-- Main Workspace -->
+                    <div class="exam-main">
+                        <div class="exam-hud">
+                            <h2 id="hudExamTitle">Examination</h2>
+                            <div class="timer-container" id="hudTimer">
+                                <i class="far fa-clock"></i>
+                                <span class="timer-text" id="timerText">--:--</span>
+                            </div>
+                            <button class="btn btn-primary" id="submitExamBtn" style="margin-left: 16px;">Submit
+                                Test</button>
+                            <button class="btn btn-outline" id="mobileNavToggleBtn">
+                                <i class="fas fa-th"></i>
+                            </button>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="hudProgressBar" style="width: 0%;"></div>
+                        </div>
+                        <div class="progress-text"
+                            style="text-align: right; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px;">
+                            <span id="progressText">0%</span> Completed
+                        </div>
+
+                        <!-- Question Workspace -->
+                        <div class="question-workspace" id="questionWorkspace">
+                            <div class="question-header">
+                                <div class="question-number">Question <span id="currentQNum">1</span> of <span
+                                        id="totalQNum">X</span></div>
+                                <button class="btn-icon" id="flagBtn" title="Flag for Review">
+                                    <i class="far fa-flag"></i> Flag
+                                </button>
+                            </div>
+
+                            <!-- Passage / Comprehension Text (data.section) -->
+                            <div class="passage-container" id="passageContainer"
+                                style="display: none; background: #f8fafc; border-left: 4px solid var(--secondary-color); padding: 16px 20px; margin-bottom: 24px; border-radius: 4px 8px 8px 4px;">
+                                <h4
+                                    style="font-size: 14px; color: var(--secondary-color); margin-bottom: 8px; text-transform: uppercase;">
+                                    Read the following passage carefully:</h4>
+                                <div id="passageText"
+                                    style="font-size: 15px; color: var(--text-primary); line-height: 1.7;"></div>
+                            </div>
+
+                            <div class="question-text" id="questionText">Loading question...</div>
+                            <div class="options-container" id="optionsContainer">
+                                <!-- Options injected via JS -->
+                            </div>
+                            <div class="question-actions">
+                                <button class="btn btn-outline" id="prevBtn" disabled>Previous</button>
+                                <button class="btn btn-primary" id="nextBtn">Next</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigator Grid -->
+                    <div class="exam-sidebar" id="navigatorGridSidebar">
+                        <div class="navigator-header">
+                            <h4>Question Navigator</h4>
+                            <button class="close-mobile-nav" id="closeMobileNav">&times;</button>
+                        </div>
+                        <div class="navigator-legend">
+                            <span class="legend-item"><span class="dot unseen"></span>Unseen</span>
+                            <span class="legend-item"><span class="dot answered"></span>Answered</span>
+                            <span class="legend-item"><span class="dot flagged"></span>Flagged</span>
+                        </div>
+                        <div class="grid-container" id="navigatorGrid">
+                            <!-- Navigator buttons injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phase C: Results View -->
+            <section id="resultsView" class="view-section" style="display: none;">
+                <div class="results-container">
+                    <div class="results-header">
+                        <h2>Examination Complete</h2>
+                        <p id="resultsExamTitle">JAMB Practice</p>
+                    </div>
+
+                    <div class="score-card" id="scoreCard">
+                        <div class="chart-container">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle" id="scoreCirclePath" stroke-dasharray="0, 100" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.35" class="percentage" id="scorePercentageText">0%</text>
+                            </svg>
+                        </div>
+                        <div class="score-details">
+                            <h3 id="passFailStatus">Status: <span class="pass">Passed</span></h3>
+                            <div class="stat-row">
+                                <span>Total Questions:</span> <strong id="resTotal">0</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Correct Answers:</span> <strong id="resCorrect" class="text-success">0</strong>
+                            </div>
+                            <div class="stat-row">
+                                <span>Wrong / Unattempted:</span> <strong id="resWrong" class="text-danger">0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="correctionsList" class="corrections-container" style="display: none;">
+                        <h3 class="corrections-title">Detailed Corrections Review</h3>
+                        <div id="correctionsContent">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <div class="results-actions" id="resultsActionsBox">
+                        <button class="btn btn-outline" id="backToLobbyBtn">Back to Lobby</button>
+                        <button class="btn btn-primary" id="reviewBtn">Review Corrections</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Instruction Modal -->
+    <div id="instructionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Exam Instructions</h3>
+                <span class="close-modal" id="closeInstructionModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h4 id="modalExamTitle" style="color: var(--primary-color); margin-bottom: 12px; font-size: 1.1rem;">
+                </h4>
+                <ul class="instruction-list">
+                    <li><i class="fas fa-list-ol"></i> Total Questions: <strong id="modalTotalQs">40</strong></li>
+                    <li><i class="fas fa-clock"></i> Time Limit: <strong id="modalTimeLimit">60 mins</strong></li>
+                    <li><i class="fas fa-check-circle"></i> Once started, the timer cannot be paused.</li>
+                    <li><i class="fas fa-exclamation-triangle"></i> If the timer reaches 0, the test automatically
+                        submits.</li>
+                    <li><i class="fas fa-flag"></i> You can skip and flag questions for later review.</li>
+                </ul>
+                <div class="form-actions" style="margin-top: 24px;">
+                    <button class="cancel-btn" id="cancelExamBtn">Cancel</button>
+                    <button class="submit-btn" id="startExamConfirmedBtn">Begin Examination</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./cbtEngine.js"></script>
+</body>
+
+</html>

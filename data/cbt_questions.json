@@ -1,0 +1,90 @@
+[
+    {
+        "id": 1,
+        "question": "Which of the following correctly describes a protocol used for secure web traffic?",
+        "options": [
+            "HTTP",
+            "FTP",
+            "HTTPS",
+            "SMTP"
+        ],
+        "answer": "C"
+    },
+    {
+        "id": 2,
+        "question": "What does CSS stand for in web development?",
+        "options": [
+            "Colorful Style Sheets",
+            "Creative Style Sheets",
+            "Cascading Style Sheets",
+            "Computer Style Sheets"
+        ],
+        "answer": "C"
+    },
+    {
+        "id": 3,
+        "question": "If 3x + 5 = 14, what is the value of x?",
+        "options": [
+            "2",
+            "3",
+            "4",
+            "5"
+        ],
+        "answer": "B"
+    },
+    {
+        "id": 4,
+        "question": "Which programming language is predominantly known as the 'language of the web'?",
+        "options": [
+            "Python",
+            "Java",
+            "C++",
+            "JavaScript"
+        ],
+        "answer": "D"
+    },
+    {
+        "id": 5,
+        "question": "Which organ in the human body is primarily responsible for pumping blood?",
+        "options": [
+            "Brain",
+            "Lungs",
+            "Heart",
+            "Liver"
+        ],
+        "answer": "C"
+    },
+    {
+        "id": 6,
+        "question": "In Git, which command is used to save your changes locally?",
+        "options": [
+            "git push",
+            "git commit",
+            "git pull",
+            "git save"
+        ],
+        "answer": "B"
+    },
+    {
+        "id": 7,
+        "question": "Which planet is known as the Red Planet?",
+        "options": [
+            "Venus",
+            "Jupiter",
+            "Saturn",
+            "Mars"
+        ],
+        "answer": "D"
+    },
+    {
+        "id": 8,
+        "question": "What is the powerhouse of the cell?",
+        "options": [
+            "Nucleus",
+            "Ribosome",
+            "Mitochondria",
+            "Chloroplast"
+        ],
+        "answer": "C"
+    }
+]

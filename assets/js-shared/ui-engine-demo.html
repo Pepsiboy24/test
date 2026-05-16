@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Engine Demo - Skeleton Loading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .demo-section h2 {
+            margin-top: 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .demo-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .demo-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .demo-btn:hover { background: #0056b3; }
+        .demo-btn.success { background: #10b981; }
+        .demo-btn.warning { background: #f59e0b; }
+        .demo-btn.danger { background: #dc3545; }
+        .demo-btn:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed; 
+            opacity: 0.6;
+        }
+        .status-indicator {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.error { background: #f8d7da; color: #721c24; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🎨 UI Engine Demo - Skeleton Loading System</h1>
+        <p>This page demonstrates the global skeleton loading system with animated shine effects for perceived performance.</p>
+        
+        <div class="demo-section">
+            <h2>🃏 Card Skeleton Demo</h2>
+            <div id="cardContainer" class="demo-target">
+                <!-- Skeleton will be injected here -->
+            </div>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="showCardSkeletons()">Show Card Skeletons</button>
+                <button class="demo-btn success" onclick="hideSkeleton('cardContainer')">Hide Skeletons</button>
+                <button class="demo-btn warning" onclick="showCardContent()">Show Real Content</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📋 List Skeleton Demo</h2>
+            <div id="listContainer" class="demo-target">
+                <!-- Skeleton will be injected here -->
+            </div>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="showListSkeletons()">Show List Skeletons</button>
+                <button class="demo-btn success" onclick="hideSkeleton('listContainer')">Hide Skeletons</button>
+                <button class="demo-btn warning" onclick="showListContent()">Show Real Content</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📊 Table Skeleton Demo</h2>
+            <div id="tableContainer" class="demo-target">
+                <!-- Skeleton will be injected here -->
+            </div>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="showTableSkeletons()">Show Table Skeletons</button>
+                <button class="demo-btn success" onclick="hideSkeleton('tableContainer')">Hide Skeletons</button>
+                <button class="demo-btn warning" onclick="showTableContent()">Show Real Content</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>👤 Profile Skeleton Demo</h2>
+            <div id="profileContainer" class="demo-target">
+                <!-- Skeleton will be injected here -->
+            </div>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="showProfileSkeletons()">Show Profile Skeletons</button>
+                <button class="demo-btn success" onclick="hideSkeleton('profileContainer')">Hide Skeletons</button>
+                <button class="demo-btn warning" onclick="showProfileContent()">Show Real Content</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🔄 Loading States Demo</h2>
+            <div id="loadingContainer" class="demo-target">
+                <!-- Loading will be injected here -->
+            </div>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="showLoadingState()">Show Loading</button>
+                <button class="demo-btn success" onclick="hideLoading('loadingContainer')">Hide Loading</button>
+                <button class="demo-btn warning" onclick="showEmptyState()">Show Empty State</button>
+                <button class="demo-btn danger" onclick="showErrorState()">Show Error State</button>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📊 Performance Features</h2>
+            <div class="status-indicator success">✅ Animated Shine Effect</div>
+            <div class="status-indicator info">✅ Multiple Template Types</div>
+            <div class="status-indicator success">✅ Responsive Design</div>
+            <div class="status-indicator info">✅ Smooth Transitions</div>
+            <div class="status-indicator success">✅ Global Standard</div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🔧 Usage Examples</h2>
+            <div class="code-box">
+                <strong>Import the UI Engine:</strong><br>
+                <code>import { showSkeleton, hideSkeleton } from '../assets/js-shared/ui-engine.js';</code><br><br>
+                
+                <strong>Show skeleton loading:</strong><br>
+                <code>showSkeleton('containerId', 5, 'card');</code><br><br>
+                
+                <strong>Hide skeleton and show content:</strong><br>
+                <code>hideSkeleton('containerId');</code><br><br>
+                
+                <strong>Available template types:</strong><br>
+                <code>'card', 'list', 'table', 'profile'</code><br><br>
+                
+                <strong>Additional utilities:</strong><br>
+                <code>showLoading(), hideLoading(), showEmptyState(), showErrorState()</code>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { showSkeleton, hideSkeleton, showLoading, hideLoading, showEmptyState, showErrorState } from './ui-engine.js';
+        
+        // Demo content generators
+        function showCardContent() {
+            const container = document.getElementById('cardContainer');
+            container.innerHTML = `
+                <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3 style="color: #374151; margin-bottom: 12px;">🎉 Real Card Content</h3>
+                    <p style="color: #64748b; line-height: 1.6;">This is the actual content that would appear after loading completes. The skeleton placeholders have been replaced with real data.</p>
+                    <div style="display: flex; gap: 8px; margin-top: 16px;">
+                        <button style="background: #007bff; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">Action Button</button>
+                        <button style="background: #6c757d; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">Secondary Action</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showListContent() {
+            const container = document.getElementById('listContainer');
+            container.innerHTML = `
+                <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3 style="color: #374151; margin-bottom: 12px;">👥 Real List Content</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: white; border-radius: 8px;">
+                            <div style="width: 40px; height: 40px; background: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #374151;">John Doe</div>
+                                <div style="font-size: 14px; color: #64748b;">Student ID: STU001</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: white; border-radius: 8px;">
+                            <div style="width: 40px; height: 40px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #374151;">Jane Smith</div>
+                                <div style="font-size: 14px; color: #64748b;">Student ID: STU002</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showTableContent() {
+            const container = document.getElementById('tableContainer');
+            container.innerHTML = `
+                <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3 style="color: #374151; margin-bottom: 12px;">📊 Real Table Content</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; color: #374151;">Name</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; color: #374151;">Email</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; color: #374151;">Status</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; color: #374151;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">Alice Johnson</td>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">alice@example.com</td>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Active</span></td>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+                                    <button style="background: #007bff; color: white; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">Bob Wilson</td>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">bob@example.com</td>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><span style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Inactive</span></td>
+                                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+                                    <button style="background: #10b981; color: white; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        function showProfileContent() {
+            const container = document.getElementById('profileContainer');
+            container.innerHTML = `
+                <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-user" style="font-size: 32px;"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #374151; margin-bottom: 8px;">Dr. Sarah Johnson</h3>
+                            <p style="color: #64748b; margin-bottom: 4px;">Mathematics Teacher</p>
+                            <p style="color: #64748b; margin-bottom: 4px;">15 years of experience</p>
+                            <div style="display: flex; gap: 8px;">
+                                <button style="background: #10b981; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">Edit Profile</button>
+                                <button style="background: #6c757d; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">Message</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 16px; border-radius: 8px;">
+                        <h4 style="color: #374151; margin-bottom: 8px;">Contact Information</h4>
+                        <p style="color: #64748b;"><strong>Email:</strong> sarah.johnson@school.edu</p>
+                        <p style="color: #64748b;"><strong>Phone:</strong> +1 (555) 123-456-7890</p>
+                        <p style="color: #64748b;"><strong>Department:</strong> Mathematics</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Demo functions
+        function showCardSkeletons() {
+            showSkeleton('cardContainer', 3, 'card');
+        }
+        
+        function showListSkeletons() {
+            showSkeleton('listContainer', 4, 'list');
+        }
+        
+        function showTableSkeletons() {
+            showSkeleton('tableContainer', 5, 'table');
+        }
+        
+        function showProfileSkeletons() {
+            showSkeleton('profileContainer', 2, 'profile');
+        }
+        
+        function showLoadingState() {
+            showLoading('loadingContainer', 'Loading data from server...');
+        }
+        
+        function showEmptyState() {
+            showEmptyState('loadingContainer', 'No data available', 'fa-inbox');
+        }
+        
+        function showErrorState() {
+            showErrorState('loadingContainer', 'Failed to load data from server');
+        }
+        
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('UI Engine Demo loaded');
+            // Show initial skeletons
+            setTimeout(() => {
+                showCardSkeletons();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

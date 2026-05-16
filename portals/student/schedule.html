@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta charset="UTF-8">
+
+    <title>EduHub - Student Schedule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=1.1">
+    <link rel="stylesheet" href="./studentsPortalStyles/studentPortal.css?v=1.1">
+    <link rel="stylesheet" href="./studentsPortalStyles/schedule.css?v=1.1">
+    <script type="module" src="./student_sidebar.js"></script>
+    <script type="module" src="../../assets/js-shared/ui-engine.js"></script>
+    <!-- Auth Guard: must load before page content renders -->
+    <script type="module" src="../../core/authGuard.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Dynamic Sidebar Anchor -->
+        <div id="sidebarAnchor"></div>
+        <script type="module" src="./student_sidebar.js"></script>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="welcome-section">
+                    <h1>Schedule</h1>
+                    <p>Your weekly timetable and activities</p>
+                </div>
+                <div class="header-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="profile-btn">
+                        A
+                    </button>
+                    <button class="nav-btn" data-nav-display>
+                        <i class="fa fa-bars" data-ie></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Weekly Schedule -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Weekly Schedule</h2>
+                </div>
+
+                <!-- Mobile Day Switcher (Visible only on small screens) -->
+                <div class="day-switcher" id="mobileDaySwitcher">
+                    <!-- Tabs will be injected here by JS -->
+                </div>
+
+                <div class="schedule-table-wrapper" id="weeklyScheduleContainer">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+                <div class="schedule-table-wrapper" id="weeklyScheduleContent" style="display:none;">
+                    <!-- Real content will be injected here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Live Classes Integration -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const SUPABASE_URL = 'https://dzotwozhcxzkxtunmqth.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6b3R3b3poY3h6a3h0dW5tcXRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwODk5NzAsImV4cCI6MjA3MDY2NTk3MH0.KJfkrRq46c_Fo7ujkmvcue4jQAzIaSDfO3bU7YqMZdE';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ── Subject → colour map for color strips ────────────────────────
+        const SUBJECT_THEMES = [
+            { keywords: ['math'], color: '#3b82f6', bg: '#eff6ff' },
+            { keywords: ['science', 'biology'], color: '#22c55e', bg: '#f0fdf4' },
+            { keywords: ['chemistry'], color: '#a855f7', bg: '#faf5ff' },
+            { keywords: ['physics'], color: '#f97316', bg: '#fff7ed' },
+            { keywords: ['english', 'literature'], color: '#ec4899', bg: '#fdf2f8' },
+            { keywords: ['history'], color: '#854d0e', bg: '#fefce8' },
+            { keywords: ['geography'], color: '#0d9488', bg: '#f0fdfa' },
+            { keywords: ['ict', 'computer', 'tech'], color: '#6366f1', bg: '#eef2ff' },
+            { keywords: ['art', 'creative'], color: '#f59e0b', bg: '#fffbeb' },
+            { keywords: ['music'], color: '#14b8a6', bg: '#f0fdfa' },
+            { keywords: ['sport', 'physical', 'pe'], color: '#ef4444', bg: '#fef2f2' },
+        ];
+        const DEFAULT_THEME = { color: '#64748b', bg: '#f8fafc' };
+
+        function getTheme(subjectName = '') {
+            const lower = subjectName.toLowerCase();
+            return SUBJECT_THEMES.find(t => t.keywords.some(k => lower.includes(k))) || DEFAULT_THEME;
+        }
+
+        async function loadLiveSchedule() {
+            const container = document.getElementById('weeklyScheduleContainer');
+            if (!container) return;
+
+            try {
+                const { data: { user }, error: authErr } = await supabase.auth.getUser();
+                if (authErr || !user) return;
+
+                const { data: student, error: sErr } = await supabase
+                    .from('Students')
+                    .select('class_id, full_name')
+                    .eq('student_id', user.id)
+                    .maybeSingle();
+
+                if (sErr || !student || !student.class_id) {
+                    container.innerHTML = '<div style="padding: 40px; text-align: center; color: #64748b;">No class assigned yet.</div>';
+                    return;
+                }
+
+                const classId = student.class_id;
+
+                const [configRes, entriesRes, subjectsRes] = await Promise.all([
+                    supabase.from('schedule_configs').select('*').eq('class_id', classId).maybeSingle(),
+                    supabase.from('timetable_entries').select('*').eq('class_id', classId),
+                    supabase.from('Subjects').select('subject_id, subject_name')
+                ]);
+
+                if (configRes.error) throw configRes.error;
+                if (entriesRes.error) throw entriesRes.error;
+
+                const config = configRes.data;
+                const entries = entriesRes.data || [];
+                const subjects = subjectsRes.data || [];
+
+                if (!config) {
+                    container.innerHTML = '<div style="padding: 40px; text-align: center; color: #64748b;">Schedule not configured for your class.</div>';
+                    return;
+                }
+
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                const periods = config.periods_per_day || 8;
+                const startTime = config.start_time || '08:00';
+                const duration = config.period_duration || 40;
+
+                const matrix = Array.from({ length: periods }, () => Array(days.length).fill(null));
+
+                entries.forEach(entry => {
+                    const entryDaySub = (entry.day_of_week || "").substring(0, 3).toLowerCase();
+                    const col = days.findIndex(d => d.substring(0, 3).toLowerCase() === entryDaySub);
+                    if (col === -1) return;
+
+                    const entryMins = timeToMins(entry.start_time.substring(0, 5));
+                    const schoolStartMins = timeToMins(startTime);
+
+                    let row = -1;
+                    for (let p = 0; p < periods; p++) {
+                        const slotStart = schoolStartMins + (p * duration);
+                        const slotEnd = slotStart + duration;
+                        if (entryMins >= slotStart && entryMins < slotEnd) {
+                            row = p;
+                            break;
+                        }
+                    }
+
+                    if (row >= 0 && row < periods) {
+                        matrix[row][col] = entry;
+                    }
+                });
+
+                let breaks = [];
+                if (config.break_times) {
+                    try {
+                        const parsed = typeof config.break_times === 'string' ? JSON.parse(config.break_times) : config.break_times;
+                        if (Array.isArray(parsed)) {
+                            breaks = parsed.map(b => {
+                                if (typeof b === 'object' && b !== null && b.start) return String(b.start).substring(0, 5);
+                                return String(b).substring(0, 5);
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Error parsing break times", e);
+                    }
+                }
+
+                const now = new Date();
+                const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+                const currentMins = now.getHours() * 60 + now.getMinutes();
+
+                let html = `
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th class="time-col-header sticky-corner">Time</th>
+                `;
+
+                // top row
+                days.forEach(day => {
+                    const isToday = day === currentDay;
+                    html += `<th class="day-col-header ${isToday ? 'active-day-header' : ''}">${day}</th>`;
+                });
+
+                html += `
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                // Render rows horizontally
+                for (let row = 0; row < periods; row++) {
+                    const periodStartStr = addMinutes(startTime, row * duration);
+                    const periodEndStr = addMinutes(periodStartStr, duration);
+                    const slotStartMins = timeToMins(periodStartStr);
+                    const slotEndMins = slotStartMins + duration;
+                    const isActiveTimeRow = currentMins >= slotStartMins && currentMins < slotEndMins;
+
+                    const isBreak = breaks.includes(periodStartStr.substring(0, 5));
+
+                    html += `<tr>`;
+                    html += `<td class="time-cell sticky-left ${isActiveTimeRow ? 'active-time-row' : ''}">${formatTime(periodStartStr)}<br><span style="font-size:0.75rem; font-weight:400;">${formatTime(periodEndStr)}</span></td>`;
+
+                    // Render columns (Days) for this specific time slot row
+                    for (let col = 0; col < days.length; col++) {
+                        const day = days[col];
+                        const entry = matrix[row][col];
+                        const isToday = day === currentDay;
+                        const isActive = isToday && isActiveTimeRow;
+                        const activeClassStr = isActive ? 'active-class' : '';
+
+                        if (entry) {
+                            const subject = subjects.find(s => s.subject_id === entry.subject_id);
+                            const subjectName = subject ? subject.subject_name : (entry.subject_id ? `Subject TBA` : 'Subject TBA');
+                            const theme = getTheme(subjectName);
+
+                            html += `
+                                <td class="subject-cell ${activeClassStr}" style="--strip-color: ${theme.color}; --bg-color: ${theme.bg};">
+                                    <div class="subject-card-inner">
+                                        <div class="subject-strip"></div>
+                                        <div class="subject-content">
+                                            <div class="subject-name">${subjectName}</div>
+                                            ${entry.room ? `<div class="room-name">Rm ${entry.room}</div>` : ''}
+                                        </div>
+                                    </div>
+                                </td>
+                            `;
+                        } else if (isBreak) {
+                            html += `
+                                <td class="subject-cell break-cell ${activeClassStr}">
+                                    <div class="subject-break-inner">
+                                        <div class="subject-break">Break / Lunch</div>
+                                    </div>
+                                </td>
+                            `;
+                        } else {
+                            html += `
+                                <td class="subject-cell empty-cell ${activeClassStr}">
+                                    <div class="subject-free-inner">
+                                        <div class="subject-free">Free Period</div>
+                                    </div>
+                                </td>
+                            `;
+                        }
+                    }
+                    html += `</tr>`;
+                }
+
+                html += `
+                        </tbody>
+                    </table>
+                `;
+
+                container.innerHTML = html;
+
+                // Hide skeleton and show content
+                document.getElementById('weeklyScheduleContainer').style.display = 'none';
+                document.getElementById('weeklyScheduleContent').style.display = 'block';
+                document.getElementById('weeklyScheduleContent').innerHTML = html;
+
+                // Build Mobile Day Switcher functionality
+                const switcher = document.getElementById('mobileDaySwitcher');
+                if (switcher) {
+                    switcher.innerHTML = days.map((day, idx) => `
+                        <button class="day-tab ${day === currentDay ? 'active' : ''}" data-day-index="${idx}">
+                            ${day.substring(0, 3)}
+                        </button>
+                    `).join('');
+
+                    const tabs = switcher.querySelectorAll('.day-tab');
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', (e) => {
+                            // Update active state
+                            tabs.forEach(t => t.classList.remove('active'));
+                            e.target.classList.add('active');
+
+                            // Scroll table
+                            // Each day col is min 200px (header rule) + 100px for time col
+                            const idx = parseInt(e.target.getAttribute('data-day-index'));
+                            const scrollTarget = (idx * 200);
+                            container.scrollTo({
+                                left: scrollTarget,
+                                behavior: 'smooth'
+                            });
+                        });
+                    });
+                }
+
+            } catch (err) {
+                console.error('Error loading schedule:', err);
+                // Hide skeleton and show error
+                document.getElementById('weeklyScheduleContainer').style.display = 'none';
+                document.getElementById('weeklyScheduleContent').style.display = 'block';
+                document.getElementById('weeklyScheduleContent').innerHTML = `<div style="padding: 40px; text-align: center; color: #ef4444;">Failed to load schedule.</div>`;
+            }
+        }
+
+        function timeToMins(t) {
+            const [h, m] = t.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function addMinutes(time, mins) {
+            const [h, m] = time.split(':').map(Number);
+            const total = h * 60 + m + mins;
+            const nh = Math.floor(total / 60) % 24;
+            const nm = total % 60;
+            return `${String(nh).padStart(2, '0')}:${String(nm).padStart(2, '0')}`;
+        }
+
+        function formatTime(time) {
+            const [h, m] = time.split(':').map(Number);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const displayH = h % 12 || 12;
+            return `${displayH}:${String(m).padStart(2, '0')} ${ampm}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadLiveSchedule);
+    </script>
+
+    <!-- <script>
+        function initSidebarToggle() {
+            const navOpen = document.querySelector("[data-nav-display]");
+            const nav = document.querySelector("[data-nav]");
+            const i = document.querySelector("[data-ie]")
+            
+            if (!navOpen || !nav || !i) {
+                // Sidebar not yet injected, try again in 100ms
+                setTimeout(initSidebarToggle, 100);
+                return;
+            }
+            
+            navOpen.addEventListener("click", () => {
+                i.classList.toggle("fa-bars");
+                i.classList.toggle("fa-times");
+                nav.classList.toggle("show")
+            });
+        }
+        
+        // Initialize sidebar toggle
+        initSidebarToggle();
+    </script> -->
+</body>
+
+</html>

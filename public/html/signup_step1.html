@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 1: School Identity - EduHub</title>
+    <link rel="stylesheet" href="../styles/auth.css">
+    <style>
+        .signup-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed {
+            background: #16a34a;
+            color: white;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 20px;
+            height: 2px;
+            background: #e5e7eb;
+            transform: translateY(-50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.active::after {
+            background: #667eea;
+        }
+
+        .step.completed::after {
+            background: #16a34a;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+
+        .form-group input {
+            background-image: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group select:focus {
+            background-color: white;
+        }
+
+        .field-hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .info-text {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            color: #0369a1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="step-header">
+                <h1>Start Your School Journey</h1>
+                <p>Let's begin with your school identity</p>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step active">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+                <div class="step">4</div>
+                <div class="step">5</div>
+            </div>
+
+            <div class="info-text">
+                <i class="fas fa-info-circle"></i>
+                This information helps us set up your school account. We'll create your admin account in the next step.
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <form id="step1Form">
+                <div class="form-group">
+                    <label for="schoolName">School Name *</label>
+                    <input type="text" id="schoolName" name="schoolName" placeholder="Enter your school name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolType">School Type *</label>
+                    <select id="schoolType" name="schoolType" required>
+                        <option value="" disabled selected>Select school type</option>
+                        <option value="Creche">Creche</option>
+                        <option value="Primary">Primary</option>
+                        <option value="Secondary">Secondary</option>
+                        <option value="Mixed">Mixed (Multiple Levels)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="workEmail">Work Email *</label>
+                    <input type="email" id="workEmail" name="workEmail" placeholder="admin@yourschool.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolWebsite">
+                        School Website
+                        <span
+                            style="font-size:11px;font-weight:400;color:#9ca3af;margin-left:6px;background:#f3f4f6;padding:2px 8px;border-radius:99px;">(Optional)</span>
+                    </label>
+                    <input type="url" id="schoolWebsite" name="schoolWebsite" placeholder="e.g. www.yourschool.com">
+                    <span class="field-hint">You can add or update this later from your school settings.</span>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                    <span id="btnText">Continue to Step 2</span>
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="/">
+                    <i class="fas fa-arrow-left"></i> Back to Landing Page
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from '../../core/config.js';
+
+        class SchoolSignupStep1 {
+            constructor() {
+                this.formData = {};
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.checkPrefilledData();
+            }
+
+            setupEventListeners() {
+                const form = document.getElementById('step1Form');
+                if (form) {
+                    form.addEventListener('submit', (e) => this.handleSubmit(e));
+                }
+            }
+
+            checkPrefilledData() {
+                // Check if tier was selected from landing page
+                const selectedTier = sessionStorage.getItem('selectedTier');
+                if (selectedTier) {
+                    console.log('Selected tier from landing page:', selectedTier);
+                }
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+
+                const schoolName = document.getElementById('schoolName').value.trim();
+                const workEmail = document.getElementById('workEmail').value.trim();
+                const schoolType = document.getElementById('schoolType').value;
+                const schoolWebsite = document.getElementById('schoolWebsite').value.trim();
+
+                // Validation
+                if (!schoolName || schoolName.length < 3) {
+                    this.showError('Please enter a valid school name (minimum 3 characters)');
+                    return;
+                }
+
+                if (!schoolType) {
+                    this.showError('Please select a school type');
+                    return;
+                }
+
+                if (!workEmail || !this.isValidEmail(workEmail)) {
+                    this.showError('Please enter a valid work email address');
+                    return;
+                }
+
+                // Store in sessionStorage
+                sessionStorage.setItem('schoolName', schoolName);
+                sessionStorage.setItem('workEmail', workEmail);
+                sessionStorage.setItem('schoolType', schoolType);
+                if (schoolWebsite) sessionStorage.setItem('schoolWebsite', schoolWebsite);
+                sessionStorage.setItem('selectedTier', sessionStorage.getItem('selectedTier') || '1');
+
+                this.showSuccess('School information saved! Proceeding to next step...');
+
+                // Redirect to step 2 after a short delay
+                setTimeout(() => {
+                    window.location.href = '/signup/step2';
+                }, 1500);
+            }
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            showError(message) {
+                const errorEl = document.getElementById('errorMessage');
+                const successEl = document.getElementById('successMessage');
+
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+                successEl.style.display = 'none';
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            showSuccess(message) {
+                const errorEl = document.getElementById('errorMessage');
+                const successEl = document.getElementById('successMessage');
+
+                successEl.textContent = message;
+                successEl.style.display = 'block';
+                errorEl.style.display = 'none';
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', () => {
+            new SchoolSignupStep1();
+        });
+    </script>
+</body>
+
+</html>

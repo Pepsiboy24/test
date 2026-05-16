@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <!-- <script type="module" src="../../scripts/authGuard.js"></script> -->
+    <meta charset="UTF-8">
+    
+    <title>School Admin Management - EduHubAdmin</title>
+    <link rel="stylesheet" href="../../styles/schoolAdminStyles/schooladmins.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1.1">
+    <script src="../../scripts/ui_feedback.js"></script>
+    <script src="../../scripts/schoolAdminScripts/school_admin_sidebar.js"></script>
+</head>
+
+<body>
+    <!-- Popup -->
+    <div class="popup" id="registrationPopup">
+        <div class="containment">
+            <div class="popup-header">
+                <div class="icon" id="closePopup"><i class="fa fa-times"></i></div>
+                <h1>School Admin Registration</h1>
+                <p>Add a new administrator to the system</p>
+            </div>
+
+            <div class="form-content">
+                <form id="adminForm">
+                    <div class="step active" id="step1">
+                        <div class="form-group">
+                            <label for="fullName">Full Name <span class="required">*</span></label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="e.g. John Doe">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required placeholder="e.g. admin@school.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="e.g. +1 234 567 8900">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="role">Role <span class="required">*</span></label>
+                            <select id="role" name="role" required>
+                                <option value="School Admin">School Admin</option>
+                                <option value="Super Admin">Super Admin</option>
+                                <option value="Editor">Editor</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="step" id="successStep" style="display: none;">
+                        <div class="success-message">
+                            <div class="success-icon"><i class="fa fa-check"></i></div>
+                            <h2>Registration Successful!</h2>
+                            <p>The new school admin has been successfully added to the system.</p>
+                            <button type="button" class="btn btn-primary" onclick="location.reload()"
+                                style="margin-top: 20px;">Add Another Admin</button>
+                        </div>
+                    </div>
+
+                    <div id="errorStep" class="step" style="display: none;">
+                        <div class="error-message" style="text-align: center; padding: 40px;">
+                            <i class="fa fa-exclamation-circle"
+                                style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"></i>
+                            <h2>Registration Failed</h2>
+                            <p id="errorMessage">The server rejected the registration.</p>
+
+                            <button type="button" class="btn btn-secondary" id="backToEditBtn"
+                                style="margin-top: 20px;">
+                                <i class="fa fa-arrow-left"></i> Back to Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Register Admin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Details Popup -->
+    <div class="popup" id="adminDetailsPopup">
+        <div class="containment">
+            <div class="popup-header">
+                <div class="icon" id="closeAdminDetailsPopup"><i class="fa fa-times"></i></div>
+                <h1>School Admin Details</h1>
+                <p>Complete admin profile information</p>
+            </div>
+
+            <div class="admin-details-content">
+                <div class="admin-profile-header">
+                    <div class="admin-avatar-large" id="adminAvatarLarge"></div>
+                    <div class="admin-basic-info">
+                        <h2 id="adminFullName"></h2>
+                        <p id="adminId"></p>
+                        <div class="admin-status">
+                            <span class="status-badge" id="adminRole">School Administrator</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <!-- Personal Information -->
+                    <div class="detail-section">
+                        <h3>Personal Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>First Name:</label>
+                                <span id="detailFirstName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Middle Name:</label>
+                                <span id="detailMiddleName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Last Name:</label>
+                                <span id="detailLastName"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Date of Birth:</label>
+                                <span id="detailDateOfBirth"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Age:</label>
+                                <span id="detailAge"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Gender:</label>
+                                <span id="detailGender"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="detail-section">
+                        <h3>Contact Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <label>Address:</label>
+                                <span id="detailAddress"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Mobile Phone:</label>
+                                <span id="detailMobilePhone"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Home Phone:</label>
+                                <span id="detailHomePhone"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Personal Email:</label>
+                                <span id="detailPersonalEmail"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Emergency Contact:</label>
+                                <span id="detailEmergencyContact"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Emergency Phone:</label>
+                                <span id="detailEmergencyPhone"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" data-sideBar></div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="header">
+            <div class="header-left">
+                <div class="icon mobile-menu-btn" data-sideBarOpen><i class="fa fa-bars"></i></div>
+                <div>
+                    <h1 class="page-title">School Admin Registration</h1>
+                    <p class="page-subtitle">Add a new administrator to the system</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-cards">
+            <div class="action-card" id="openPopupBtn">
+                <div class="action-icon add-single">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Add New School Admin</h3>
+                    <p>Add a single school administrator to the system</p>
+                </div>
+            </div>
+
+            <div class="action-card" id="openExcelUploadBtn">
+                <div class="action-icon add-multiple">
+                    <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Upload Excel Sheet</h3>
+                    <p>Bulk import school admins from Excel file</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admins Table Section -->
+        <div class="students-section">
+            <div class="section-header">
+                <h2 class="section-title">School Admin List</h2>
+                <div class="filter-tabs">
+                    <div class="filter-tab active">All</div>
+                    <div class="filter-tab">Active</div>
+                    <div class="filter-tab">Inactive</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="students-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>School Admin</th>
+                            <th>Age</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../../scripts/font-awesome.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="../../scripts/sideBar.js"></script>
+    <script src="../../scripts/schoolAdminScripts/schooladminsForm.js" type="module"></script>
+    <script src="../../scripts/schoolAdminScripts/schooladminsFormDB.js" type="module"></script>
+    <script src="../../scripts/schoolAdminScripts/viewAllSchoolAdmins.js" type="module"></script>
+    <script src="../../scripts/schoolAdminScripts/schooladmins_excel_upload.js" type="module"></script>
+
+    <script>
+        // // Sidebar Toggle
+        // const sidebar = document.querySelector('[data-sideBar]');
+        // const sidebarOpenBtn = document.querySelector('[data-sideBarOpen]');
+        // const sidebarCloseBtn = document.querySelector('[data-sideBarClose]');
+
+        // if (sidebarOpenBtn && sidebar) {
+        //     sidebarOpenBtn.addEventListener('click', () => sidebar.classList.add('show'));
+        // }
+        // if (sidebarCloseBtn && sidebar) {
+        //     sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('show'));
+        // }
+
+        // Popup Logic
+        const popup = document.getElementById('registrationPopup');
+        const openPopupBtn = document.getElementById('openPopupBtn');
+        const closePopupBtn = document.getElementById('closePopup');
+
+        if (openPopupBtn && popup) {
+            openPopupBtn.addEventListener('click', () => {
+                popup.style.display = 'flex';
+            });
+        }
+
+        if (closePopupBtn && popup) {
+            closePopupBtn.addEventListener('click', () => {
+                popup.style.display = 'none';
+            });
+        }
+
+        // Excel Upload card
+        document.getElementById('openExcelUploadBtn').addEventListener('click', () => {
+            if (typeof window.openAdminExcelUpload === 'function') {
+                window.openAdminExcelUpload();
+            } else {
+                showToast('Upload module is still loading, please try again.', 'info');
+            }
+        });
+
+        // Form Handling Logic
+        const adminForm = document.getElementById('adminForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const backToEditBtn = document.getElementById('backToEditBtn');
+
+        // Form Submission
+        if (adminForm) {
+            adminForm.addEventListener('submit', async function (e) {
+                // The actual submission logic is handled in schooladminsForm.js
+                // This block is just to prevent default if listeners aren't attached yet/properly
+                // But since we import schooladminsForm.js type=module, it handles the listener.
+                // We keep this minimal or remove if conflict. 
+                // Actually, let's remove the inline script logic for steps that was here 
+                // and rely on schooladminsForm.js to attach the submit listener.
+                // However, we need to ensure the module is working.
+            });
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeleton Animation Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/portals/student/studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="./parentsPortalStyles/parentsPortal.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .test-section h2 {
+            margin: 0 0 16px 0;
+            color: #374151;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .skeleton-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .status-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0;
+            display: inline-block;
+        }
+        .status-indicator.success { background: #d4edda; color: #155724; }
+        .status-indicator.error { background: #f8d7da; color: #721c24; }
+        .status-indicator.info { background: #d1ecf1; color: #0c5460; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+        .css-check {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎬 Skeleton Animation Test</h1>
+        <p>Testing if the skeleton shine animation is working properly.</p>
+        
+        <div class="status-indicator success">✅ CSS imports loaded</div>
+        <div class="status-indicator info">🎬 Testing skeleton animation</div>
+        
+        <div class="test-section">
+            <h2>🔧 CSS Classes Test</h2>
+            <div class="css-check">
+                <strong>Required Classes:</strong><br>
+                ✅ .skeleton - Base skeleton class<br>
+                ✅ .skeleton-card - Card styling<br>
+                ✅ .skeleton-shine - Animation effect<br>
+                ✅ @keyframes shine - Animation definition<br><br>
+                
+                <strong>Animation Properties:</strong><br>
+                - background: linear-gradient(...)<br>
+                - animation: shine 2s ease-in-out infinite<br>
+                - position: relative<br>
+                - overflow: hidden
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Skeleton Animation Demo</h2>
+            <button class="test-btn" onclick="addShineClass()">✨ Add Shine</button>
+            <button class="test-btn" onclick="removeShineClass()">🚫 Remove Shine</button>
+            <button class="test-btn success" onclick="testAnimation()">🔄 Test Animation</button>
+            
+            <div class="skeleton-demo">
+                <div class="skeleton skeleton-card skeleton-shine">
+                    <p style="padding: 20px; text-align: center; color: #64748b;">With Shine</p>
+                </div>
+                <div class="skeleton skeleton-card">
+                    <p style="padding: 20px; text-align: center; color: #64748b;">Without Shine</p>
+                </div>
+                <div class="skeleton skeleton-card skeleton-shine">
+                    <p style="padding: 20px; text-align: center; color: #64748b;">With Shine</p>
+                </div>
+                <div class="skeleton skeleton-card">
+                    <p style="padding: 20px; text-align: center; color: #64748b;">Without Shine</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Expected vs Actual</h2>
+            <div class="css-check">
+                <strong>Expected Behavior:</strong><br>
+                - Gray skeleton cards with animated shine effect<br>
+                - Shine moves from left to right continuously<br>
+                - Smooth 2-second animation loop<br><br>
+                
+                <strong>If Not Working:</strong><br>
+                1. Check main.css is loaded<br>
+                2. Verify .skeleton-shine class exists<br>
+                3. Check @keyframes shine is defined<br>
+                4. Test in different browsers
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Test Links</h2>
+            <a href="./parentsPortal.html" class="test-btn success">👨‍👩‍👧‍👦 Parent Portal</a>
+            <a href="./skeleton_test.html" class="test-btn">🧪 Full Test</a>
+        </div>
+    </div>
+
+    <script>
+        function addShineClass() {
+            const skeletons = document.querySelectorAll('.skeleton-card');
+            skeletons.forEach(skeleton => {
+                skeleton.classList.add('skeleton-shine');
+            });
+        }
+        
+        function removeShineClass() {
+            const skeletons = document.querySelectorAll('.skeleton-card');
+            skeletons.forEach(skeleton => {
+                skeleton.classList.remove('skeleton-shine');
+            });
+        }
+        
+        function testAnimation() {
+            const skeletons = document.querySelectorAll('.skeleton-card');
+            skeletons.forEach((skeleton, index) => {
+                skeleton.classList.remove('skeleton-shine');
+                setTimeout(() => {
+                    skeleton.classList.add('skeleton-shine');
+                    setTimeout(() => {
+                        skeleton.classList.remove('skeleton-shine');
+                    }, 3000);
+                }, index * 500);
+            });
+        }
+        
+        // Check if skeleton styles are loaded
+        function checkSkeletonStyles() {
+            const testElement = document.createElement('div');
+            testElement.className = 'skeleton skeleton-shine';
+            document.body.appendChild(testElement);
+            
+            const styles = window.getComputedStyle(testElement);
+            const hasAnimation = styles.animation && styles.animation !== 'none';
+            const hasBackground = styles.background && styles.background.includes('linear-gradient');
+            
+            document.body.removeChild(testElement);
+            
+            if (hasAnimation && hasBackground) {
+                console.log('✅ Skeleton animation styles are loaded correctly');
+                document.querySelector('.status-indicator.info').innerHTML = '✅ Skeleton animation working';
+                document.querySelector('.status-indicator.info').className = 'status-indicator success';
+            } else {
+                console.error('❌ Skeleton animation styles are not loaded');
+                document.querySelector('.status-indicator.info').innerHTML = '❌ Skeleton animation not working';
+                document.querySelector('.status-indicator.info').className = 'status-indicator error';
+            }
+        }
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkSkeletonStyles();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

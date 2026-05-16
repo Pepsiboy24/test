@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 5: Portal Entry - EduHub</title>
+    <link rel="stylesheet" href="../styles/auth.css">
+    <style>
+        .redirect-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .redirect-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .redirect-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #16a34a 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+
+        .success-icon i {
+            font-size: 36px;
+            color: white;
+        }
+
+        .redirect-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .redirect-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .countdown-section {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .countdown-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: #0369a1;
+            margin-bottom: 8px;
+        }
+
+        .countdown-text {
+            font-size: 14px;
+            color: #0369a1;
+        }
+
+        .login-form {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .manual-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .manual-login a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .manual-login a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <div class="redirect-card">
+            <div class="success-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+
+            <h1 class="redirect-title">Welcome to EduHub!</h1>
+            <p class="redirect-subtitle">
+                Your school is ready. You can now access your dashboard.
+            </p>
+
+            <div class="countdown-section">
+                <div class="countdown-number" id="countdown">5</div>
+                <div class="countdown-text">Auto-redirecting to login page...</div>
+            </div>
+
+            <div class="login-form" id="loginForm" style="display: none;">
+                <h3 style="margin-bottom: 20px; color: #1e293b;">Quick Login</h3>
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+                
+                <form id="quickLoginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" 
+                               placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" 
+                               placeholder="Enter your password" value="123456" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="loginBtn">
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                        <span id="btnText">Login to Dashboard</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="manual-login">
+                <a href="/login">
+                    <i class="fas fa-sign-in-alt"></i> Go to Login Page
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase } from '../../core/config.js';
+
+        class PortalEntry {
+            constructor() {
+                this.countdown = 5;
+                this.init();
+            }
+
+            init() {
+                this.startCountdown();
+                this.setupEventListeners();
+                this.loadSavedCredentials();
+            }
+
+            startCountdown() {
+                const countdownEl = document.getElementById('countdown');
+                const countdownText = document.querySelector('.countdown-text');
+                
+                const timer = setInterval(() => {
+                    this.countdown--;
+                    
+                    if (countdownEl) {
+                        countdownEl.textContent = this.countdown;
+                    }
+                    
+                    if (this.countdown <= 0) {
+                        clearInterval(timer);
+                        this.redirectToLogin();
+                    } else if (this.countdown <= 3) {
+                        if (countdownText) {
+                            countdownText.textContent = 'Get ready to login...';
+                        }
+                        // Show login form
+                        document.getElementById('loginForm').style.display = 'block';
+                    }
+                }, 1000);
+            }
+
+            setupEventListeners() {
+                const form = document.getElementById('quickLoginForm');
+                if (form) {
+                    form.addEventListener('submit', (e) => this.handleLogin(e));
+                }
+            }
+
+            loadSavedCredentials() {
+                // Try to get the last used email from sessionStorage
+                const workEmail = sessionStorage.getItem('workEmail');
+                if (workEmail) {
+                    const emailInput = document.getElementById('email');
+                    if (emailInput) {
+                        emailInput.value = workEmail;
+                    }
+                }
+            }
+
+            async handleLogin(e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                if (!email || !password) {
+                    this.showError('Please enter both email and password');
+                    return;
+                }
+
+                this.setLoading(true);
+
+                try {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    // Check if user has school_id in metadata
+                    const schoolId = data.user?.user_metadata?.school_id;
+                    if (schoolId) {
+                        this.showSuccess('Login successful! Redirecting to dashboard...');
+                        setTimeout(() => {
+                            window.location.href = '/admin';
+                        }, 1500);
+                    } else {
+                        this.showError('Account not properly configured. Please contact support.');
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showError(error.message || 'Login failed. Please try again.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            redirectToLogin() {
+                sessionStorage.clear();
+                window.location.href = '/login';
+            }
+
+            setLoading(isLoading) {
+                const loginBtn = document.getElementById('loginBtn');
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                const btnText = document.getElementById('btnText');
+
+                loginBtn.disabled = isLoading;
+                loadingSpinner.style.display = isLoading ? 'inline-block' : 'none';
+                btnText.textContent = isLoading ? 'Logging in...' : 'Login to Dashboard';
+            }
+
+            showError(message) {
+                const errorEl = document.getElementById('errorMessage');
+                const successEl = document.getElementById('successMessage');
+                
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+                successEl.style.display = 'none';
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            showSuccess(message) {
+                const errorEl = document.getElementById('errorMessage');
+                const successEl = document.getElementById('successMessage');
+                
+                successEl.textContent = message;
+                successEl.style.display = 'block';
+                errorEl.style.display = 'none';
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Initialize the portal entry
+        document.addEventListener('DOMContentLoaded', () => {
+            new PortalEntry();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structure Test</title>
+    <link rel="stylesheet" href="/portals/student/studentsPortalStyles/studentPortal.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 32px;
+        }
+        .section-header {
+            margin-bottom: 16px;
+        }
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0;
+        }
+        .upcoming-classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .performance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .recent-grades h4, .overall-progress h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #374151;
+        }
+        .debug-info {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 8px 8px 8px 0;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .test-btn.success { background: #10b981; }
+        .test-btn.success:hover { background: #059669; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🏗️ Structure Comparison Test</h1>
+        <p>Testing skeleton animation with different container structures.</p>
+        
+        <!-- Test 1: Exact Student Portal Structure -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Test 1: Exact Student Portal Structure</h2>
+            </div>
+            <div class="upcoming-classes-grid">
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+        </section>
+        
+        <!-- Test 2: Parent Portal Structure -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Test 2: Parent Portal Structure</h2>
+            </div>
+            <div class="section-content">
+                <div class="performance-grid">
+                    <div class="recent-grades">
+                        <h4>Recent Grades</h4>
+                        <div id="recentGradesSkeleton">
+                            <div class="skeleton skeleton-card"></div>
+                            <div class="skeleton skeleton-card"></div>
+                            <div class="skeleton skeleton-card"></div>
+                        </div>
+                    </div>
+                    <div class="overall-progress">
+                        <h4>Overall Progress</h4>
+                        <div id="progressSkeleton">
+                            <div class="skeleton skeleton-card"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Test 3: Minimal Structure -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Test 3: Minimal Structure (No Extra Containers)</h2>
+            </div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+        </section>
+        
+        <div class="debug-info" id="debug-results">
+            <strong>Animation Status:</strong><br>
+            <div id="animation-check">Checking...</div>
+        </div>
+        
+        <div>
+            <button class="test-btn" onclick="checkAnimation()">🔍 Check Animation</button>
+            <button class="test-btn success" onclick="highlightDifferences()">🔍 Highlight Differences</button>
+            <a href="../student/studentPortal.html" class="test-btn success">🏠 Student Portal</a>
+            <a href="./parentsPortal.html" class="test-btn">👨‍👩‍👧‍👦 Parent Portal</a>
+        </div>
+    </div>
+
+    <script>
+        function checkAnimation() {
+            const results = document.getElementById('animation-check');
+            let html = '';
+            
+            // Check each test section
+            const tests = [
+                { name: 'Student Portal Structure', selector: '.upcoming-classes-grid .skeleton' },
+                { name: 'Parent Portal Structure', selector: '#recentGradesSkeleton .skeleton' },
+                { name: 'Minimal Structure', selector: '.section:nth-child(3) .skeleton' }
+            ];
+            
+            tests.forEach(test => {
+                const element = document.querySelector(test.selector);
+                if (element) {
+                    const styles = window.getComputedStyle(element);
+                    html += `<strong>${test.name}:</strong><br>`;
+                    html += `Animation: ${styles.animation}<br>`;
+                    html += `Background: ${styles.background.substring(0, 50)}...<br>`;
+                    html += `Working: ${styles.animation.includes('shimmer') ? '✅' : '❌'}<br><br>`;
+                }
+            });
+            
+            results.innerHTML = html;
+        }
+        
+        function highlightDifferences() {
+            const skeletons = document.querySelectorAll('.skeleton');
+            skeletons.forEach((skeleton, index) => {
+                setTimeout(() => {
+                    skeleton.style.border = '3px solid red';
+                    setTimeout(() => {
+                        skeleton.style.border = 'none';
+                    }, 2000);
+                }, index * 500);
+            });
+        }
+        
+        // Auto-check on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkAnimation();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

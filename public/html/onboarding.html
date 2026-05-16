@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Onboarding - EduHub</title>
+    <link rel="stylesheet" href="../styles/auth.css">
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .onboarding-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .onboarding-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .onboarding-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .onboarding-header h1 {
+            color: #1e293b;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .onboarding-header p {
+            color: #64748b;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #374151;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f0f9ff;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            font-size: 48px;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-text {
+            color: #6b7280;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .file-preview img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: -1;
+        }
+
+        .step:last-child::before {
+            display: none;
+        }
+
+        .step.active::before {
+            background: #667eea;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #16a34a;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .step.active .step-label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Tier Selector Styles */
+        .tier-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .tier-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .tier-option:hover {
+            border-color: #667eea;
+            background: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.1);
+        }
+
+        .tier-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tier-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .tier-header h4 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .tier-price {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .tier-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tier-features li {
+            padding: 5px 0;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tier-features li i {
+            margin-right: 8px;
+            font-size: 12px;
+        }
+
+        .tier-option:not(.selected) .tier-features li i.fa-check {
+            color: #16a34a;
+        }
+
+        .tier-option:not(.selected) .tier-features li i.fa-times {
+            color: #dc2626;
+        }
+
+        .tier-option.selected .tier-features li {
+            color: white;
+        }
+
+        /* Academic Setup Styles */
+        .academic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .academic-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .academic-field label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .academic-field input,
+        .academic-field select {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .academic-field input:focus,
+        .academic-field select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadingOverlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        <div style="text-align: center; color: white;">
+            <div
+                style="width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;">
+            </div>
+            <p id="loadingText" style="font-size: 18px; font-weight: 500;">Verifying authentication...</p>
+        </div>
+    </div>
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <div class="onboarding-container" id="mainContainer" style="display: none;">
+        <div class="onboarding-card">
+            <div class="onboarding-header">
+                <h1>Welcome to EduHub</h1>
+                <p>Let's set up your school's account</p>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">School Info</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Academic Setup</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Bank Details</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+
+            <form id="onboardingForm">
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../scripts/onboarding.js"></script>
+
+    <script>
+        // FAIL-SAFE: If the page stays on "Verifying" for too long, redirect to login
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay && overlay.style.display !== 'none') {
+                console.warn("Auth verification timed out. Redirecting to login.");
+                window.location.href = '/login?error=timeout';
+            }
+        }, 5000); // 5 seconds max
+
+        // Tier selection functionality
+        window.selectTier = function (tier) {
+            document.querySelectorAll('.tier-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            const selected = document.querySelector(`[data-tier="${tier}"]`);
+            if (selected) selected.classList.add('selected');
+            document.getElementById('tierSelect').value = tier;
+        }
+
+        // Logo preview function
+        window.previewLogo = function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('logoPreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Logo Preview" style="max-width:100px; margin-top:10px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+
+</html>

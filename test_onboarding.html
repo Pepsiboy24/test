@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Onboarding Fixes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Onboarding Fixes Test</h1>
+    
+    <div class="test-container">
+        <h2>CSS Files Test</h2>
+        <div id="css-test"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Authentication Test</h2>
+        <div id="auth-test"></div>
+        <button onclick="testAuthentication()">Test Authentication</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>File Structure Test</h2>
+        <div id="files-test"></div>
+    </div>
+
+    <script type="module">
+        // Test CSS files
+        async function testCSSFiles() {
+            const cssFiles = [
+                '../styles/main.css',
+                '../styles/auth.css'
+            ];
+            
+            const results = [];
+            for (const file of cssFiles) {
+                try {
+                    const response = await fetch(file);
+                    const contentType = response.headers.get('content-type');
+                    results.push({
+                        file,
+                        status: response.status,
+                        contentType,
+                        success: response.ok && contentType && contentType.includes('text/css')
+                    });
+                } catch (error) {
+                    results.push({
+                        file,
+                        error: error.message,
+                        success: false
+                    });
+                }
+            }
+            
+            const cssTestDiv = document.getElementById('css-test');
+            results.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `status ${result.success ? 'success' : 'error'}`;
+                div.innerHTML = `
+                    <strong>${result.file}</strong><br>
+                    Status: ${result.status || 'Error'}<br>
+                    Content-Type: ${result.contentType || 'N/A'}<br>
+                    ${result.error ? `Error: ${result.error}` : ''}
+                `;
+                cssTestDiv.appendChild(div);
+            });
+        }
+        
+        // Test Authentication
+        window.testAuthentication = async function() {
+            const authTestDiv = document.getElementById('auth-test');
+            authTestDiv.innerHTML = '<div class="status info">Testing authentication...</div>';
+            
+            try {
+                // Import supabase config
+                const { supabase } = await import('../scripts/config.js');
+                
+                // Test user session
+                const { data: { user }, error } = await supabase.auth.getUser();
+                
+                if (error) {
+                    authTestDiv.innerHTML = `<div class="status error">Auth Error: ${error.message}</div>`;
+                } else if (user) {
+                    authTestDiv.innerHTML = `<div class="status success">User authenticated: ${user.email}</div>`;
+                } else {
+                    authTestDiv.innerHTML = `<div class="status info">No user authenticated (expected for onboarding)</div>`;
+                }
+            } catch (error) {
+                authTestDiv.innerHTML = `<div class="status error">Import/Error: ${error.message}</div>`;
+            }
+        };
+        
+        // Test file structure
+        async function testFileStructure() {
+            const files = [
+                '../scripts/config.js',
+                '../scripts/onboarding.js',
+                '../scripts/tierAccess.js',
+                '../html/login.html',
+                '../html/onboarding.html'
+            ];
+            
+            const results = [];
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    results.push({
+                        file,
+                        status: response.status,
+                        success: response.ok
+                    });
+                } catch (error) {
+                    results.push({
+                        file,
+                        error: error.message,
+                        success: false
+                    });
+                }
+            }
+            
+            const filesTestDiv = document.getElementById('files-test');
+            results.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `status ${result.success ? 'success' : 'error'}`;
+                div.innerHTML = `
+                    <strong>${result.file}</strong><br>
+                    Status: ${result.status || 'Error'}<br>
+                    ${result.error ? `Error: ${result.error}` : ''}
+                `;
+                filesTestDiv.appendChild(div);
+            });
+        }
+        
+        // Run all tests
+        document.addEventListener('DOMContentLoaded', () => {
+            testCSSFiles();
+            testFileStructure();
+        });
+    </script>
+</body>
+</html>

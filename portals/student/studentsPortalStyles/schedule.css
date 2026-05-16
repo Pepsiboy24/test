@@ -1,0 +1,564 @@
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
+
+ body {
+     font-family: 'Inter', sans-serif;
+     background-color: #f8fafc;
+     color: #1e293b;
+     line-height: 1.6;
+ }
+
+ .container {
+     display: flex;
+     min-height: 100vh;
+ }
+
+ /* Sidebar */
+ .sidebar {
+     width: 250px;
+     background-color: white;
+     border-right: 1px solid #e2e8f0;
+     padding: 1.5rem 0;
+     position: fixed;
+     height: 100vh;
+     overflow-y: auto;
+     display: flex;
+     flex-direction: column;
+     z-index: 1111;
+ }
+
+ .sidebar-header {
+     padding: 0 1.5rem 2rem 1.5rem;
+     border-bottom: 1px solid #e2e8f0;
+ }
+
+ .sidebar-header h2 {
+     font-size: 1.25rem;
+     font-weight: 700;
+     color: #1e293b;
+ }
+
+ .sidebar-nav {
+     padding-top: 1rem;
+ }
+
+ .nav-item {
+     display: flex;
+     align-items: center;
+     padding: 0.75rem 1.5rem;
+     color: #64748b;
+     text-decoration: none;
+     transition: all 0.2s ease;
+     border-left: 3px solid transparent;
+ }
+
+ .nav-item:hover,
+ .nav-item.active {
+     background-color: #f1f5f9;
+     color: #3b82f6;
+     border-left-color: #3b82f6;
+ }
+
+ .nav-item i {
+     width: 20px;
+     margin-right: 0.75rem;
+ }
+
+ /* Main Content */
+ .main-content {
+     flex: 1;
+     margin-left: 250px;
+     padding: 2rem;
+     min-width: 0;
+     /* Prevents flex child from blowing out parent on mobile */
+ }
+
+ /* Header */
+ .header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 2rem;
+ }
+
+ .welcome-section h1 {
+     font-size: 1.875rem;
+     font-weight: 600;
+     color: #1e293b;
+     margin-bottom: 0.25rem;
+ }
+
+ .welcome-section h1 span {
+     color: #3b82f6;
+ }
+
+ .welcome-section p {
+     color: #64748b;
+ }
+
+ .header-actions {
+     display: flex;
+     align-items: center;
+     gap: 1rem;
+ }
+
+ .notification-btn,
+ .profile-btn,
+ .nav-btn {
+     width: 40px;
+     height: 40px;
+     border-radius: 8px;
+     background-color: white;
+     border: 1px solid #e2e8f0;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
+     transition: all 0.2s ease;
+ }
+
+ .notification-btn:hover,
+ .profile-btn:hover {
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+ }
+
+ .profile-btn {
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     color: white;
+     font-weight: 600;
+ }
+
+ .nav-btn {
+     display: none;
+ }
+
+ /* Upcoming Classes */
+ .section {
+     /* background: white; */
+     border-radius: 20px;
+     padding: 2rem;
+     margin-bottom: 2rem;
+     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+ }
+
+ .section-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 2rem;
+ }
+
+ .section-title {
+     font-size: 1.5rem;
+     color: #333;
+     font-weight: 600;
+ }
+
+ .view-all-btn {
+     background: none;
+     border: none;
+     color: #667eea;
+     cursor: pointer;
+     font-weight: 600;
+     padding: 0.5rem 1rem;
+     border-radius: 8px;
+     transition: 0.3s ease;
+ }
+
+ .view-all-btn:hover {
+     background: rgba(102, 126, 234, 0.1);
+ }
+
+ .classes-grid {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+     gap: 1.5rem;
+ }
+
+ .class-card {
+     background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+     border: 1px solid rgba(102, 126, 234, 0.1);
+     border-radius: 16px;
+     padding: 1.5rem;
+     position: relative;
+     transition: all 0.3s ease;
+ }
+
+ .class-card:hover {
+     transform: translateY(-3px);
+     box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+ }
+
+ .class-subject {
+     font-size: 1.2rem;
+     font-weight: 600;
+     color: #333;
+     margin-bottom: 0.5rem;
+ }
+
+ .class-details {
+     color: #666;
+     margin-bottom: 1rem;
+ }
+
+ .class-time {
+     display: flex;
+     align-items: center;
+     gap: 0.5rem;
+     color: #667eea;
+     font-weight: 600;
+     margin-bottom: 1rem;
+ }
+
+ .join-btn {
+     background: linear-gradient(135deg, #667eea, #764ba2);
+     color: white;
+     border: none;
+     padding: 0.75rem 1.5rem;
+     border-radius: 10px;
+     cursor: pointer;
+     font-weight: 600;
+     transition: all 0.3s ease;
+     width: 100%;
+ }
+
+ .join-btn:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+ }
+
+ .join-btn.upcoming {
+     background: #f0f0f0;
+     color: #666;
+     cursor: not-allowed;
+ }
+
+ /* Weekly Schedule - Horizontal Matrix Table */
+ .schedule-table-wrapper {
+     overflow-x: auto;
+     overflow-y: auto;
+     max-height: 80vh;
+     /* scroll vertically if schedule is extremely long */
+     border-radius: 12px;
+     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+     background: white;
+     /* hide scrollbar for webkit but keep functionality */
+     -webkit-overflow-scrolling: touch;
+     scroll-snap-type: x mandatory;
+     scroll-behavior: smooth;
+ }
+
+ .schedule-table-wrapper::-webkit-scrollbar {
+     height: 8px;
+     width: 8px;
+ }
+
+ .schedule-table-wrapper::-webkit-scrollbar-track {
+     background: #f1f5f9;
+     border-radius: 4px;
+ }
+
+ .schedule-table-wrapper::-webkit-scrollbar-thumb {
+     background: #cbd5e1;
+     border-radius: 4px;
+ }
+
+ .schedule-table {
+     width: 100%;
+     min-width: 800px;
+     /* forces horizontal scroll on small screens */
+     border-collapse: separate;
+     border-spacing: 0;
+     table-layout: fixed;
+ }
+
+ /* TABLE HEADERS */
+ .schedule-table th {
+     padding: 1rem;
+     text-align: center;
+     font-weight: 600;
+     font-size: 1.05rem;
+     color: white;
+     position: sticky;
+     top: 0;
+     z-index: 20;
+     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+     scroll-snap-align: start;
+     min-width: 200px;
+     /* Enforce minimum width for snapping and preventing squishing */
+ }
+
+ /* Top Left Corner */
+ .sticky-corner {
+     position: sticky;
+     left: 0;
+     top: 0;
+     z-index: 30 !important;
+     /* Above both top row and left column */
+     background: linear-gradient(135deg, #1e293b, #0f172a);
+     width: 100px;
+     border-right: 2px solid rgba(0, 0, 0, 0.1);
+ }
+
+ /* Day Header Gradients */
+ .schedule-table th:nth-child(2) {
+     background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+ }
+
+ /* Mon */
+ .schedule-table th:nth-child(3) {
+     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+ }
+
+ /* Tue */
+ .schedule-table th:nth-child(4) {
+     background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+ }
+
+ /* Wed */
+ .schedule-table th:nth-child(5) {
+     background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+ }
+
+ /* Thu */
+ .schedule-table th:nth-child(6) {
+     background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+ }
+
+ /* Fri */
+
+ .active-day-header {
+     box-shadow: inset 0 -4px 0 #fff;
+ }
+
+ /* TABLE BODY */
+ .schedule-table td {
+     padding: 0.5rem;
+     border-bottom: 1px solid #f1f5f9;
+     border-right: 1px dashed #f1f5f9;
+     vertical-align: middle;
+     scroll-snap-align: start;
+ }
+
+ .schedule-table tr:hover td {
+     background: #f8fafc;
+     transition: background 0.2s ease;
+ }
+
+ /* Left Time Column */
+ .sticky-left {
+     position: sticky;
+     left: 0;
+     z-index: 10;
+     background: white;
+     font-weight: 600;
+     color: #475569;
+     text-align: center;
+     border-right: 2px solid #e2e8f0;
+     width: 100px;
+     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.02);
+ }
+
+ .active-time-row {
+     background: #eff6ff !important;
+     color: #2563eb;
+     border-right-color: #3b82f6;
+ }
+
+ /* Cells and Cards */
+ .subject-cell {
+     height: 80px;
+ }
+
+ /* Free Period Cells */
+ .subject-cell.empty-cell {
+     background: transparent;
+ }
+
+ .subject-free-inner {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: 100%;
+     border: 2px dashed #cbd5e1;
+     border-radius: 6px;
+ }
+
+ .subject-free {
+     color: #cbd5e1;
+     font-weight: 500;
+     font-size: 0.85rem;
+ }
+
+ /* Break and Lunch Cells */
+ .subject-cell.break-cell {
+     background: #fef9c3;
+     /* Light yellow to span across days visually */
+     border-right: none;
+     border-bottom: 2px solid #fde047;
+ }
+
+ .subject-cell.break-cell:last-child {
+     border-right: 1px dashed #f1f5f9;
+ }
+
+ .subject-break-inner {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: 100%;
+ }
+
+ .subject-break {
+     color: #ca8a04;
+     font-weight: 600;
+     font-size: 0.95rem;
+     letter-spacing: 0.5px;
+     text-transform: uppercase;
+ }
+
+ /* Compact Card Design */
+ .subject-card-inner {
+     display: flex;
+     background: white;
+     /* Solid white background as requested */
+     border-radius: 6px;
+     height: 100%;
+     overflow: hidden;
+     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+     border: 1px solid #e2e8f0;
+     /* Solid border as requested */
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
+ }
+
+ .subject-card-inner:hover {
+     transform: scale(1.02);
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+ }
+
+ /* The Color Strip */
+ .subject-strip {
+     width: 4px;
+     background-color: var(--strip-color, #64748b);
+     flex-shrink: 0;
+ }
+
+ .subject-content {
+     padding: 0.5rem;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     overflow: hidden;
+ }
+
+ .subject-name {
+     color: #1e293b;
+     font-weight: 700;
+     font-size: 0.9rem;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     margin-bottom: 2px;
+ }
+
+ .room-name {
+     color: #64748b;
+     font-size: 0.75rem;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }
+
+ /* Active Class Spotlight */
+ .subject-cell.active-class .subject-card-inner {
+     border: 1px solid var(--strip-color);
+     box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+     transform: scale(1.03);
+     position: relative;
+ }
+
+ .subject-cell.active-class .subject-card-inner::after {
+     content: "NOW";
+     position: absolute;
+     top: 4px;
+     right: 4px;
+     background: #ef4444;
+     color: white;
+     font-size: 0.5rem;
+     padding: 1px 4px;
+     border-radius: 4px;
+     font-weight: 700;
+     letter-spacing: 0.5px;
+ }
+
+ /* Day Switcher Tabs (Mobile) */
+ .day-switcher {
+     display: none;
+     gap: 0.5rem;
+     margin-bottom: 1rem;
+     overflow-x: auto;
+     padding-bottom: 0.5rem;
+     -webkit-overflow-scrolling: touch;
+ }
+
+ .day-tab {
+     padding: 0.5rem 1rem;
+     background: white;
+     border: 1px solid #e2e8f0;
+     border-radius: 20px;
+     color: #475569;
+     font-weight: 600;
+     font-size: 0.9rem;
+     cursor: pointer;
+     white-space: nowrap;
+     transition: all 0.2s ease;
+ }
+
+ .day-tab.active {
+     background: #3b82f6;
+     color: white;
+     border-color: #3b82f6;
+     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+ }
+
+ @media (max-width: 768px) {
+     .sidebar {
+         transform: translateX(-100%);
+         transition: transform 0.3s ease;
+     }
+
+     .sidebar.show {
+         transform: translateX(0);
+     }
+
+     .main-content {
+         margin-left: 0;
+         padding: 1rem;
+     }
+
+     .nav-btn {
+         display: flex;
+     }
+
+     .profile-btn {
+         display: none;
+     }
+
+     .day-switcher {
+         display: flex;
+     }
+
+     .section {
+         padding: 1rem;
+     }
+ }
+
+/* Explicitly prevent iOS Safari auto-zoom on focus by enforcing >= 16px */
+input, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"],
+textarea, select, button {
+    font-size: 16px !important;
+    touch-action: manipulation !important;
+}
