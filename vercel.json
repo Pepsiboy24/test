@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/public/html/index.html"
+      "destination": "/public/html/login.html"
     },
     {
       "source": "/login",
